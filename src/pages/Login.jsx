@@ -1,15 +1,31 @@
 import React, { useEffect, useState, useRef } from "react";
 import logo from "../assets/football-jersey.svg";
 import googlelogo from "../assets/google.svg";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, provider } from "../lib/firebaseConfig"; 
+import { auth, provider, storage } from "../lib/firebaseConfig"; 
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getDownloadURL, ref } from "firebase/storage";
+import { useNavigate} from "react-router-dom";
 
 
 const Login = () => {
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [user, setUser] = useState(null);
+
+  const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,7 +33,7 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       console.log("Login exitoso:", user);
-      // Redireccionar o actualizar estado global aquí
+      navigate("/main"); // Redirige al usuario después del login
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
       setError("Correo o contraseña incorrectos.");
@@ -29,14 +45,13 @@ const Login = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       console.log("Usuario logueado con Google:", user);
+      navigate("/main");
     } catch (error) {
       console.error("Error en login con Google", error);
     }
   };
 
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const dropdownRef = useRef(null);
-  const buttonRef = useRef(null);
+  
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -144,9 +159,10 @@ const Login = () => {
                             </button>
                           </div>
                           {error && <p className="text-red-600 text-sm text-center">{error}</p>} 
-                          <a href="/register" id="btn-sign" className="text-center p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black">
+                          
+                          <button onClick={() => navigate("/register")} className="text-center p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black">
                             Registrarse
-                          </a>
+                          </button>
                           <button className="p-2 rounded-md bg-[#252525] text-white hover:bg-[#DA544A] hover:text-black">
                             ¿Olvidó su contraseña?
                           </button>
@@ -157,11 +173,13 @@ const Login = () => {
                 )}
               </div>
             </div>
-
           </div>
           <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
 			    </div>
         </header>
+        <main className="items-center content-center">
+          <h1>Hola </h1>
+        </main>
     </div>
   );
 };

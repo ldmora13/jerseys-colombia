@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import logo from "../assets/football-jersey.svg";
 import googlelogo from "../assets/google.svg";
-import { auth, provider, storage } from "../lib/firebaseConfig"; 
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import {  getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { getDownloadURL, ref } from "firebase/storage";
 import { useNavigate} from "react-router-dom";
 
 
 const Login = () => {
   const navigate = useNavigate();
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,14 +34,14 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       console.log("Login exitoso:", user);
-      navigate("/main"); // Redirige al usuario después del login
     } catch (error) {
       console.error("Error al iniciar sesión:", error.message);
       setError("Correo o contraseña incorrectos.");
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (e) => {
+    e.preventDefault();
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
@@ -51,7 +52,6 @@ const Login = () => {
     }
   };
 
-  
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -154,8 +154,8 @@ const Login = () => {
                             <button onClick={handleLogin} className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black transition">
                               Iniciar sesión
                             </button>
-                            <button onClick={handleGoogleLogin} id="btn-google" className="p-2 px-4 rounded-md bg-[#252525] text-white hover:bg-black transition">
-                              <img src={googlelogo} className="w-[40px]" alt="Google login"/>
+                            <button type="button" onClick={handleGoogleLogin} id="btn-google" className="p-2 px-4 rounded-md bg-[#252525] text-white hover:bg-black transition">
+                                <img src={googlelogo} className="w-[40px]" alt="Google login" />
                             </button>
                           </div>
                           {error && <p className="text-red-600 text-sm text-center">{error}</p>} 
@@ -178,7 +178,7 @@ const Login = () => {
 			    </div>
         </header>
         <main className="items-center content-center">
-          <h1>Hola </h1>
+          <h1></h1>
         </main>
     </div>
   );

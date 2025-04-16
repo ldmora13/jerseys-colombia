@@ -29,8 +29,6 @@ const Register = () => {
         });
   
         console.log("Usuario registrado:", user);
-  
-        // Redirigir al home
         navigate("/main");
       } catch (error) {
         console.error("Error en el registro:", error.message);

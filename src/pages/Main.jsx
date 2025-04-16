@@ -6,6 +6,7 @@ import {  getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPasswo
 const Main = () => {
     const auth = getAuth();
     const [userName, setUserName] = useState("");
+    const [UserNameFull, setUserNameFull] = useState("");
     const dropdownRef = useRef(null);
     const buttonRef = useRef(null);
     const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -15,6 +16,8 @@ const Main = () => {
         if (user) {
             const displayName = user.displayName || user.email || "Usuario";
             setUserName(displayName.split(" ")[0]);
+            setUserNameFull(displayName);
+
         }
         });
 
@@ -76,7 +79,6 @@ const Main = () => {
                 </div>
 
                 <div className="flex items-center gap-5">
-
                     <div className="flex gap-3 relative">
                         <div ref={buttonRef} onClick={() => setDropdownVisible(!dropdownVisible)} className="w-[131px] h-[45px] ml-2 rounded-[15px] cursor-pointer focus:outline-none">
                         {/* Dashboard Button */}
@@ -88,18 +90,53 @@ const Main = () => {
                                 </svg>
                                 <p>{userName}</p>
                             </div>
+                        </div>
 
-                            {dropdownVisible && (
-                            <div ref={dropdownRef} className="absolute top-[60px] right-0 w-[400px] rounded-xl p-4 z-[999]">
-                                {/* Background Cards */}
-                                <div id="card" className="rounded-[25px] w-full h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)]" style={{ backgroundImage: "linear-gradient(163deg, #C9FCD4 0%, #C9FCD4 100%)",}}>
-                                    <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px]">
+                        {dropdownVisible && (
+                        <div ref={dropdownRef} className="absolute top-[60px] right-0 w-[400px] rounded-xl p-4 z-[999]">
+                            {/* Background Cards */}
+                            <div id="card" className="rounded-[25px] w-full h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)]" style={{ backgroundImage: "linear-gradient(163deg, #C9FCD4 0%, #C9FCD4 100%)",}}>
+                                <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px]">
                                     
+                                    <div className="flex flex-col gap-6 p-6 bg-[#a4ceac] rounded-[25px]">
+                                        <div className="flex flex-col gap-4 items-center justify-center">
+                                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-[27px] h-[27px] fill-white">
+                                            <g data-name="Layer 2" id="Layer_2">
+                                                <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
+                                            </g>
+                                            </svg>
+                                            <p className="text-white text-[20px] ">{UserNameFull}</p>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            
+                                            <button onClick={() => navigate("/")} className="bg-[#252525] text-center p-2 mb-3 rounded-md  text-white hover:bg-[#AFFCBE] hover:text-black">
+                                                Perfil
+                                            </button>
+                                            <button className="p-2 mb-3 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black">
+                                                Compras
+                                            </button>
+
+                                            <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
+                                            </div>
+
+                                            <button className="p-2  rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black">
+                                                Soporte
+                                            </button>
+
+                                            <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
+                                            </div>
+                                            <button className="p-2 rounded-md bg-[#252525] text-white hover:bg-[#DA544A] hover:text-white">
+                                                Salir
+                                            </button>
+                                        </div>
                                     </div>
+                                    
+                                    
                                 </div>
                             </div>
-                            )}
                         </div>
+                        )}
+                        
                     </div>
                 </div>
                 <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">

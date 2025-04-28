@@ -96,7 +96,7 @@ const Register = () => {
                                 </button>
                             </div>
                             <div className="flex justify-center">
-                                <button type="button" onClick={() => navigate("/login", { state: { dropdownOpen: true } })} className="flex items-center justify-center text-center w-[300px] p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE]">
+                                <button type="button" onClick={() => navigate("/login", { state: { showDropdown: true } })} className="flex items-center justify-center text-center w-[300px] p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE]">
                                     ¿Ya tienes cuenta?
                                 </button>
                             </div>

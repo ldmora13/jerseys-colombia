@@ -1,1 +1,7 @@
 @import "tailwindcss";
+@import "@fontsource/cascadia-code";
+
+body{
+    background-color: #E8E8E8;
+    font-family: 'Cascadia Code', monospace;
+}

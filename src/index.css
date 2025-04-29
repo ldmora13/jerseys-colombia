@@ -5,3 +5,10 @@ body{
     background-color: #E8E8E8;
     font-family: 'Cascadia Code', monospace;
 }
+
+@layer utilities {
+    .group:hover .card:not(:hover) {
+      filter: blur(10px);
+      transform: scale(0.9);
+    }
+  }

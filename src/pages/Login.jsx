@@ -108,9 +108,7 @@ const Login = () => {
       } else {
         setCamisetasFutbol(data)
       } 
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
+      
     }
 
     fetchCamisetasFutbol()
@@ -131,6 +129,26 @@ const Login = () => {
     }
 
     fetchCamisetasNBA()
+  }, [])
+
+  useEffect(() => {
+    const fetchCamisetasF1 = async () => {
+      const { data, error } = await supabase
+        .from('F1')
+        .select('nombre, imagenes, team, año, fecha_indexacion, driver')
+        .order('año', { ascending: true })
+        .limit(3)
+      if (error) {
+        console.error('Error al traer camisetas:', error)
+      } else {
+        setCamisetasF1(data)
+      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000); 
+    }
+
+    fetchCamisetasF1()
   }, [])
 
 
@@ -306,7 +324,7 @@ const Login = () => {
                   <div key={index} onMouseEnter={() => setHoveredIndexFutbol(index)} onMouseLeave={() => setHoveredIndexFutbol(null)}  onClick={(e) => {e.stopPropagation(); navigate("/");}}
                    className={`flex flex-row items-center border rounded shadow p-2 gap-2 w-[250px] mx-auto cursor-pointer 
                     transform transition-all duration-300 ease-in-out
-                    ${hoveredIndexFutbol === null ? '' : hoveredIndexFutbol === index ? 'scale-110 blur-0' : 'scale-90 blur-[5px]'}
+                    ${hoveredIndexFutbol === null ? '' : hoveredIndexFutbol === index ? 'scale-110 blur-0' : 'scale-90 blur-[2px]'}
                   `}>
                     {imagenPrincipal && (
                       <img
@@ -334,10 +352,10 @@ const Login = () => {
                 const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
 
                 return (
-                  <div key={index} onMouseEnter={() => setHoveredIndexF1(index)} onMouseLeave={() => setHoveredIndexF1(null)}  onClick={(e) => {e.stopPropagation(); navigate("/");}}
+                  <div key={index} onMouseEnter={() => setHoveredIndexNBA(index)} onMouseLeave={() => setHoveredIndexNBA(null)}
                    className={`flex flex-row items-center border rounded shadow p-2 gap-2 w-[250px] mx-auto cursor-pointer 
                     transform transition-all duration-300 ease-in-out
-                    ${hoveredIndexF1 === null ? '' : hoveredIndexF1 === index ? 'scale-110 blur-0' : 'scale-90 blur-[5px]'}
+                    ${hoveredIndexNBA === null ? '' : hoveredIndexNBA === index ? 'scale-110 blur-0' : 'scale-90 blur-[2px]'}
                   `}>
                     {imagenPrincipal && ( 
                       <img
@@ -361,15 +379,15 @@ const Login = () => {
               style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">F1</p>
             <div className="flex flex-col gap-4 overflow-visible">
-              {camisetasNBA.map((camiseta, index) => {
+              {camisetasF1.map((camiseta, index) => {
                 const imagenes = camiseta.imagenes || []
-                const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
+                const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 2] : null
 
                 return (
-                  <div key={index} onMouseEnter={() => setHoveredIndexNBA(index)} onMouseLeave={() => setHoveredIndexNBA(null)}  onClick={(e) => {e.stopPropagation(); navigate("/");}}
+                  <div key={index} onMouseEnter={() => setHoveredIndexF1(index)} onMouseLeave={() => setHoveredIndexF1(null)}
                    className={`flex flex-row items-center border rounded shadow p-2 gap-2 w-[250px] mx-auto cursor-pointer 
                     transform transition-all duration-300 ease-in-out
-                    ${hoveredIndexNBA === null ? '' : hoveredIndexNBA === index ? 'scale-110 blur-0' : 'scale-90 blur-[5px]'}
+                    ${hoveredIndexF1 === null ? '' : hoveredIndexF1 === index ? 'scale-110 blur-0' : 'scale-90 blur-[2px]'}
                   `}>
                     {imagenPrincipal && ( 
                       <img
@@ -379,7 +397,7 @@ const Login = () => {
                       />
                     )}
                     <div className="flex flex-col">
-                      <h2>{camiseta.player ? camiseta.player : camiseta.team} {camiseta.año}</h2>
+                      <h2>{camiseta.team} {camiseta.driver ? camiseta.driver : camiseta.año}</h2>
                     </div>
                     
                   </div>

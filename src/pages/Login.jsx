@@ -14,7 +14,6 @@ const Login = () => {
 
   const [loading, setLoading] = useState(true);
 
-
   {/* Auth */}
   const navigate = useNavigate();
   const auth = getAuth();
@@ -48,7 +47,6 @@ const Login = () => {
   const topRef = useRef(null);
   const preguntasRef = useRef(null);
   const [activa, setActiva] = useState(null);
-  const [enPreguntas, setEnPreguntas] = useState(false);
   const preguntas = [
     {
       pregunta: '¿Cuanto tiempo demora en llegar mi pedido?',
@@ -56,7 +54,7 @@ const Login = () => {
     },
     {
       pregunta: '¿Como se mi talla?',
-      respuesta: 'Las tallas son las estandarizadas por el sistema internacional, por lo que puedes consultar la tabla de tallas en cada producto.'
+      respuesta: 'Las tallas son las estandarizadas por el sistema internacional, aún así puedes consultar la tabla de tallas en cada producto.'
     },
     {
       pregunta: '¿Puedo devolver mi pedido?',
@@ -64,14 +62,15 @@ const Login = () => {
     },
     {
       pregunta: '¿Como puedo pagar?',
-      respuesta: 'Aceptamos tarjetas de crédito y débito, PayPal y transferencias bancarias y todo, a travez de portales totalmente seguros y estandarizados. Puedes elegir tu método de pago preferido al finalizar la compra.'
+      respuesta: 'Aceptamos tarjetas de crédito y débito, PayPal y transferencias bancarias. Todo se realiza a travez de portales totalmente seguros y estandarizados. Puedes elegir tu método de pago preferido al finalizar la compra.'
     },
     {
       pregunta: '¿Como puedo saber donde está mi pedido?',
       respuesta: 'Una vez que tu pedido haya sido enviado, recibirás un correo electrónico con un enlace de seguimiento. Puedes usar ese enlace para ver el estado de tu pedido en tiempo real o si lo prefieres, puedes consultar el estado de tu pedido en la sección "Compras" de tu cuenta.'
-    }
+    } 
 
   ]
+
   const togglePregunta = (index) => {
     setActiva(activa === index ? null : index);
   };
@@ -175,7 +174,8 @@ const Login = () => {
   
     fetchCamisetas()
   }, [])
-  
+
+
   const handleScroll = () => {
     if (isAtTop) {
       topRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -184,6 +184,7 @@ const Login = () => {
     }
     setIsAtTop(!isAtTop);
   };
+
   useEffect(() => {
     const handleScrollPosition = () => {
       const scrollY = window.scrollY;
@@ -192,7 +193,6 @@ const Login = () => {
     window.addEventListener("scroll", handleScrollPosition);
     return () => window.removeEventListener("scroll", handleScrollPosition);
   }, []);
-
 
 
   return (
@@ -451,24 +451,21 @@ const Login = () => {
           
         </div>
         <button
-          onClick={handleScroll}
-          type="button"
+          onClick={handleScroll} type="button"
           className={`fixed ${
             isAtTop ? "top-5" : "bottom-5"
           } left-1/2 transform -translate-x-1/2 cursor-pointer z-10 px-6 py-2 overflow-hidden border-2 border-gray-200 rounded-full bg-gray-50 text-gray-800 text-lg font-semibold group shadow-xl
             before:absolute before:w-0 before:h-full before:top-0 before:left-0 before:bg-emerald-500 before:transition-all before:duration-500 before:rounded-full
-            hover:before:w-full hover:text-white`}
-        >
+            hover:before:w-full hover:text-white`}>
           <span className="relative z-10 flex items-center gap-2">
             {isAtTop ? "↑ Volver" : "Explorar ↓"}
           </span>
         </button>
-        <div className="h-screen flex items-center justify-center relative flex-col">
-
+        <div className="min-h-screen flex items-center justify-center relative flex-col">
           {/* Sección de preguntas frecuentes */}
           <div className="py-16">
-            <h1 className="mt-50 text-2xl font-bold text-center mb-6">Preguntas frecuentes</h1>
-            <div ref={preguntasRef} className="max-w-xl mx-auto p-4 space-y-4">
+            <h1 className="pt-20 text-2xl font-bold text-center mb-6">Preguntas frecuentes</h1>
+            <div ref={preguntasRef} className="max-w-[400px] mx-auto p-4 space-y-4">
               {preguntas.map((item, index) => (
                 <div key={index} className="border rounded-lg shadow-sm">
                   <button
@@ -489,7 +486,13 @@ const Login = () => {
           </div>
         </div>
       </main>
-      <footer className=""> 
+      <footer> 
+        <div className="h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent"></div>
+        <div className="flex items-center justify-center gap-4 p-4 bg-[#E8E8E8]">
+          <p className="text-sm text-gray-600">© 2025 Jerseys Colombia</p>
+          <a onClick={() => navigate("/politicas")} className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">Políticas</a>
+          <a onClick={() => navigate("/politicas")} className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">Términos de servicio</a>
+        </div>
       </footer>
     </div>
   );

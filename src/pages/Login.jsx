@@ -453,7 +453,7 @@ const Login = () => {
         <button
           onClick={handleScroll} type="button"
           className={`fixed ${
-            isAtTop ? "top-5" : "bottom-5"
+            isAtTop ? "opacity-0" : "bottom-5"
           } left-1/2 transform -translate-x-1/2 cursor-pointer z-10 px-6 py-2 overflow-hidden border-2 border-gray-200 rounded-full bg-gray-50 text-gray-800 text-lg font-semibold group shadow-xl
             before:absolute before:w-0 before:h-full before:top-0 before:left-0 before:bg-emerald-500 before:transition-all before:duration-500 before:rounded-full
             hover:before:w-full hover:text-white`}>

@@ -1,11 +1,11 @@
 import React from 'react'
 
 
-const Futbol = props => {
+const Futbol = () => {
   return (
     <div>Futbol</div>
   )
 }
 
 
-export default Futbol
+export default Futbol;

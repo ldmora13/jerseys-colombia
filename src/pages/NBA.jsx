@@ -6,4 +6,4 @@ const NBA = () => {
   )
 }
 
-export default NBA
+export default NBA;

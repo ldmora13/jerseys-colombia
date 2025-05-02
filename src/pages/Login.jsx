@@ -486,12 +486,11 @@ const Login = () => {
           </div>
         </div>
       </main>
-      <footer> 
+      <footer className=""> 
         <div className="h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent"></div>
-        <div className="flex items-center justify-center gap-4 p-4 bg-[#E8E8E8]">
-          <p className="text-sm text-gray-600">© 2025 Jerseys Colombia</p>
-          <a onClick={() => navigate("/politicas")} className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">Políticas</a>
-          <a onClick={() => navigate("/politicas")} className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">Términos de servicio</a>
+        <div className="bg-[#252525] flex items-center justify-center gap-4 p-4 text-white">
+          <p className="text-sm ">© 2025 Jerseys Colombia</p>
+          <a onClick={() => navigate("/politicas")} className="cursor-pointer text-sm text-white hover:text-gray-200">Políticas</a>
         </div>
       </footer>
     </div>

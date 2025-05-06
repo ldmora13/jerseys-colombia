@@ -14,7 +14,6 @@ const Policies = () => {
                 <img src={logo} onClick={() => navigate("/")} alt="logo" className="h-[40px]"/>
               </a>
             </div>
-
           <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
           </div>
         </header>

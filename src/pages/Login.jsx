@@ -149,8 +149,8 @@ const Login = () => {
         </div>
       )}
       <Header/>
-      <main className="bg-[#E8E8E8] flex items-center justify-start h-full w-full p-[20px] flex-col">
-        <div className="mt-2 flex flex-row justify-center items-start gap-10 w-full">
+      <main className="bg-[#E8E8E8] flex items-center md:justify-start h-full w-full p-[20px] flex-col mt-20">
+        <div className="mt-2 flex md:flex-row flex-col justify-center items-center gap-10 w-full">
 
           {/* Contenedor 1 */}
           <div onClick={() => navigate("/futbol")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]"
@@ -184,7 +184,7 @@ const Login = () => {
             </div>
           </div>
           {/* Contenedor 2 */}
-          <div className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
+          <div onClick={() => navigate("/nba")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
               style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">NBA</p>
             <div className="flex flex-col gap-4 overflow-visible">
@@ -216,7 +216,7 @@ const Login = () => {
           </div>
 
           {/* Contenedor 3 */}
-          <div className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
+          <div onClick={() => navigate("/f1")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
               style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">F1</p>
             <div className="flex flex-col gap-4 overflow-visible">
@@ -250,7 +250,7 @@ const Login = () => {
         </div>
         <button
           onClick={handleScroll} type="button"
-          className={`fixed ${
+          className={`fixed hidden md:flex ${
             isAtTop ? "opacity-0" : "bottom-5"
           } left-1/2 transform -translate-x-1/2 cursor-pointer z-10 px-6 py-2 overflow-hidden border-2 border-gray-200 rounded-full bg-gray-50 text-gray-800 text-lg font-semibold group shadow-xl
             before:absolute before:w-0 before:h-full before:top-0 before:left-0 before:bg-emerald-500 before:transition-all before:duration-500 before:rounded-full
@@ -261,9 +261,9 @@ const Login = () => {
         </button>
         <div className="min-h-screen flex items-center justify-center relative flex-col">
           {/* Sección de preguntas frecuentes */}
-          <div className="py-16">
+          <div ref={preguntasRef} className="py-16">
             <h1 className="pt-20 text-2xl font-bold text-center mb-6">Preguntas frecuentes</h1>
-            <div ref={preguntasRef} className="max-w-[400px] mx-auto p-4 space-y-4">
+            <div  className="max-w-[400px] mx-auto p-4 space-y-4">
               {preguntas.map((item, index) => (
                 <div key={index} className="border rounded-lg shadow-sm">
                   <button

@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Alert from '@mui/material/Alert';
+import { AlertTitle } from "@mui/material";
 import logo from "../assets/football-jersey.svg"
 import googlelogo from "../assets/google.svg"
 
@@ -16,40 +18,79 @@ const Register = () => {
     const [lastname, setLastname] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [alert, setAlert] = useState({
+        show: false,
+        message: "",
+        severity: "success",
+    });
   
     const handleRegister = async (e) => {
-      e.preventDefault();
-  
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-  
-        await updateProfile(user, {
-          displayName: `${nombre} ${apellido}`,
-        });
-  
-        console.log("Usuario registrado:", user);
-        navigate("/main");
-      } catch (error) {
-        console.error("Error en el registro:", error.message);
-      }
-    };
+        e.preventDefault();
+        if (!email || !password || !name || !lastname) {
+          setAlert({
+            show: true,
+            message: "Todos los campos son obligatorios.",
+            severity: "error",
+          });
+          return;
+        }
+    
+        if (password.length < 6) {
+          setAlert({
+            show: true,
+            message: "La contraseña debe tener al menos 6 caracteres.",
+            severity: "error",
+          });
+          return;
+        }
+    
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          const user = userCredential.user;
+    
+          await updateProfile(user, {
+            displayName: `${name} ${lastname}`,
+          });
+    
+          console.log("Usuario registrado:", user);
+          navigate("/login");
+        } catch (error) {
+          if (error.code === "auth/email-already-in-use") {
+            setAlert({
+              show: true,
+              message: "El correo ya está en uso. Por favor, usa otro.",
+              severity: "error",
+            });
+          } else {
+            setAlert({
+              show: true,
+              message: "Error en el registro. Inténtalo de nuevo.",
+              severity: "error",
+            });
+          }
+        }
+      };
 
     const handleGoogleLogin = async () => {
         const provider = new GoogleAuthProvider();
         try {
           const result = await signInWithPopup(auth, provider);
           const user = result.user;
-          console.log("Login con Google exitoso", user.displayName);
-          navigate("/main");
+          navigate("/login")
         } catch (error) {
-          console.error("Error con Google login:", error);
+          console.error(error);
         }
       };
     
     return (
         <div className="h-screen w-screen flex justify-center items-center">
-            <div id="card" className="flex justify-center items-center rounded-[25px] w-[500px] h-[600px]" style={{backgroundImage: 'linear-gradient(163deg, #C9FCD4 0%, #AFFCBE 100%)',}}>
+            {alert.show && (
+                <Alert severity={alert.severity} variant="filled" className="absolute top-5 left-1/2 transform -translate-x-1/2 w-[300px] z-50" onClose={() => setAlert({ ...alert, show: false })}>
+                    <AlertTitle>{alert.severity === "error" ? "Error" : "Éxito"}</AlertTitle>
+                    {alert.message}
+                </Alert>
+            )}
+            <div id="card" className="flex justify-center items-center rounded-[25px] w-[250px] h-[300px] md:w-[500px] md:h-[600px] " style={{backgroundImage: 'linear-gradient(163deg, #C9FCD4 0%, #AFFCBE 100%)',}}>
                 <div id="card2" className="rounded-0 w-[500px] h-[600px] transition-all duration-200 hover:scale-[0.98] hover:rouded-[30px]">
                 
                     <form onSubmit={handleRegister} className="flex flex-col gap-6 p-6 bg-[#A4CEAC] rounded-[25px] h-full w-full">
@@ -96,7 +137,7 @@ const Register = () => {
                                 </button>
                             </div>
                             <div className="flex justify-center">
-                                <button type="button" onClick={() => navigate("/", { state: { showDropdown: true } })} className="flex items-center justify-center text-center w-[300px] p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE]">
+                                <button type="button" onClick={() => navigate("/", { state: { showDropdown: true } })} className="flex items-center justify-center text-center w-[300px] p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black">
                                     ¿Ya tienes cuenta?
                                 </button>
                             </div>

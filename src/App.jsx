@@ -8,6 +8,7 @@ import Policies from './pages/Policies';
 import Futbol from './pages/Futbol';
 import NBA from './pages/NBA';
 import F1 from './pages/F1';
+import Searchs from './pages/Searchs';
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
         <Route path='/futbol' element={<Futbol />} />
         <Route path='/nba' element={<NBA />} />
         <Route path='/f1' element={<F1 />} />
+        <Route path='/searchs' element={<Searchs />} />
       </Routes>
   );
 }

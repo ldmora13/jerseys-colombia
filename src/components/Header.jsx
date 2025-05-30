@@ -1,6 +1,8 @@
 import React, {useRef, useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import Alert from '@mui/material/Alert';
+import { AlertTitle } from "@mui/material";
 import logo from "../assets/football-jersey.svg";
 import googlelogo from "../assets/google.svg";
 
@@ -10,6 +12,11 @@ const Header = () => {
     const navigate = useNavigate();
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
+    const [alert, setAlert] = useState({
+        show: false,
+        message: "",
+        severity: "success",
+    });
 
     {/* Login and reset password */}
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,19 +31,40 @@ const Header = () => {
     const buttonRef = useRef(null);
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
+    {/* Menú hamburger */}
     const [menuOpen, setMenuOpen] = useState(false);
     const navRef = useRef(null);
     const buttonNav = useRef(null);
 
+    const [query, setQuery] = useState("");
+
+
     const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (!email || !password) {
+          setAlert({
+            show: true,
+            message: "Todos los campos son obligatorios.",
+            severity: "error",
+          });
+          return;
+        }
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log("Login exitoso:", user);
+        setAlert({
+            show: true,
+            message: "Inicio de sesión exitoso.",
+            severity: "success",
+        });
+
     } catch (error) {
-        console.error("Error al iniciar sesión:", error.message);
-        setError("Correo o contraseña incorrectos.");
+        setAlert({
+              show: true,
+              message: "Error al iniciar sesión. Verifica tus credenciales.",
+              severity: "error",
+            });
     }
     };
 
@@ -45,9 +73,8 @@ const Header = () => {
     try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-        console.log("Usuario logueado con Google:", user);
     } catch (error) {
-        console.error("Error en login con Google", error);
+        console.error(error);
     }
     };
 
@@ -82,6 +109,14 @@ const Header = () => {
 
     return () => unsubscribe();
     }, []);
+
+    const handleQuery = (e) => {
+        if (query.trim() !== "") {
+            navigate(`/searchs/${query}`);
+        } else {
+            console.log("Error en busqueda");
+        }
+    }
     
 
   return (
@@ -135,9 +170,14 @@ const Header = () => {
                             </ul>
 
                             {/* Barra de búsqueda */}
-                            <div className="w-full px-4">
-                                <input type="text" placeholder="Buscar"
-                                    className="w-full h-[45px] text-black px-4 rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"/>
+                            <div className="w-full px-4 flex-row">
+                                <form className='flex' onSubmit={e => {e.preventDefault(); handleQuery(); }}>
+                                    <input type="text" placeholder="Buscar" value={query} onChange={(e) => setQuery(e.target.value)}
+                                        className="w-[50%] h-[45px] text-black px-4 rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"/>
+                                    <button type="submit" className="h-[45px] w-[50%] rounded-[13px] bg-[#3B92BA] text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
+                                        Buscar
+                                    </button>
+                                </form>
                             </div>
 
                             {/* Botón de login */}
@@ -160,6 +200,13 @@ const Header = () => {
                                             onClick={() => setDropdownVisible(false)}>
                                         </div>
                                         <div ref={dropdownRef} className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[400px] rounded-xl p-4 z-[999] transition-all">
+                                            {/* Alert*/}
+                                            {alert.show && (
+                                                <Alert className="mb-4" severity={alert.severity} onClose={() => setAlert({ ...alert, show: false })}>
+                                                    <AlertTitle>{alert.severity === "error" ? "Error" : "Éxito"}</AlertTitle>
+                                                    {alert.message}
+                                                </Alert>
+                                            )}
                                                 {isAuthenticated ? (
                                                 <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)] mx-auto" style={{ backgroundImage: "linear-gradient(163deg, #C9FCD4 0%, #C9FCD4 100%)" }}>
                                                     <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px] ">
@@ -270,13 +317,15 @@ const Header = () => {
                 {/* Search bar */}
                 <div className={`md:flex hidden flex-col md:flex-row md:items-center items-center gap-4 md:gap-6 w-full md:w-auto mt-4 md:mt-0  `}>
                     <div className='w-full md:w-[300px]'>
-                        <input
-                            type="text"
-                            placeholder="Buscar"
-                            name="text"
-                            id="search"
-                            className="h-[45px] px-4 rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"
-                        />
+                        <form className='hidden md:flex' onSubmit={e => {e.preventDefault(); handleQuery(); }}>
+                            <input
+                                type='text'
+                                placeholder="Buscar"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                className="h-[45px] w-full px-4 rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"
+                            />
+                        </form>    
                     </div>      
                 </div>
                 {/* Login button + dropdown */}
@@ -299,6 +348,13 @@ const Header = () => {
                                 onClick={() => setDropdownVisible(false)}>
                             </div>
                             <div ref={dropdownRef} className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[400px] rounded-xl p-4 z-[999] transition-all">
+                                    {/* Alert*/}
+                                    {alert.show && (
+                                        <Alert className="mb-4" severity={alert.severity}>
+                                            <AlertTitle>{alert.severity === "error" ? "Error" : "Éxito"}</AlertTitle>
+                                            {alert.message}
+                                        </Alert>
+                                    )}
                                     {isAuthenticated ? (
                                     <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)] mx-auto" style={{ backgroundImage: "linear-gradient(163deg, #C9FCD4 0%, #C9FCD4 100%)" }}>
                                         <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px] ">

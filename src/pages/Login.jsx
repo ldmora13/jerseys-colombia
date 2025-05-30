@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate, useLocation} from "react-router-dom";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.jsx"
 import Header from "../components/Header.jsx";
 import {supabase} from "../lib/supabaseClient"
@@ -15,21 +14,6 @@ const Login = () => {
 
   {/* Auth */}
   const navigate = useNavigate();
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
-
-  {/* Login and reset password */}
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userNameFull, setUserNameFull] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [userName, setUserName] = useState("");
-
-  {/* Dropdown */}
-  const dropdownRef = useRef(null);
-  const buttonRef = useRef(null);
-  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   {/* Supabase */}
   const [camisetasFutbol, setCamisetasFutbol] = useState([])
@@ -110,7 +94,7 @@ const Login = () => {
       } catch (err) {
         console.error('Error al cargar camisetas:', err)
       } finally {
-        // Espera opcional antes de quitar el loader
+        
         setTimeout(() => {
           setLoading(false)
         }, 1500)
@@ -148,7 +132,11 @@ const Login = () => {
           <Loader />
         </div>
       )}
+
+      {/* Header */}
       <Header/>
+
+
       <main className="bg-[#E8E8E8] flex items-center md:justify-start h-full w-full p-[20px] flex-col mt-20">
         <div className="mt-2 flex md:flex-row flex-col justify-center items-center gap-10 w-full">
 

@@ -51,8 +51,6 @@ const Register = () => {
           await updateProfile(user, {
             displayName: `${name} ${lastname}`,
           });
-    
-          console.log("Usuario registrado:", user);
           navigate("/login");
         } catch (error) {
           if (error.code === "auth/email-already-in-use") {

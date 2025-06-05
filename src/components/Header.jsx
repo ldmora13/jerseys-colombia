@@ -144,26 +144,26 @@ const Header = () => {
                         <div ref={navRef} onClick={(e) => e.stopPropagation()}
                             className="absolute top-0 left-0 w-full h-screen z-[999] flex flex-col items-center text-white gap-6 pt-20">
                             
-                            <button onClick={() => setMenuOpen(false)} className="absolute top-4 right-4 bg-red-500 rounded-[5px] p-2">
+                            <button onClick={() => setMenuOpen(false)} className="absolute top-4 right-4 h-[45px] px-6 rounded-[13px] bg-[#ffffff] text-black font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
                                 Regresar
                             </button>
                             {/* Lista de enlaces */}
-                            <ul className="flex flex-col items-center gap-4">
+                            <ul className="flex flex-col items-center gap-3 bg-white/80 rounded-xl shadow-md px-6 py-4 w-full max-w-xs mx-auto mb-4">
                                 <li>
                                     <a onClick={() => navigate("/futbol")}
-                                        className="cursor-pointer font-medium py-2 px-3 rounded-sm transition-all duration-300 ease-in-out hover:bg-[#00ff2a] active:text-[#4a6cf7] active:bg-green-100">
+                                        className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:bg-[#00ff2a]/80 hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
                                         Fútbol
                                     </a>
                                 </li>
                                 <li>
                                     <a onClick={() => navigate("/nba")}
-                                        className="cursor-pointer font-medium py-2 px-3 rounded-sm transition-all duration-300 ease-in-out hover:bg-[#EE6730] active:text-[#4a6cf7] active:bg-red-100">
+                                        className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:bg-[#EE6730]/80 hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
                                         Basketball
                                     </a>
                                 </li>
                                 <li>
                                     <a onClick={() => navigate("/f1")} 
-                                        className="cursor-pointer font-medium py-2 px-3 rounded-sm transition-all duration-300 ease-in-out hover:text-white hover:bg-black active:text-[#4a6cf7] active:bg-gray-200">
+                                        className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:bg-black/80 hover:text-white hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
                                         Fórmula 1
                                     </a>
                                 </li>
@@ -171,10 +171,10 @@ const Header = () => {
 
                             {/* Barra de búsqueda */}
                             <div className="w-full px-4 flex-row">
-                                <form className='flex' onSubmit={e => {e.preventDefault(); handleQuery(); }}>
+                                <form className='flex items-center gap-2' onSubmit={e => {e.preventDefault(); handleQuery(); }}>
                                     <input type="text" placeholder="Buscar" value={query} onChange={(e) => setQuery(e.target.value)}
-                                        className="w-[50%] h-[45px] text-black px-4 rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"/>
-                                    <button type="submit" className="h-[45px] w-[50%] rounded-[13px] bg-[#3B92BA] text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
+                                        className="h-[45px] flex-1 px-4 text-black rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"/>
+                                    <button type="submit" className="h-[45px] px-6 rounded-[13px] bg-[#2f3545] text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
                                         Buscar
                                     </button>
                                 </form>
@@ -185,7 +185,7 @@ const Header = () => {
                                 <div ref={buttonRef} onClick={() => setDropdownVisible(!dropdownVisible)}
                                     className="w-full h-[45px] md:w-[131px] rounded-[15px] cursor-pointer">
                                     {/* Dynamic Button */}
-                                    <div className="w-full h-[43px] rounded-[13px] bg-[#3B92BA] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
+                                    <div className="w-full h-[43px] rounded-[13px] bg-[#2f3545] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
                                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-[24px] h-[24px] fill-white">
                                             <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
                                         </svg>
@@ -196,7 +196,7 @@ const Header = () => {
                                 {/* Dropdown */}
                                 {dropdownVisible && (
                                     <>
-                                        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[998]" 
+                                        <div className="fixed inset-0 bg-black/30 z-[998]" 
                                             onClick={() => setDropdownVisible(false)}>
                                         </div>
                                         <div ref={dropdownRef} className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[400px] rounded-xl p-4 z-[999] transition-all">
@@ -333,7 +333,7 @@ const Header = () => {
                     <div ref={buttonRef} onClick={() => setDropdownVisible(!dropdownVisible)}
                         className="w-full h-[45px] md:w-[131px] rounded-[15px] cursor-pointer">
                         {/* Dynamic Button */}
-                        <div className="w-full h-[43px] rounded-[13px] bg-[#3B92BA] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
+                        <div className="w-full h-[43px] rounded-[13px] bg-[#2f3545] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
                             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-[24px] h-[24px] fill-white">
                                 <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
                             </svg>

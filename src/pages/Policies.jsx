@@ -4,7 +4,13 @@ import { useNavigate } from 'react-router-dom'
 
 const Policies = () => {
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const navigate = useNavigate();
+
+  
   return (
     <div>
        <header className="p-4 relative w-full z-[1000] top-0 left-0 h-[70px] border-b-[2px] border-transparent">

@@ -132,7 +132,7 @@ const Header = () => {
 
                 <nav className="relative">
                     {/* Botón hamburguesa*/}
-                    <button ref={buttonNav} className="md:hidden block" onClick={() => setMenuOpen(!menuOpen)}>
+                    <button ref={buttonNav} aria-label='Abrir menú' className="md:hidden block" onClick={() => setMenuOpen(!menuOpen)}>
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -337,7 +337,7 @@ const Header = () => {
                             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-[24px] h-[24px] fill-white">
                                 <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
                             </svg>
-                            <p>{isAuthenticated ? userName : "Login"}</p>
+                            <p data-testid="login-btn">{isAuthenticated ? userName : "Login"}</p>
                         </div>
                     </div>
 
@@ -412,7 +412,7 @@ const Header = () => {
 
                                         {/* Buttons */}
                                         <div className="flex flex-col sm:flex-row sm:justify-around gap-3 text-white">
-                                            <button onClick={handleLogin} className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black transition">
+                                            <button data-testid="submit-login" onClick={handleLogin} className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black transition">
                                             Iniciar sesión
                                             </button>
                                             <button type="button" onClick={handleGoogleLogin} id="btn-google" className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black flex items-center justify-center">
@@ -436,7 +436,7 @@ const Header = () => {
                     )}
                 </div>
             </div>
-            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
+            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#2f3545] to-transparent">
             </div>
         </header>
     </div>

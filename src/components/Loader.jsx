@@ -6,7 +6,7 @@ const Loader = () => {
     <StyledWrapper>
       <div className='loader-container'>
         <div className="loader">
-          <svg viewBox="0 0 80 80">
+          <svg role='img' viewBox="0 0 80 80">
             <circle r={32} cy={40} cx={40} id="test" />
           </svg>
         </div>

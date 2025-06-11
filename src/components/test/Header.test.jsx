@@ -22,7 +22,7 @@ const customRender = (ui) => render(<BrowserRouter>{ui}</BrowserRouter>);
 
 describe('Header component', () => {
 
-  it('muestra el formulario de login en escritorio', async () => {
+  it('should display the login form on the desktop', async () => {
     customRender(<Header />);
 
     const loginBtn = screen.getByTestId('login-btn');
@@ -35,7 +35,7 @@ describe('Header component', () => {
     expect(passwordInput).toBeInTheDocument();
   });
 
-  it('simula inicio de sesión con email y contraseña', async () => {
+  it('should simulate login with email and password', async () => {
     customRender(<Header />);
     const loginBtn = screen.getByTestId('login-btn');
     fireEvent.click(loginBtn);
@@ -52,7 +52,7 @@ describe('Header component', () => {
     );
   });
 
-  it('muestra error si los campos están vacíos', async () => {
+  it('should show error if fields are empty', async () => {
     customRender(<Header />);
     const loginBtn = screen.getByTestId('login-btn');
     fireEvent.click(loginBtn);

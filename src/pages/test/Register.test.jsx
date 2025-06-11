@@ -14,7 +14,6 @@ jest.mock("firebase/auth", () => ({
     signInWithPopup: jest.fn(),
 }));
 
-// Mock de imágenes
 jest.mock("../assets/football-jersey.svg", () => "logo.svg");
 jest.mock("../assets/google.svg", () => "googlelogo.svg");
 
@@ -27,7 +26,7 @@ describe("Register", () => {
         jest.clearAllMocks();
     });
 
-    it("renderiza el formulario de registro", () => {
+    it("should render the registration form", () => {
         renderWithRouter(<Register />);
         expect(screen.getByPlaceholderText(/Nombres/i)).toBeInTheDocument();
         expect(screen.getByPlaceholderText(/Apellido/i)).toBeInTheDocument();
@@ -36,7 +35,7 @@ describe("Register", () => {
         expect(screen.getByText(/Registrarse/i)).toBeInTheDocument();
     });
 
-    it("muestra alerta si faltan campos", async () => {
+    it("should show alert if fields are missing", async () => {
         renderWithRouter(<Register />);
         fireEvent.click(screen.getByText(/Registrarse/i));
         await waitFor(() => {
@@ -44,7 +43,7 @@ describe("Register", () => {
         });
     });
 
-    it("muestra alerta si el correo ya está en uso", async () => {
+    it("should show alert if the email is already in use", async () => {
         createUserWithEmailAndPassword.mockRejectedValue({ code: "auth/email-already-in-use" });
 
         renderWithRouter(<Register />);
@@ -59,7 +58,7 @@ describe("Register", () => {
     });
 
 
-    it("permite hacer login con Google", async () => {
+    it("should allow login with Google", async () => {
         signInWithPopup.mockResolvedValue({ user: { uid: "123" } });
 
         renderWithRouter(<Register />);

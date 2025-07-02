@@ -64,13 +64,13 @@ const Login = () => {
       try {
         const [futbolRes, nbaRes, f1Res] = await Promise.all([
           supabase
-            .from('selecciones')
-            .select('nombre, imagenes, pais, año, fecha_indexacion')
-            .order('año', { ascending: true })
+            .from('futbol')
+            .select('name, img, country, year, index')
+            .order('year', { ascending: true })
             .limit(3),
   
           supabase
-            .from('NBA-1')
+            .from('NBA')
             .select('nombre, imagenes, team, año, fecha_indexacion, player')
             .order('año', { ascending: true })
             .limit(3),
@@ -146,7 +146,7 @@ const Login = () => {
             <p className="-mt-4 mb-2 text-center text-[16px] font-semibold cursor-pointer">Fútbol</p>
             <div className="flex flex-col gap-4 overflow-visible">
               {camisetasFutbol.map((camiseta, index) => {
-                const imagenes = camiseta.imagenes || []
+                const imagenes = camiseta.img || []
                 const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
 
                 return (
@@ -158,12 +158,12 @@ const Login = () => {
                     {imagenPrincipal && (
                       <img
                         src={imagenPrincipal}
-                        alt={camiseta.nombre}
+                        alt={camiseta.name}
                         className="w-[80px] h-[80px] object-cover rounded"
                       />
                     )}
                     <div className="mx-2 flex flex-col">
-                      <h2>{camiseta.pais} {camiseta.año}</h2>
+                      <h2>{camiseta.country} {camiseta.year}</h2>
                     </div>
                     
                   </div>
@@ -247,7 +247,7 @@ const Login = () => {
             {isAtTop ? "↑ Volver" : "Explorar ↓"}
           </span>
         </button>
-        <div className="min-h-screen flex items-center justify-center relative flex-col">
+        <div className="mt-30 min-h-screen flex items-center justify-center relative flex-col">
           {/* Sección de preguntas frecuentes */}
           <div ref={preguntasRef} className="py-16">
             <h1 className="pt-20 text-2xl font-bold text-center mb-6">Preguntas frecuentes</h1>
@@ -273,7 +273,7 @@ const Login = () => {
         </div>
       </main>
       <footer className=""> 
-        <div className="h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent"></div>
+        <div className="h-[2px] bg-gradient-to-r from-transparent via-[#2f3545] to-transparent"></div>
         <div className="bg-[#252525] flex items-center justify-center gap-4 p-4 text-white">
           <p className="text-sm ">© 2025 Jerseys Colombia</p>
           <a onClick={() => navigate("/politicas")} className="cursor-pointer text-sm text-white hover:text-gray-200">Políticas</a>

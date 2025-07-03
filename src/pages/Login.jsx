@@ -71,14 +71,14 @@ const Login = () => {
   
           supabase
             .from('NBA')
-            .select('nombre, imagenes, team, año, fecha_indexacion, player')
-            .order('año', { ascending: true })
+            .select('name, img, team, year, index, player')
+            .order('year', { ascending: true })
             .limit(3),
   
           supabase
             .from('F1')
-            .select('nombre, imagenes, team, año, fecha_indexacion, driver')
-            .order('año', { ascending: true })
+            .select('name, img, team, year, index, driver')
+            .order('year', { ascending: true })
             .limit(3)
         ])
   
@@ -177,7 +177,7 @@ const Login = () => {
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">NBA</p>
             <div className="flex flex-col gap-4 overflow-visible">
               {camisetasNBA.map((camiseta, index) => {
-                const imagenes = camiseta.imagenes || []
+                const imagenes = camiseta.img || []
                 const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
 
                 return (
@@ -189,12 +189,12 @@ const Login = () => {
                     {imagenPrincipal && ( 
                       <img
                         src={imagenPrincipal}
-                        alt={camiseta.nombre}
+                        alt={camiseta.name}
                         className="mx-2 w-[80px] h-[80px] object-cover rounded"
                       />
                     )}
                     <div className="flex flex-col">
-                      <h2>{camiseta.player ? camiseta.player : camiseta.team} {camiseta.año}</h2>
+                      <h2>{camiseta.player ? camiseta.player : camiseta.team} {camiseta.year}</h2>
                     </div>
                     
                   </div>
@@ -209,7 +209,7 @@ const Login = () => {
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">F1</p>
             <div className="flex flex-col gap-4 overflow-visible">
               {camisetasF1.map((camiseta, index) => {
-                const imagenes = camiseta.imagenes || []
+                const imagenes = camiseta.img || []
                 const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
 
                 return (
@@ -221,12 +221,12 @@ const Login = () => {
                     {imagenPrincipal && ( 
                       <img
                         src={imagenPrincipal}
-                        alt={camiseta.nombre}
+                        alt={camiseta.name}
                         className="w-[80px] h-[80px] object-contain rounded"
                       />
                     )}
                     <div className="flex flex-col">
-                      <h2>{camiseta.team} {camiseta.driver ? camiseta.driver : camiseta.año}</h2>
+                      <h2>{camiseta.team} {camiseta.driver ? camiseta.driver : camiseta.year}</h2>
                     </div>
                     
                   </div>

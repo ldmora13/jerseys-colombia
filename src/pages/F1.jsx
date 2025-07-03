@@ -18,9 +18,9 @@ const F1 = () => {
       try {
         const f1Res = await supabase
           .from('F1')
-          .select('nombre, imagenes, team, año, fecha_indexacion, driver')
-          .order('año', { ascending: true })
-          .limit(25);
+          .select('name, img, team, year, index, driver')
+          .order('year', { ascending: true })
+          .limit(100);
 
         if (f1Res.error) {
           console.error('Error en F1:', f1Res.error);
@@ -39,7 +39,7 @@ const F1 = () => {
   }, []);
 
   const camisetasFiltradas = camisetasF1.filter((camiseta) => {
-  const texto = `${camiseta.nombre} ${camiseta.team} ${camiseta.año} ${camiseta.driver}`.toLowerCase();
+  const texto = `${camiseta.name} ${camiseta.team} ${camiseta.year} ${camiseta.driver}`.toLowerCase();
   return texto.includes(filtro.toLowerCase());
   });
 
@@ -53,7 +53,7 @@ const F1 = () => {
         <h3 className="mt-6 mb-2 font-bold text-lg">Filtrar</h3>
         <input
           type="text"
-          placeholder="Buscar por nombre, año..."
+          placeholder="Buscar"
           value={filtro}
           onChange={e => setFiltro(e.target.value)}
           className="rounded p-2 w-[80%] border mb-4"
@@ -72,7 +72,7 @@ const F1 = () => {
         <Header />
         <main className="bg-[#E8E8E8] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1 items-start mt-15 justify-center min-h-screen w-full ml-[50px] p-[20px]">
           {camisetasFiltradas.map((camiseta, index) => {
-            const imagenes = camiseta.imagenes || [];
+            const imagenes = camiseta.img || [];
             const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null;
 
             return (
@@ -84,12 +84,12 @@ const F1 = () => {
                 {imagenPrincipal && (
                   <img
                     src={imagenPrincipal}
-                    alt={camiseta.nombre}
+                    alt={camiseta.name}
                     className="w-[200px] object-contain rounded mb-2"
                   />
                 )}
                 <div className="w-full flex flex-col items-center">
-                  <h2 className="font-bold text-center">{camiseta.team} {camiseta.driver ? camiseta.driver : camiseta.año}</h2>
+                  <h2 className="font-bold text-center">{camiseta.team} {camiseta.driver ? camiseta.driver : camiseta.year}</h2>
                 </div>
               </div>
             );

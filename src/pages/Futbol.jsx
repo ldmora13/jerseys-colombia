@@ -20,7 +20,13 @@ const Futbol = () => {
       )}
       <Header />
       <main className="bg-[#E8E8E8] flex items-center justify-start h-full w-full p-[20px] flex-col">
-        
+        <div className=''>
+          <h1>Jerseys de Fútbol</h1>
+          <div>
+            <div></div>
+            
+          </div>
+        </div>
       </main>
 
     </div>

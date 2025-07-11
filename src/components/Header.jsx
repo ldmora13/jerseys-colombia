@@ -54,7 +54,7 @@ const Header = () => {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         setAlert({
-            show: true,
+            show: false,
             message: "Inicio de sesión exitoso.",
             severity: "success",
         });
@@ -78,20 +78,33 @@ const Header = () => {
     }
     };
 
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (
+useEffect(() => {
+    function handleClickOutside(event) {
+        if (
             dropdownRef.current &&
             !dropdownRef.current.contains(event.target) &&
             !buttonRef.current.contains(event.target)
-            ) {
+        ) {
             setDropdownVisible(false);
-            }
         }
+    }
 
-        document.addEventListener("click", handleClickOutside);
-        return () => document.removeEventListener("click", handleClickOutside);
-        }, [setDropdownVisible]);
+    document.addEventListener("click", handleClickOutside);
+
+    if (dropdownVisible) {
+        document.body.classList.add('overflow-hidden');
+        document.documentElement.classList.add('overflow-hidden');
+    } else {
+        document.body.classList.remove('overflow-hidden');
+        document.documentElement.classList.remove('overflow-hidden');
+    }
+
+    return () => {
+        document.removeEventListener("click", handleClickOutside);
+        document.body.classList.remove('overflow-hidden');
+        document.documentElement.classList.remove('overflow-hidden');
+    };
+}, [dropdownVisible, setDropdownVisible]);
 
 
     useEffect(() => {
@@ -121,7 +134,7 @@ const Header = () => {
 
   return (
     <div>
-        <header className="bg-[#E8E8E8] p-4 w-full z-[1000] top-0 left-0 h-[70px] border-b-[2px] border-transparent fixed">
+        <header className="bg-[#E8E8E8] p-4 w-full z-[999] top-0 left-0 h-[70px] border-b-[2px] border-transparent fixed">
             <div className="max-w-[1200px] mx-auto px-5 sm:-mt-1.5 flex items-center flex-wrap justify-between md:flex-nowrap">
                 {/* Logo */}
                 <div className="flex items-center">
@@ -202,37 +215,35 @@ const Header = () => {
                                         <div ref={dropdownRef} className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[400px] rounded-xl p-4 z-[999] transition-all">
                                             {/* Alert*/}
                                             {alert.show && (
-                                                <Alert className="mb-4" severity={alert.severity} onClose={() => setAlert({ ...alert, show: false })}>
+                                                <Alert className="fixed rounded-[25px] z-[999]" severity={alert.severity} onClose={() => setAlert({ ...alert, show: false })}>
                                                     <AlertTitle>{alert.severity === "error" ? "Error" : "Éxito"}</AlertTitle>
                                                     {alert.message}
                                                 </Alert>
                                             )}
                                                 {isAuthenticated ? (
-                                                <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)] mx-auto" style={{ backgroundImage: "linear-gradient(163deg, #C9FCD4 0%, #C9FCD4 100%)" }}>
+                                                <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)] mx-auto" style={{ backgroundImage: "linear-gradient(163deg, ##bebebe 0%, #bebebe 100%)" }}>
                                                     <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px] ">
-                                                        <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-[#a4ceac] rounded-[25px]">
+                                                        <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-[#e0e0e0] rounded-[25px]">
                                                         <div className="flex flex-col gap-3 sm:gap-4 items-center justify-center">
                                                             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
-                                                                className="w-[24px] sm:w-[26px] md:w-[27px] h-[24px] sm:h-[26px] md:h-[27px] fill-white">
+                                                                className="w-[24px] sm:w-[26px] md:w-[27px] h-[24px] sm:h-[26px] md:h-[27px] fill-black">
                                                                 <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
                                                             </svg>
-                                                            <p className="text-white text-[18px] sm:text-[20px] md:text-[22px] ">{userNameFull}</p>
+                                                            <p className="text-black text-[18px] sm:text-[20px] md:text-[22px] ">{userNameFull}</p>
                                                         </div>
-                                                        <div className="flex flex-col">
-                                                            <button onClick={() => navigate("/profile")} className="bg-[#252525] text-center p-2 mb-3 rounded-md  text-white hover:bg-[#AFFCBE] hover:text-black">
+                                                        <div className="flex flex-col text-white">
+                                                            <button onClick={() => navigate("/profile")} className="text-center p-2 mb-3 rounded-md bg-[#252525]  hover:bg-black">
                                                                 Perfil
                                                             </button>
-                                                            <button className="p-2 mb-3 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black">
+                                                            <button className="p-2 mb-3 rounded-md bg-[#252525] hover:bg-black">
                                                                 Compras
                                                             </button>
-                                                            <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
-                                                            </div>
-                                                            <button className="p-2  rounded-md bg-[#252525] text-white hover:bg-[#32ff54] hover:text-black">
+                                                            <button className="p-2  rounded-md bg-[#252525] hover:bg-black">
                                                                 Soporte
                                                             </button>
-                                                            <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
+                                                            <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#252525] to-transparent">
                                                             </div>
-                                                            <button onClick={() => auth.signOut()} className="p-2 rounded-md bg-[#252525] text-white hover:bg-[#DA544A] hover:text-white">
+                                                            <button onClick={() => auth.signOut()} className="p-2 rounded-md bg-[#252525] hover:bg-black">
                                                                 Salir
                                                             </button>
                                                         </div>
@@ -240,11 +251,11 @@ const Header = () => {
                                                 </div>
                                             </div>
                                             ): (
-                                            <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto mx-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)]" style={{ backgroundImage: "linear-gradient(163deg, #C9FCD4 0%, #C9FCD4 100%)",}}>
+                                            <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto mx-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)]" style={{ backgroundImage: "linear-gradient(163deg, #bebebe 0%, #bebebe 100%)",}}>
                                                 <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px]">
                                                 {/* Form */}
-                                                    <form id="form" className="flex flex-col gap-5 sm:gap-6 p-4 sm:p-5 md:p-6 bg-[#a4ceac] rounded-[25px]">
-                                                    <p id="heading" className="text-center text-[1.1em] sm:text-[1.2em] text-white "> Iniciar sesión </p>
+                                                    <form id="form" className="flex flex-col gap-5 sm:gap-6 p-4 sm:p-5 md:p-6 bg-[#e0e0e0] rounded-[25px]">
+                                                    <p id="heading" className="text-center text-[1.1em] sm:text-[1.2em] text-black"> Iniciar sesión </p>
 
                                                     {/* Email input */}
                                                     <div className="flex items-center gap-3 bg-[#252525] p-3 rounded-[15px]">
@@ -263,21 +274,25 @@ const Header = () => {
                                                     </div>
 
                                                     {/* Buttons */}
-                                                    <div className="flex flex-col sm:flex-row sm:justify-around gap-3 text-white">
-                                                        <button onClick={handleLogin} className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black transition">
+                                                    <div className="flex flex-col gap-3 text-white">
+                                                        <button onClick={handleLogin} className="p-2 rounded-md bg-[#252525] hover:bg-black">
                                                         Iniciar sesión
                                                         </button>
-                                                        <button type="button" onClick={handleGoogleLogin} id="btn-google" className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black flex items-center justify-center">
-                                                            <img src={googlelogo} className="w-[30px] sm:w-[35px]" alt="Google login" />
+                                                        <div className='mt-4 h-1 w-full border-0 bg-gradient-to-r from-transparent via-[#252525] to-transparent'></div>
+                                                        <button onClick={() => navigate("/register")} className=" mt-4 p-2 rounded-md bg-[#252525] hover:bg-black">
+                                                        Registrarse
+                                                        </button>
+                                                        <button className="p-2 rounded-md bg-[#252525] hover:bg-[#DA544A] hover:text-black" onClick={() => navigate("/forgot-password")}>
+                                                            ¿Olvidó su contraseña?
                                                         </button>
                                                     </div>
-                                                    {error && <p className="text-red-600 text-sm text-center">{error}</p>} 
-                                                    
-                                                    <button onClick={() => navigate("/register")} className="text-center p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black">
-                                                        Registrarse
-                                                    </button>
-                                                    <button className="p-2 rounded-md bg-[#252525] text-white hover:bg-[#DA544A] hover:text-black" onClick={() => navigate("/forgot-password")}>
-                                                        ¿Olvidó su contraseña?
+                                                    <div className='flex justify-between items-center mt-4'>
+                                                        <div className='h-1 w-[20%] border-0 bg-gradient-to-r from-[#252525] to-transparent'></div>
+                                                        <p className='text-center text-black text-sm'>O inicia sesión con</p>
+                                                        <div className='h-1 w-[20%] border-0 bg-gradient-to-l from-[#252525] to-transparent'></div>
+                                                    </div>
+                                                    <button type="button" onClick={handleGoogleLogin} id="btn-google" className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black flex items-center justify-center">
+                                                            <img src={googlelogo} className="w-[30px] sm:w-[35px]" alt="Google login" />
                                                     </button>
                                                     </form>
                                                 </div>
@@ -333,7 +348,7 @@ const Header = () => {
                     <div ref={buttonRef} onClick={() => setDropdownVisible(!dropdownVisible)}
                         className="w-full h-[45px] md:w-[131px] rounded-[15px] cursor-pointer">
                         {/* Dynamic Button */}
-                        <div className="w-full h-[43px] rounded-[13px] bg-[#2f3545] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
+                        <div className="w-full h-[43px] rounded-[13px] bg-[#292F36] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
                             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-[24px] h-[24px] fill-white">
                                 <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
                             </svg>
@@ -350,37 +365,35 @@ const Header = () => {
                             <div ref={dropdownRef} className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[400px] rounded-xl p-4 z-[999] transition-all">
                                     {/* Alert*/}
                                     {alert.show && (
-                                        <Alert className="mb-4" severity={alert.severity}>
+                                        <Alert className="top-10 -left-100 fixed rounded-2xl z-[999] w-[90%]" severity={alert.severity}>
                                             <AlertTitle>{alert.severity === "error" ? "Error" : "Éxito"}</AlertTitle>
                                             {alert.message}
                                         </Alert>
                                     )}
                                     {isAuthenticated ? (
-                                    <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)] mx-auto" style={{ backgroundImage: "linear-gradient(163deg, #C9FCD4 0%, #C9FCD4 100%)" }}>
+                                    <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)] mx-auto" style={{ backgroundImage: "linear-gradient(163deg, #bebebe 0%, #bebebe 100%)" }}>
                                         <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px] ">
-                                            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-[#a4ceac] rounded-[25px]">
+                                            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-[#e0e0e0] rounded-[25px]">
                                             <div className="flex flex-col gap-3 sm:gap-4 items-center justify-center">
                                                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
-                                                    className="w-[24px] sm:w-[26px] md:w-[27px] h-[24px] sm:h-[26px] md:h-[27px] fill-white">
+                                                    className="w-[24px] sm:w-[26px] md:w-[27px] h-[24px] sm:h-[26px] md:h-[27px] fill-black">
                                                     <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
                                                 </svg>
-                                                <p className="text-white text-[18px] sm:text-[20px] md:text-[22px] ">{userNameFull}</p>
+                                                <p className="text-black text-[18px] sm:text-[20px] md:text-[22px] ">{userNameFull}</p>
                                             </div>
-                                            <div className="flex flex-col">
-                                                <button onClick={() => navigate("/profile")} className="bg-[#252525] text-center p-2 mb-3 rounded-md  text-white hover:bg-[#AFFCBE] hover:text-black">
+                                            <div className="flex flex-col text-white">
+                                                <button onClick={() => navigate("/profile")} className="bg-[#252525] text-center p-2 mb-3 rounded-md hover:bg-black">
                                                     Perfil
                                                 </button>
-                                                <button className="p-2 mb-3 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black">
+                                                <button className="p-2 mb-3 rounded-md bg-[#252525] hover:bg-black">
                                                     Compras
                                                 </button>
-                                                <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
-                                                </div>
-                                                <button className="p-2  rounded-md bg-[#252525] text-white hover:bg-[#32ff54] hover:text-black">
+                                                <button className="p-2 rounded-md bg-[#252525] hover:bg-black">
                                                     Soporte
                                                 </button>
-                                                <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
+                                                <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#252525] to-transparent">
                                                 </div>
-                                                <button onClick={() => auth.signOut()} className="p-2 rounded-md bg-[#252525] text-white hover:bg-[#DA544A] hover:text-white">
+                                                <button onClick={() => auth.signOut()} className="p-2 rounded-md bg-[#252525] text-white hover:bg-[#DA544A]">
                                                     Salir
                                                 </button>
                                             </div>
@@ -388,11 +401,11 @@ const Header = () => {
                                     </div>
                                 </div>
                                 ): (
-                                <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto mx-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)]" style={{ backgroundImage: "linear-gradient(163deg, #C9FCD4 0%, #C9FCD4 100%)",}}>
+                                <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto mx-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)]" style={{ backgroundImage: "linear-gradient(163deg, #bebebe 0%, #bebebe 100%)",}}>
                                     <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px]">
                                     {/* Form */}
-                                        <form id="form" className="flex flex-col gap-5 sm:gap-6 p-4 sm:p-5 md:p-6 bg-[#a4ceac] rounded-[25px]">
-                                        <p id="heading" className="text-center text-[1.1em] sm:text-[1.2em] text-white "> Iniciar sesión </p>
+                                        <form id="form" className="flex flex-col gap-5 sm:gap-6 p-4 sm:p-5 md:p-6 bg-[#e0e0e0] rounded-[25px]">
+                                        <p id="heading" className="text-center text-[1.1em] sm:text-[1.2em] text-black"> Iniciar sesión </p>
 
                                         {/* Email input */}
                                         <div className="flex items-center gap-3 bg-[#252525] p-3 rounded-[15px]">
@@ -411,21 +424,25 @@ const Header = () => {
                                         </div>
 
                                         {/* Buttons */}
-                                        <div className="flex flex-col sm:flex-row sm:justify-around gap-3 text-white">
-                                            <button data-testid="submit-login" onClick={handleLogin} className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black transition">
+                                        <div className="flex flex-col gap-3 text-white">
+                                            <button onClick={handleLogin} className="p-2 rounded-md bg-[#252525] hover:bg-black">
                                             Iniciar sesión
                                             </button>
-                                            <button type="button" onClick={handleGoogleLogin} id="btn-google" className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black flex items-center justify-center">
-                                                <img src={googlelogo} className="w-[30px] sm:w-[35px]" alt="Google login" />
+                                            <div className='mt-4 h-1 w-full border-0 bg-gradient-to-r from-transparent via-[#252525] to-transparent'></div>
+                                            <button onClick={() => navigate("/register")} className=" mt-4 p-2 rounded-md bg-[#252525] hover:bg-black">
+                                            Registrarse
+                                            </button>
+                                            <button className="p-2 rounded-md bg-[#252525] hover:bg-[#DA544A] hover:text-black" onClick={() => navigate("/forgot-password")}>
+                                                ¿Olvidó su contraseña?
                                             </button>
                                         </div>
-                                        {error && <p className="text-red-600 text-sm text-center">{error}</p>} 
-                                        
-                                        <button onClick={() => navigate("/register")} className="text-center p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black">
-                                            Registrarse
-                                        </button>
-                                        <button className="p-2 rounded-md bg-[#252525] text-white hover:bg-[#DA544A] hover:text-black" onClick={() => navigate("/forgot-password")}>
-                                            ¿Olvidó su contraseña?
+                                        <div className='flex justify-between items-center mt-4'>
+                                            <div className='h-1 w-[20%] border-0 bg-gradient-to-r from-transparent to-[#252525]'></div>
+                                            <p className='text-center text-black text-sm'>O inicia sesión con</p>
+                                            <div className='h-1 w-[20%] border-0 bg-gradient-to-r from-[#252525] to-transparent'></div>
+                                        </div>
+                                        <button type="button" onClick={handleGoogleLogin} id="btn-google" className="p-2 px-4 rounded-md bg-[#252525] hover:bg-black flex items-center justify-center">
+                                                <img src={googlelogo} className="w-[30px] sm:w-[35px]" alt="Google login" />
                                         </button>
                                         </form>
                                     </div>
@@ -436,7 +453,7 @@ const Header = () => {
                     )}
                 </div>
             </div>
-            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#2f3545] to-transparent">
+            <div className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#2f3545] to-transparent">
             </div>
         </header>
     </div>

@@ -64,7 +64,7 @@ const Login = () => {
       try {
         const [futbolRes, nbaRes, f1Res] = await Promise.all([
           supabase
-            .from('futbol')
+            .from('selecciones')
             .select('name, img, country, year, index')
             .order('year', { ascending: true })
             .limit(3),
@@ -76,7 +76,7 @@ const Login = () => {
             .limit(3),
   
           supabase
-            .from('F1')
+            .from('f1')
             .select('name, img, team, year, index, driver')
             .order('year', { ascending: true })
             .limit(3)

@@ -453,7 +453,7 @@ useEffect(() => {
                     )}
                 </div>
             </div>
-            <div className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#2f3545] to-transparent">
+            <div className="absolute -bottom-0.5 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#2f3545] to-transparent">
             </div>
         </header>
     </div>

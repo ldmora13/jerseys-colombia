@@ -4,7 +4,14 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 import { Slider } from '@mui/material'
 
-const Filter = ({filterVisible, setFilterVisible}) => {
+const Filter = ({
+  filterVisible, setFilterVisible,
+  search, setSearch,
+  stockSelected, setStockSelected,
+  promoSelected, setPromoSelected,
+  categorySelected, setCategorySelected,
+  yearRange, setYearRange
+}) => {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -70,6 +77,8 @@ const Filter = ({filterVisible, setFilterVisible}) => {
                             <input
                                 type='text'
                                 placeholder="Buscar"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
                                 className="h-[45px] w-full px-4 rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"
                             />
                         </form>    
@@ -81,15 +90,16 @@ const Filter = ({filterVisible, setFilterVisible}) => {
                         <h3 className='text-[20px]'>Stock</h3>
                     </div>
                     <div className='flex flex-row items-center justify-start w-full gap-x-8 mt-2 text-black'>
-                        <div className='hover:bg-[#252525] hover:text-white hover:scale-110 transition p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer' role='button'>
-                            <p>Todo</p>
-                        </div>
-                        <div className='hover:bg-[#252525] hover:text-white hover:scale-110 transition p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer' role='button'>
-                            <p>En stock</p>
-                        </div>
-                        <div className='hover:bg-[#252525] hover:text-white hover:scale-110 transition p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer' role='button'>
-                            <p>Agotado</p>
-                        </div>
+                        {['Todo', 'En stock', 'Agotado'].map((stock) => (
+                            <div
+                            key={stock}
+                            className={`p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer transition
+                                ${stockSelected === stock ? 'bg-[#252525] text-white scale-110' : 'hover:bg-[#252525] hover:text-white hover:scale-110'}`}
+                            role='button'
+                            onClick={() => setStockSelected(stock)}>
+                            <p>{stock}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className='mt-5 flex items-start justify-between flex-col w-full'>
@@ -98,12 +108,17 @@ const Filter = ({filterVisible, setFilterVisible}) => {
                         <h3 className='text-[20px]'>Promociones</h3>
                     </div>
                     <div className='flex flex-row items-center justify-start w-full gap-x-8 mt-2 text-black'>
-                        <div className='hover:bg-[#252525] hover:text-white hover:scale-110 transition p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer' role='button'>
-                            <p>Todo</p>
-                        </div>
-                        <div className='hover:bg-[#252525] hover:text-white hover:scale-110 transition p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer' role='button'>
-                            <p>En oferta</p>
-                        </div>
+                        {['Todo', 'En oferta'].map((promo) => (
+                            <div
+                            key={promo}
+                            className={`p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer transition
+                                ${promoSelected === promo ? 'bg-[#252525] text-white scale-110' : 'hover:bg-[#252525] hover:text-white hover:scale-110'}`}
+                            role='button'
+                            onClick={() => setPromoSelected(promo)}
+                            >
+                            <p>{promo}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className='mt-5 flex items-start justify-between flex-col w-full'>
@@ -113,7 +128,8 @@ const Filter = ({filterVisible, setFilterVisible}) => {
                     </div>
                     <div className='flex flex-col items-center justify-start w-[350px] gap-x-8 mt-2 text-black'>
                         <Slider
-                            defaultValue={[2000, 2025]}
+                            value={yearRange}
+                            onChange={(e, newValue) => setYearRange(newValue)}
                             valueLabelDisplay="auto"
                             step={10}
                             marks
@@ -131,13 +147,15 @@ const Filter = ({filterVisible, setFilterVisible}) => {
                     </div>
                     <div className='flex flex-row items-center justify-start w-full gap-x-8 mt-2 text-black'>
                         {categorias.map((cat) => (
-                        <div
+                            <div
                             key={cat}
-                            className='hover:bg-[#252525] hover:text-white hover:scale-110 transition p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer'
-                            role='button'>
+                            className={`p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer transition
+                                ${categorySelected === cat ? 'bg-[#252525] text-white scale-110' : 'hover:bg-[#252525] hover:text-white hover:scale-110'}`}
+                            role='button'
+                            onClick={() => setCategorySelected(cat)}>
                             <p>{cat}</p>
-                        </div>
-                    ))}
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

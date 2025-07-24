@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.jsx"
 import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
 import {supabase} from "../lib/supabaseClient"
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -272,12 +273,8 @@ const Login = () => {
           </div>
         </div>
       </main>
-      <footer className=""> 
-        <div className="h-[2px] bg-gradient-to-r from-transparent via-[#2f3545] to-transparent"></div>
-        <div className="bg-[#252525] flex items-center justify-center gap-4 p-4 text-white">
-          <p className="text-sm ">© 2025 Jerseys Colombia</p>
-          <a onClick={() => navigate("/politicas")} className="cursor-pointer text-sm text-white hover:text-gray-200">Políticas</a>
-        </div>
+      <footer > 
+        <Footer />
       </footer>
     </div>
   );

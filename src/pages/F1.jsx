@@ -104,22 +104,43 @@ const F1 = () => {
 
   useEffect(() => {
     async function loadCart(uid) {
-      const {data} = await supabase
+      const {data, error} = await supabase
         .from('carts')
         .select('items')
-        .single();
+        .eq('firebase_uid', uid)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error cargando carrito:', error.message);
+      }
+
       setCartItems(data?.items || []);
     }
     if (userUID) loadCart(userUID);
   }, [userUID]);
 
-  useEffect(() => {
+useEffect(() => {
   async function saveCart(uid, items) {
-    if (!uid || !Array.isArray(items)) return;
-    if (items.length === 0) return;
-    await supabase
+    const user = supabase.auth.getUser();
+    if (!user) {
+      console.error("No estás autenticado");
+      return;
+    }
+    if (!uid || !Array.isArray(items) || items.length === 0) return;
+
+    const { error } = await supabase
       .from('carts')
-      .upsert([{ firebase_uid: uid, items }], { onConflict: ['firebase_uid'] });
+      .upsert([
+        { firebase_uid: userUID,
+          items 
+        }
+      ], { 
+        onConflict: ['firebase_uid'] 
+      });
+
+    if (error) {
+      console.error('Error guardando carrito:', error.message);
+    }
   }
   if (userUID) saveCart(userUID, cartItems);
 }, [userUID, cartItems]);

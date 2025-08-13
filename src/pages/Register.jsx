@@ -94,7 +94,7 @@ const Register = () => {
   };
     
     return (
-        <div className="h-screen w-screen flex justify-center items-center">
+        <div className="h-screen w-screen flex justify-center items-center bg-[#e0e0e00d]">
             {alert.show && (
                 <Alert severity={alert.severity} variant="filled" className="absolute top-5 left-1/2 transform -translate-x-1/2 w-[300px] z-50" onClose={() => setAlert({ ...alert, show: false })}>
                     <AlertTitle>{alert.severity === "error" ? "Error" : "Éxito"}</AlertTitle>

@@ -91,10 +91,9 @@ const F1 = () => {
 
   {/* Verificar user */}
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUserUID(user.uid);
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        setUserUID(session.user.id); // ID de Supabase Auth
       } else {
         setUserUID(null);
         const savedCart = localStorage.getItem('guest_cart');
@@ -105,8 +104,12 @@ const F1 = () => {
         }
       }
     });
-    return () => unsubscribe();
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
+
 
   {/* Guardar carrito !auth */}
   useEffect(() => {
@@ -117,13 +120,12 @@ const F1 = () => {
 
   {/* Cargar carrito */}
   useEffect(() => {
-    async function loadAndMergeCart(uid) {
+    async function loadAndMergeCart() {
       try {
-        const sb = await getSupabaseClient();
-        const { data, error } = await sb
+        const { data, error } = await supabase
           .from('carts')
           .select('items')
-          .eq('firebase_uid', uid)
+          .eq('user_uid', userUID)
           .maybeSingle();
 
         if (error) throw error;
@@ -148,7 +150,7 @@ const F1 = () => {
         });
 
         setCartItems(mergedCart);
-        localStorage.removeItem('guest_cart'); // Limpiar carrito local
+        localStorage.removeItem('guest_cart');
       } catch (err) {
         console.error('Error cargando/fusionando carrito:', err.message);
       } finally {
@@ -158,18 +160,17 @@ const F1 = () => {
 
     if (userUID) {
       setIsInitialLoad(true);
-      loadAndMergeCart(userUID);
+      loadAndMergeCart();
     }
   }, [userUID]);
 
   {/* Guardar carrito */}
   useEffect(() => {
-    async function saveCart(uid, items) {
+    async function saveCart(items) {
       try {
-        const sb = await getSupabaseClient();
-        const { error } = await sb
+        const { error } = await supabase
           .from('carts')
-          .upsert([{ firebase_uid: uid, items }], { onConflict: ['firebase_uid'] });
+          .upsert([{ user_uid: userUID, items }], { onConflict: ['user_uid'] });
 
         if (error) throw error;
       } catch (err) {
@@ -178,7 +179,7 @@ const F1 = () => {
     }
 
     if (userUID && !isInitialLoad) {
-      saveCart(userUID, cartItems);
+      saveCart(cartItems);
     }
   }, [cartItems, userUID, isInitialLoad]);
 

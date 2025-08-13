@@ -1,7 +1,7 @@
-import React, { use } from 'react';
+import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate} from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
+import {supabase, getSupabaseClient } from '../lib/supabaseClient';
 import { getAuth } from 'firebase/auth';
 import AlertGlobal from '../components/AlertGlobal';
 import Header from '../components/Header';
@@ -27,6 +27,7 @@ const F1 = () => {
   const navigate = useNavigate();
   const [order, setOrder] = useState('');
   const [liked, setLiked] = useState({});
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const [wishlistVisible, setWishlistVisible] = useState(false);
   const [cartVisible, setCartVisible] = useState(false);
@@ -88,7 +89,7 @@ const F1 = () => {
     return matchSearch && matchStock && matchPromo && matchYear && matchCat;
   });
 
-
+  {/* Verificar user */}
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -96,87 +97,124 @@ const F1 = () => {
         setUserUID(user.uid);
       } else {
         setUserUID(null);
-        setCartItems([]);
+        const savedCart = localStorage.getItem('guest_cart');
+        if (savedCart) {
+          setCartItems(JSON.parse(savedCart));
+        } else {
+          setCartItems([]);
+        }
       }
     });
     return () => unsubscribe();
   }, []);
 
+  {/* Guardar carrito !auth */}
   useEffect(() => {
-    async function loadCart(uid) {
-      const {data, error} = await supabase
-        .from('carts')
-        .select('items')
-        .eq('firebase_uid', uid)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error cargando carrito:', error.message);
-      }
-
-      setCartItems(data?.items || []);
+    if (!userUID) {
+      localStorage.setItem('guest_cart', JSON.stringify(cartItems));
     }
-    if (userUID) loadCart(userUID);
+  }, [cartItems, userUID]);
+
+  {/* Cargar carrito */}
+  useEffect(() => {
+    async function loadAndMergeCart(uid) {
+      try {
+        const sb = await getSupabaseClient();
+        const { data, error } = await sb
+          .from('carts')
+          .select('items')
+          .eq('firebase_uid', uid)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        const supabaseCart = data?.items || [];
+        const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+
+        const mergedCart = [...supabaseCart];
+        guestCart.forEach(item => {
+          const existingIndex = mergedCart.findIndex(
+            i =>
+              i.name === item.name &&
+              i.team === item.team &&
+              i.year === item.year &&
+              i.size === item.size
+          );
+          if (existingIndex !== -1) {
+            mergedCart[existingIndex].quantity += item.quantity;
+          } else {
+            mergedCart.push(item);
+          }
+        });
+
+        setCartItems(mergedCart);
+        localStorage.removeItem('guest_cart'); // Limpiar carrito local
+      } catch (err) {
+        console.error('Error cargando/fusionando carrito:', err.message);
+      } finally {
+        setIsInitialLoad(false);
+      }
+    }
+
+    if (userUID) {
+      setIsInitialLoad(true);
+      loadAndMergeCart(userUID);
+    }
   }, [userUID]);
 
-useEffect(() => {
-  async function saveCart(uid, items) {
-    const user = supabase.auth.getUser();
-    if (!user) {
-      console.error("No estás autenticado");
+  {/* Guardar carrito */}
+  useEffect(() => {
+    async function saveCart(uid, items) {
+      try {
+        const sb = await getSupabaseClient();
+        const { error } = await sb
+          .from('carts')
+          .upsert([{ firebase_uid: uid, items }], { onConflict: ['firebase_uid'] });
+
+        if (error) throw error;
+      } catch (err) {
+        console.error('Error guardando carrito:', err.message);
+      }
+    }
+
+    if (userUID && !isInitialLoad) {
+      saveCart(userUID, cartItems);
+    }
+  }, [cartItems, userUID, isInitialLoad]);
+
+  {/* Añadir elementos al carrito */}
+  const addToCart = (product) => {
+    const selectedSize = selectedSizes[product.name];
+
+    if (!selectedSize) {
+      setAlert({
+        show: true,
+        message: "Selecciona una talla antes de agregar al carrito.",
+        severity: "error",
+      });
       return;
     }
-    if (!uid || !Array.isArray(items) || items.length === 0) return;
 
-    const { error } = await supabase
-      .from('carts')
-      .upsert([
-        { firebase_uid: userUID,
-          items 
-        }
-      ], { 
-        onConflict: ['firebase_uid'] 
-      });
+    setCartItems(prevCart => {
+      const index = prevCart.findIndex(
+        item =>
+          item.name === product.name &&
+          item.team === product.team &&
+          item.year === product.year &&
+          item.size === selectedSize
+      );
 
-    if (error) {
-      console.error('Error guardando carrito:', error.message);
-    }
-  }
-  if (userUID) saveCart(userUID, cartItems);
-}, [userUID, cartItems]);
-
-const addToCart = (product) => {
-  const selectedSize = selectedSizes[product.name];
-
-  if (!selectedSize) {
-    setAlert({
-      show: true,
-      message: "Selecciona una talla antes de agregar al carrito.",
-      severity: "error",
+      if (index !== -1) {
+        const updatedCart = [...prevCart];
+        updatedCart[index].quantity += 1;
+        return updatedCart;
+      } else {
+        return [...prevCart, { ...product, quantity: 1, size: selectedSize }];
+      }
     });
-    return;
-  }
 
-  setCartItems(prevCart => {
-    const index = prevCart.findIndex(
-      item =>
-        item.name === product.name &&
-        item.team === product.team &&
-        item.year === product.year &&
-        item.size === selectedSize
-    );
-
-    if (index !== -1) {
-      const updatedCart = [...prevCart];
-      updatedCart[index].quantity += 1;
-      return updatedCart;
-    } else {
-      return [...prevCart, { ...product, quantity: 1, size: selectedSize }];
-    }
-  });
-
-  setCartVisible(true);
-};
+    setCartVisible(true);
+  };
 
   const totalPages = Math.ceil(camisetasFiltradas.length / itemsPerPage);
   const camisetasPagina = camisetasFiltradas.slice(

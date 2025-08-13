@@ -23,8 +23,6 @@ function App() {
         <Route path='/futbol' element={<Futbol />} />
         <Route path='/nba' element={<NBA />} />
         <Route path='/f1' element={<F1 />} />
-        <Route path='/searchs' element={<Searchs />} />
-        <Route path='/cart' element={<Cart />} />
       </Routes>
   );
 }

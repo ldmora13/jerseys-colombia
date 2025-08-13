@@ -1,6 +1,6 @@
 import React, {useRef, useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import { supabase } from '../lib/supabaseClient';
 import Alert from '@mui/material/Alert';
 import { AlertTitle } from "@mui/material";
 import logo from "../assets/football-jersey.svg";
@@ -10,8 +10,6 @@ import googlelogo from "../assets/google.svg";
 const Header = ({setCartVisible, setWishlistVisible}) => {
 
     const navigate = useNavigate();
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
     const [alert, setAlert] = useState({
         show: false,
         message: "",
@@ -21,10 +19,11 @@ const Header = ({setCartVisible, setWishlistVisible}) => {
     {/* Login and reset password */}
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userNameFull, setUserNameFull] = useState("");
+    const [userName, setUserName] = useState("");
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [userName, setUserName] = useState("");
 
     {/* Dropdown */}
     const dropdownRef = useRef(null);
@@ -40,43 +39,84 @@ const Header = ({setCartVisible, setWishlistVisible}) => {
 
 
     const handleLogin = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    if (!email || !password) {
-          setAlert({
+        if (!email || !password) {
+            setAlert({
             show: true,
             message: "Todos los campos son obligatorios.",
             severity: "error",
-          });
-          return;
+            });
+            return;
         }
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        setAlert({
-            show: false,
-            message: "Inicio de sesión exitoso.",
-            severity: "success",
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
         });
 
-    } catch (error) {
-        setAlert({
-              show: true,
-              message: "Error al iniciar sesión. Verifica tus credenciales.",
-              severity: "error",
+        if (error) {
+            setAlert({
+            show: true,
+            message: "Error al iniciar sesión. Verifica tus credenciales.",
+            severity: "error",
             });
-    }
+        } else {
+            const user = data.user;
+            setIsAuthenticated(true);
+            setUserNameFull(user.user_metadata.full_name || user.email);
+            setUserName((user.user_metadata.full_name || user.email).split(" ")[0]);
+        }
     };
 
+
     const handleGoogleLogin = async (e) => {
-    e.preventDefault();
-    try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-    } catch (error) {
-        console.error(error);
-    }
+        e.preventDefault();
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+            redirectTo: window.location.origin,
+            },
+        });
+
+        if (error) {
+            console.error(error);
+        } else {
+            console.log("Redirigiendo");
+        }
     };
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                setIsAuthenticated(true);
+                setUserNameFull(user.user_metadata?.full_name || user.email);
+                setUserName((user.user_metadata?.full_name || user.email).split(" ")[0]);
+            } else {
+                setIsAuthenticated(false);
+                setUserNameFull("");
+                setUserName("");
+            }
+        };
+        getUser();
+
+        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+            if (session?.user) {
+                setIsAuthenticated(true);
+                setUserNameFull(session.user.user_metadata?.full_name || session.user.email);
+                setUserName((session.user.user_metadata?.full_name || session.user.email).split(" ")[0]);
+            } else {
+                setIsAuthenticated(false);
+                setUserNameFull("");
+                setUserName("");
+            }
+        });
+
+        return () => {
+            listener?.subscription?.unsubscribe();
+        };
+    }, []);
 
 useEffect(() => {
     function handleClickOutside(event) {
@@ -105,23 +145,6 @@ useEffect(() => {
         document.documentElement.classList.remove('overflow-hidden');
     };
 }, [dropdownVisible, setDropdownVisible]);
-
-
-    useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-        const displayName = user.displayName || user.email || "Usuario";
-        setUserName(displayName.split(" ")[0]);
-        setUserNameFull(displayName);
-        setIsAuthenticated(true);
-        } else {
-        setIsAuthenticated(false);
-
-        }
-    });
-
-    return () => unsubscribe();
-    }, []);
 
     const handleQuery = (e) => {
         if (query.trim() !== "") {
@@ -255,7 +278,8 @@ useEffect(() => {
                                                             </button>
                                                             <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#252525] to-transparent">
                                                             </div>
-                                                            <button onClick={() => auth.signOut()} className="p-2 rounded-md bg-[#252525] hover:bg-black">
+                                                            <button onClick={async () => { await supabase.auth.signOut(); setIsAuthenticated(false); setDropdownVisible(false); }} 
+                                                                className="p-2 rounded-md bg-[#252525] hover:bg-black">
                                                                 Salir
                                                             </button>
                                                         </div>
@@ -383,7 +407,7 @@ useEffect(() => {
                             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-[24px] h-[24px] fill-white">
                                 <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
                             </svg>
-                            <p data-testid="login-btn">{isAuthenticated ? userName : "Login"}</p>
+                            <p>{isAuthenticated ? userName : "Login"}</p>
                         </div>
                     </div>
 
@@ -424,7 +448,8 @@ useEffect(() => {
                                                 </button>
                                                 <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#252525] to-transparent">
                                                 </div>
-                                                <button onClick={() => auth.signOut()} className="p-2 rounded-md bg-[#252525] text-white hover:bg-[#DA544A]">
+                                                <button onClick={async () => { await supabase.auth.signOut(); setIsAuthenticated(false); setDropdownVisible(false); }}
+                                                    className="p-2 rounded-md bg-[#252525] text-white hover:bg-[#DA544A]">
                                                     Salir
                                                 </button>
                                             </div>

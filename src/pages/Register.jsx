@@ -1,13 +1,12 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
 import Alert from '@mui/material/Alert';
 import { AlertTitle } from "@mui/material";
 import logo from "../assets/football-jersey.svg"
 import googlelogo from "../assets/google.svg"
 
-import { app, auth } from "../lib/firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 
 
@@ -25,60 +24,74 @@ const Register = () => {
     });
   
     const handleRegister = async (e) => {
-        e.preventDefault();
-        if (!email || !password || !name || !lastname) {
-          setAlert({
-            show: true,
-            message: "Todos los campos son obligatorios.",
-            severity: "error",
-          });
-          return;
-        }
-    
-        if (password.length < 6) {
-          setAlert({
-            show: true,
-            message: "La contraseña debe tener al menos 6 caracteres.",
-            severity: "error",
-          });
-          return;
-        }
-    
-        try {
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password, name);
-          const user = userCredential.user;
-    
-          await updateProfile(user, {
-            displayName: `${name} ${lastname}`,
-          });
-          navigate("/login");
-        } catch (error) {
-          if (error.code === "auth/email-already-in-use") {
-            setAlert({
-              show: true,
-              message: "El correo ya está en uso. Por favor, usa otro.",
-              severity: "error",
-            });
-          } else {
-            setAlert({
-              show: true,
-              message: "Error en el registro. Inténtalo de nuevo.",
-              severity: "error",
-            });
+      e.preventDefault();
+
+      if (!email || !password || !name || !lastname) {
+        setAlert({
+          show: true,
+          message: "Todos los campos son obligatorios.",
+          severity: "error",
+        });
+        return;
+      }
+
+      if (password.length < 6) {
+        setAlert({
+          show: true,
+          message: "La contraseña debe tener al menos 6 caracteres.",
+          severity: "error",
+        });
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: `${name} ${lastname}`,
+            name: name,
+            lastname: lastname
           }
         }
-      };
+      });
 
-    const handleGoogleLogin = async () => {
-        const provider = new GoogleAuthProvider();
-        try {
-          const result = await signInWithPopup(auth, provider);
-          const user = result.user;
-          navigate("/login")
-        } catch (error) {
-          console.error(error);
+      if (error) {
+        if (error.message.includes("duplicate key value") || error.message.includes("already registered")) {
+          setAlert({
+            show: true,
+            message: "El correo ya está en uso. Por favor, usa otro.",
+            severity: "error",
+          });
+        } else {
+          setAlert({
+            show: true,
+            message: "Error en el registro. Inténtalo de nuevo.",
+            severity: "error",
+          });
         }
-      };
+      } else {
+        setAlert({
+          show: false,
+          message: "Registro exitoso. Revisa tu correo para confirmar tu cuenta.",
+          severity: "success",
+        });
+        navigate("/login");
+      }
+    };
+
+  const handleGoogleLogin = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/login'
+      }
+    });
+
+    if (error) {
+      console.error(error);
+    }
+  };
     
     return (
         <div className="h-screen w-screen flex justify-center items-center">

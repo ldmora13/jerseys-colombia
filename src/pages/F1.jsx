@@ -2,7 +2,8 @@ import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link} from 'react-router-dom';
 import {supabase, getSupabaseClient } from '../lib/supabaseClient';
-import { getAuth } from 'firebase/auth';
+import { useCart } from '../context/CartContext';
+
 import AlertGlobal from '../components/AlertGlobal';
 import Header from '../components/Header';
 import Loader from '../components/Loader';
@@ -12,7 +13,7 @@ import Footer from '../components/Footer';
 import Wishlist from '../components/Wishlist';
 
 
-const F1 = () => {
+const F1 = ({cartVisible, setCartVisible}) => {
 
   const [alert, setAlert] = useState({
     show: false,
@@ -20,6 +21,8 @@ const F1 = () => {
     severity: 'success',
     title: ''
   });
+
+  const { cartItems, setCartItems} = useCart();
 
   const topRef = useRef(null);
   const [camisetasF1, setCamisetasF1] = useState([]);
@@ -30,11 +33,9 @@ const F1 = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const [wishlistVisible, setWishlistVisible] = useState(false);
-  const [cartVisible, setCartVisible] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
 
   const [wishlistItems, setWishlistItems] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
 
   const [userUID, setUserUID] = useState(null);
   const [selectedSizes, setSelectedSizes] = useState({});
@@ -323,16 +324,6 @@ const F1 = () => {
           setYearRange={setYearRange}
         />
         
-        <Cart 
-          cartVisible={cartVisible}
-          setCartVisible={setCartVisible}
-          cartItems={cartItems}
-          setCartItems={setCartItems}
-        />
-        <Header 
-          setWishlistVisible={setWishlistVisible}
-          setCartVisible={setCartVisible} 
-        />
         <div ref={topRef} className='h-20'></div>
         <main className="flex flex-col items-center w-full p-4 text-black">
           <div className='flex flex-col items-center w-auto h-auto'>

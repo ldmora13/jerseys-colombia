@@ -1,18 +1,13 @@
 import React from 'react'
-import { useState, useEffect, useRef} from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Alert } from '@mui/material'
+import { useState, useEffect, useRef} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
+import {useCart} from '../context/CartContext';
 
-const Cart = ({
-    cartVisible, setCartVisible,
-    cartItems, setCartItems
-}) => {
-
-    useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    }, [cartItems]);
-
+const Cart = ({ cartVisible, setCartVisible }) => {
+  
+    const { cartItems, setCartItems } = useCart();
     const navigate = useNavigate();
     const cartRef = useRef(null);
 
@@ -53,20 +48,20 @@ const Cart = ({
 
 
     useEffect(() => {
-            function handleClickOutside(event) {
-                if (
-                    cartVisible &&
-                    cartRef.current &&
-                    !cartRef.current.contains(event.target)
-                ) {
-                    setCartVisible(false);
-                }
-            }
-            document.addEventListener('mousedown', handleClickOutside);
-            return () => {
-                document.removeEventListener('mousedown', handleClickOutside);
-            };
-        }, [cartVisible, setCartVisible]);
+      function handleClickOutside(event) {
+          if (
+              cartVisible &&
+              cartRef.current &&
+              !cartRef.current.contains(event.target)
+          ) {
+              setCartVisible(false);
+          }
+      }
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+      };
+  }, [cartVisible, setCartVisible]);
     
 
 return (

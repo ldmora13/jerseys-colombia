@@ -1,5 +1,11 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Route, Routes} from 'react-router-dom';
+import { supabase } from './lib/supabaseClient';
+
+import { CartProvider } from './context/CartContext'; 
+
+import Cart from './components/Cart';
+import Header from './components/Header';
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -12,18 +18,34 @@ import Product from './pages/Product';
 
 function App() {
 
+  const [user, setUser] = useState(null);
+  const [cartVisible, setCartVisible] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => listener?.subscription?.unsubscribe();
+  }, []);
+
+
   return (
+    <CartProvider user={user}>
+      <Header setCartVisible={setCartVisible} />
+      <Cart cartVisible={cartVisible} setCartVisible={setCartVisible} />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/policies" element={<Policies />} />
-        <Route path='/futbol' element={<Futbol />} />
-        <Route path='/NBA' element={<NBA />} />
-        <Route path='/F1' element={<F1 />} />
-        <Route path='/:category/:name' element={<Product />} />
+        <Route path='/futbol' element={<Futbol setCartVisible={setCartVisible} />} />
+        <Route path='/NBA' element={<NBA setCartVisible={setCartVisible} />} />
+        <Route path='/F1' element={<F1 setCartVisible={setCartVisible}  />} />
+        <Route path='/:category/:name' element={<Product setCartVisible={setCartVisible} />} />
       </Routes>
+    </CartProvider>
   );
 }
 

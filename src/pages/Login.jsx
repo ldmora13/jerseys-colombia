@@ -134,9 +134,6 @@ const Login = () => {
         </div>
       )}
 
-      {/* Header */}
-      <Header/>
-
 
       <main className="bg-[#E8E8E8] flex items-center md:justify-start h-full w-full p-[20px] flex-col mt-20">
         <div className="mt-2 flex md:flex-row flex-col justify-center items-center gap-10 w-full">

@@ -2,10 +2,12 @@ import React, {useState, useEffect} from 'react';
 import { Route, Routes} from 'react-router-dom';
 import { supabase } from './lib/supabaseClient';
 
-import { CartProvider } from './context/CartContext'; 
+import { CartProvider } from './context/CartContext';
+import { WishlistProvider } from './context/WishlistContext';
 
 import Cart from './components/Cart';
 import Header from './components/Header';
+import Wishlist from './components/Wishlist';
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -32,19 +34,22 @@ function App() {
 
   return (
     <CartProvider user={user}>
-      <Header setCartVisible={setCartVisible} />
-      <Cart cartVisible={cartVisible} setCartVisible={setCartVisible} />
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/policies" element={<Policies />} />
-        <Route path='/futbol' element={<Futbol setCartVisible={setCartVisible} />} />
-        <Route path='/NBA' element={<NBA setCartVisible={setCartVisible} />} />
-        <Route path='/F1' element={<F1 setCartVisible={setCartVisible}  />} />
-        <Route path='/:category/:name' element={<Product setCartVisible={setCartVisible} />} />
-      </Routes>
+      <WishlistProvider>
+        <Header setCartVisible={setCartVisible} />
+        <Cart cartVisible={cartVisible} setCartVisible={setCartVisible} />
+        <Wishlist />
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/policies" element={<Policies />} />
+          <Route path='/futbol' element={<Futbol setCartVisible={setCartVisible} />} />
+          <Route path='/NBA' element={<NBA setCartVisible={setCartVisible} />} />
+          <Route path='/F1' element={<F1 setCartVisible={setCartVisible}  />} />
+          <Route path='/:category/:name' element={<Product setCartVisible={setCartVisible} />} />
+        </Routes>
+      </WishlistProvider>
     </CartProvider>
   );
 }

@@ -1,13 +1,17 @@
 import React, {useRef, useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient';
+import { useWishlist } from '../context/WishlistContext';
+
 import Alert from '@mui/material/Alert';
 import { AlertTitle } from "@mui/material";
 import logo from "../assets/football-jersey.svg";
 import googlelogo from "../assets/google.svg";
 
 
-const Header = ({setCartVisible, setWishlistVisible}) => {
+const Header = ({setCartVisible}) => {
+
+    const { setWishlistVisible } = useWishlist();
 
     const navigate = useNavigate();
     const [alert, setAlert] = useState({

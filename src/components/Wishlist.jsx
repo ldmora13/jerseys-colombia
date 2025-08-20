@@ -2,12 +2,12 @@ import React from 'react'
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useWishlist } from '../context/WishlistContext'
 
-const Wishlist = ({ 
-    wishlistVisible, setWishlistVisible,
-    wishlistItems, setWishlistItems 
-}) => {
- 
+const Wishlist = () => {
+
+    const { wishlistVisible, setWishlistVisible, wishlistItems, setWishlistItems } = useWishlist();
+    if (!wishlistVisible) return null;
     const wishlistRef = useRef(null)
 
   return (
@@ -39,7 +39,7 @@ const Wishlist = ({
                                 </div>
                             ))
                         ) : (
-                            <p>No items in wishlist</p>
+                            <p>Sin items en la lista de deseos</p>
                         )}
                         <button 
                             onClick={() => setWishlistVisible(false)} 

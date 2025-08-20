@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link} from 'react-router-dom';
 import {supabase, getSupabaseClient } from '../lib/supabaseClient';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 
 import AlertGlobal from '../components/AlertGlobal';
 import Header from '../components/Header';
@@ -23,6 +24,8 @@ const F1 = ({cartVisible, setCartVisible}) => {
   });
 
   const { cartItems, setCartItems} = useCart();
+  const { wishlistItems, setWishlistItems } = useWishlist();
+
 
   const topRef = useRef(null);
   const [camisetasF1, setCamisetasF1] = useState([]);
@@ -32,10 +35,7 @@ const F1 = ({cartVisible, setCartVisible}) => {
   const [liked, setLiked] = useState({});
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const [wishlistVisible, setWishlistVisible] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
-
-  const [wishlistItems, setWishlistItems] = useState([]);
 
   const [userUID, setUserUID] = useState(null);
   const [selectedSizes, setSelectedSizes] = useState({});
@@ -48,8 +48,6 @@ const F1 = ({cartVisible, setCartVisible}) => {
   const [promoSelected, setPromoSelected] = useState('Todo');
   const [categorySelected, setCategorySelected] = useState('Todo');
   const [yearRange, setYearRange] = useState([1950, 2025]);
-
-
 
   const [tasaCOP, setTasaCOP] = useState(null);
   const categoryMap = {
@@ -110,7 +108,6 @@ const F1 = ({cartVisible, setCartVisible}) => {
       authListener.subscription.unsubscribe();
     };
   }, []);
-
 
   {/* Guardar carrito !auth */}
   useEffect(() => {
@@ -218,6 +215,19 @@ const F1 = ({cartVisible, setCartVisible}) => {
     setCartVisible(true);
   };
 
+  const toggleWishlist = (item) => {
+    setWishlistItems(prev => {
+      const exists = prev.some(w => w.name === item.name && w.team === item.team && w.year === item.year);
+      if (exists) {
+        // Quitar de la wishlist
+        return prev.filter(w => !(w.name === item.name && w.team === item.team && w.year === item.year));
+      } else {
+        // Agregar a la wishlist
+        return [...prev, item];
+      }
+    });
+  };
+
   const totalPages = Math.ceil(camisetasFiltradas.length / itemsPerPage);
   const camisetasPagina = camisetasFiltradas.slice(
     (page - 1) * itemsPerPage,
@@ -302,12 +312,6 @@ const F1 = ({cartVisible, setCartVisible}) => {
             <Loader />
           </div>
         )}
-        <Wishlist 
-          wishlistVisible={wishlistVisible}
-          setWishlistVisible={setWishlistVisible}
-          wishlistItems={wishlistItems}
-          setWishlistItems={setWishlistItems}
-        />
 
         <Filter
           filterVisible={filterVisible}
@@ -346,7 +350,7 @@ const F1 = ({cartVisible, setCartVisible}) => {
               </select>
             </form>
           </div>
-          <div className='md:ml-20 ml-30 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 w-[80%] h-full p-4'>
+          <div className='md:ml-20 ml-30 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-[80%] h-full p-4'>
             {camisetasPagina.map((camiseta, index) => {
                 const categoria = camiseta.category
                 const slug = generarSlug(camiseta.name)
@@ -382,9 +386,10 @@ const F1 = ({cartVisible, setCartVisible}) => {
                         <div className='flex items-center w-auto bg-[#252525] text-white px-4 py-2 rounded-[12px]'>
                           <p className='text-[12px] text-center'>Nuevo</p>
                         </div>
-                        <svg className='flex h-8 w-auto cursor-pointer mr-2 sm:opacity-0 group-hover:opacity-100 active:scale-110 transition' viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={() => setLiked(prev => ({ ...prev, [index]: !prev[index] }))}>
+                        <svg className='flex h-8 w-auto cursor-pointer mr-2 sm:opacity-0 group-hover:opacity-100 active:scale-110 transition' viewBox="0 0 24 24" 
+                          onClick={() => toggleWishlist(camiseta)}>
                           <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" 
-                            fill={isLiked ? '#FF0000' : '#292F36'}>
+                            fill={wishlistItems.some(w => w.name === camiseta.name && w.team === camiseta.team && w.year === camiseta.year) ? '#FF0000' : '#292F36'}>
                           </path>
                         </svg>
                       </div>

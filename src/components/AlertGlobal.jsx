@@ -14,7 +14,7 @@ const AlertGlobal = ({ alert, setAlert, autoHideDuration = 3000 }) => {
   if (!alert.show) return null;
 
   return (
-    <div className="fixed top-5 right-5 sm:top-35 sm:left-[36%] z-[9999] w-[90%] sm:w-[400px]">
+    <div className="fixed bottom-10 right-5  sm:left-[36%] z-[9999] w-[90%] sm:w-[400px]">
       <Alert
         severity={alert.severity || "info"}
         onClose={() => setAlert((prev) => ({ ...prev, show: false }))}

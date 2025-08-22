@@ -2,16 +2,14 @@ import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link} from 'react-router-dom';
 import {supabase, getSupabaseClient } from '../lib/supabaseClient';
+
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 
 import AlertGlobal from '../components/AlertGlobal';
-import Header from '../components/Header';
 import Loader from '../components/Loader';
 import Filter from '../components/Filter';
-import Cart from '../components/Cart';
 import Footer from '../components/Footer';
-import Wishlist from '../components/Wishlist';
 
 
 const F1 = ({cartVisible, setCartVisible}) => {
@@ -215,15 +213,18 @@ const F1 = ({cartVisible, setCartVisible}) => {
     setCartVisible(true);
   };
 
-  const toggleWishlist = (item) => {
-    setWishlistItems(prev => {
-      const exists = prev.some(w => w.name === item.name && w.team === item.team && w.year === item.year);
-      if (exists) {
-        // Quitar de la wishlist
-        return prev.filter(w => !(w.name === item.name && w.team === item.team && w.year === item.year));
+  {/* Añadir a favoritos */}
+  const toggleWishlist = (product) => {
+    const productName = product.name; 
+
+    setWishlistItems(prevItems => {
+      // Comprobar si el item ya existe
+      if (prevItems.includes(productName)) {
+        // Si existe, lo eliminamos (devuelve un nuevo array sin ese item)
+        return prevItems.filter(item => item !== productName);
       } else {
-        // Agregar a la wishlist
-        return [...prev, item];
+        // Si no existe, lo añadimos
+        return [...prevItems, productName];
       }
     });
   };
@@ -337,7 +338,7 @@ const F1 = ({cartVisible, setCartVisible}) => {
             </svg>
             <h1 className='font-bold text-2xl'>Jerseys de Fórmula 1</h1>
           </div>
-          <div className='flex flex-row items-center justify-center md:justify-between w-[80%] h-auto gap-4 p-4 mt-4'>
+          <div className='flex flex-row items-center justify-center md:justify-between sm:w-[80%] w-5 h-auto sm:gap-4 p-4 mt-4'>
             <div onClick={() => setFilterVisible(true)} className='hover:bg-[#252525] hover:text-white hover:scale-110 transition p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer' role='button'>
                 <p>Filtrar</p>
             </div>
@@ -350,18 +351,18 @@ const F1 = ({cartVisible, setCartVisible}) => {
               </select>
             </form>
           </div>
-          <div className='md:ml-20 ml-30 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-[80%] h-full p-4'>
+          <div className='-ml-5 sm:ml-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-[80%] h-full p-2'>
             {camisetasPagina.map((camiseta, index) => {
                 const categoria = camiseta.category
                 const slug = generarSlug(camiseta.name)
                 const isLiked = liked[index];
                 const imagenes = camiseta.img || []
-                const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
+                const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null;
                 const imagenSecundaria = imagenes.length > 1 ? imagenes[imagenes.length -2] : null;
 
                 return (
                   <div key={index}
-                    className="flex flex-col items-center justify-between w-[300px] h-[450px] rounded-2xl bg-white border-2 border-[#252525] mb-5 hover:scale-105 transition-transform "
+                    className="flex flex-col items-center justify-center sm:justify-between w-[300px] h-[450px] rounded-2xl bg-white border-2 border-[#252525] mb-5 hover:scale-105 transition-transform "
                     style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
                     <Link to={`/${categoria}/${slug}`} className="w-full">
                       <div className="w-full h-[300px] relative rounded-t-2xl overflow-hidden bg-[#f3f3f3] group border-b-2 border-b-[#252525]">
@@ -389,7 +390,7 @@ const F1 = ({cartVisible, setCartVisible}) => {
                         <svg className='flex h-8 w-auto cursor-pointer mr-2 sm:opacity-0 group-hover:opacity-100 active:scale-110 transition' viewBox="0 0 24 24" 
                           onClick={() => toggleWishlist(camiseta)}>
                           <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" 
-                            fill={wishlistItems.some(w => w.name === camiseta.name && w.team === camiseta.team && w.year === camiseta.year) ? '#FF0000' : '#292F36'}>
+                          fill={wishlistItems.includes(camiseta.name) ? '#FF0000' : '#292F36'}> 
                           </path>
                         </svg>
                       </div>

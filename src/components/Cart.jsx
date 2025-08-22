@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect, useRef} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Alert } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import {useCart} from '../context/CartContext';
@@ -61,7 +61,18 @@ const Cart = ({ cartVisible, setCartVisible }) => {
       return () => {
           document.removeEventListener('mousedown', handleClickOutside);
       };
-  }, [cartVisible, setCartVisible]);
+    }, [cartVisible, setCartVisible]);
+    
+  const generarSlug = (str) => {
+    return str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "")
+      .replace(/-+/g, "-")
+      .trim();
+  };
     
 
 return (
@@ -79,7 +90,7 @@ return (
           
           <motion.div
             ref={cartRef}
-            className="fixed top-0 right-0 sm:w-1/4 lg:w-[350px] w-1/2 h-full bg-[#E8E8E8] p-4 gap-4 gap-y-6 flex flex-col z-[1000] overflow-auto"
+            className="fixed top-0 right-0 sm:w-1/4 lg:w-[350px] w-full h-full bg-[#E8E8E8] p-4 gap-4 gap-y-6 flex flex-col z-[1000] overflow-auto"
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -87,10 +98,11 @@ return (
           >
             <div className="flex flex-col items-center">
               <div className="flex items-center flex-row justify-start w-full p-2 gap-x-5">
-                <svg className="h-3 sm:h-6 cursor-pointer hover:scale-110 transition" role="button" onClick={toggleCart} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#000000"></path>
+                <svg className=" h-5 sm:ml-2 sm:h-6 cursor-pointer hover:scale-110 transition" role="button"
+                  onClick={toggleCart} viewBox="0 0 24 24">
+                  <path d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#000000"></path>
                 </svg>
-                <h2 className="text-[16px] font-bold sm:text-2xl">Carrito</h2>
+                <h2 className="text-[16px] font-bold sm:text-2xl">Carrito</h2>  
               </div>
 
               <div className="mt-3 sm:mt-1 w-full h-[2px] bg-gradient-to-r from-transparent via-[#252525] to-transparent" />
@@ -99,35 +111,41 @@ return (
               {cartItems.map((camiseta, index) => {
                 const imagenPrincipal = camiseta.img?.length > 0 ? camiseta.img[camiseta.img.length - 1] : null;
                 return (
-                  <div key={index}
-                    className="mt-3 flex flex-row items-center border-2 rounded-2xl shadow p-2 gap-2 w-[90%] mx-auto cursor-pointer bg-white transform transition-all duration-300 ease-in-out hover:scale-110"
-                  >
-                    {imagenPrincipal && (
-                      <img
-                        src={imagenPrincipal}
-                        alt={camiseta.name}
-                        className="w-[80px] h-[80px] object-contain rounded"
-                      />
-                    )}
-                    <div className="flex flex-row items-center justify-start w-full">
-                      <div className="flex flex-col items-start justify-start">
-                        <h2 className="font-bold text-sm">
-                          {camiseta.team} {camiseta.driver ? camiseta.driver : camiseta.year}
-                        </h2>
-                        <span className="text-xs text-gray-500">
-                          {camiseta.type} - ${camiseta.price} USD {camiseta.quantity < 2 ? '' : ` x ${camiseta.quantity}`}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {camiseta.size ? `Talla: ${camiseta.size}` : ''}
-                        </span>
+                             
+                    <div key={index}
+                      className="mt-3 flex flex-row items-center border-2 rounded-2xl shadow p-2 gap-2 w-[90%] mx-auto cursor-pointer bg-white transform transition-all duration-300 ease-in-out hover:scale-110">
+                      <Link to={`/${camiseta.category}/${generarSlug(camiseta.name)}`} className="flex items-center"> 
+                        {imagenPrincipal && (
+                          <img
+                            src={imagenPrincipal}
+                            alt={camiseta.name}
+                            className="w-[80px] h-[80px] object-contain rounded"
+                          />
+                        )}
+                      </Link>
+                      <div className="flex flex-row items-center justify-start w-full">
+                      <Link to={`/${camiseta.category}/${generarSlug(camiseta.name)}`} className="flex items-center"> 
+                        <div className="flex flex-col items-start justify-start">
+                          <h2 className="font-bold text-sm">
+                            {camiseta.team} {camiseta.driver ? camiseta.driver : camiseta.year}
+                          </h2>
+                          <span className="text-xs text-gray-500">
+                            {camiseta.type} - ${camiseta.price} USD {camiseta.quantity < 2 ? '' : ` x ${camiseta.quantity}`}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {camiseta.size ? `Talla: ${camiseta.size}` : ''}
+                          </span>
+                        </div>
+                      </Link>
+                        <svg className="fixed right-3 h-3 ml-6 sm:ml-2 sm:h-6 cursor-pointer hover:scale-110 transition" role="button"
+                          onClick={() => deleteItem(index)} 
+                          viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path fillRule="evenodd" clipRule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#000000"></path>
+                        </svg>
                       </div>
-                      <svg className="fixed right-3 h-3 ml-6 sm:ml-2 sm:h-6 cursor-pointer hover:scale-110 transition" role="button"
-                        onClick={() => deleteItem(index)} 
-                        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#000000"></path>
-                      </svg>
+                      
                     </div>
-                  </div>
+                  
                 );
               })}
 

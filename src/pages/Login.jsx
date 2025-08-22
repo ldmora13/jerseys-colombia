@@ -1,13 +1,12 @@
+
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Loader from "../components/Loader.jsx"
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import {supabase} from "../lib/supabaseClient"
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-
-const BASE_URL = 'https://nnungauvdtershilojxj.supabase.co/storage/v1/object/public/camisetas-futbol/'
 
 const Login = () => {
 
@@ -66,19 +65,19 @@ const Login = () => {
         const [futbolRes, nbaRes, f1Res] = await Promise.all([
           supabase
             .from('selecciones')
-            .select('name, img, country, year, index')
+            .select('name, img, country, year, index, deporte')
             .order('year', { ascending: true })
             .limit(3),
   
           supabase
             .from('nba')
-            .select('name, img, team, year, index, player')
+            .select('name, img, team, year, index, player, deporte')
             .order('year', { ascending: true })
             .limit(3),
   
           supabase
             .from('f1')
-            .select('name, img, team, year, index, driver')
+            .select('name, img, team, year, index, driver, category')
             .order('year', { ascending: true })
             .limit(3)
         ])
@@ -124,6 +123,16 @@ const Login = () => {
     return () => window.removeEventListener("scroll", handleScrollPosition);
   }, []);
 
+    const generarSlug = (str) => {
+        return str
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
+          .replace(/-+/g, "-")
+          .trim();
+    };
 
   return (
     <div>
@@ -148,29 +157,30 @@ const Login = () => {
                 const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
 
                 return (
-                  <div key={index} onMouseEnter={() => setHoveredIndexFutbol(index)} onMouseLeave={() => setHoveredIndexFutbol(null)}  onClick={(e) => {e.stopPropagation(); navigate("/");}}
+                  <div key={index} onMouseEnter={() => setHoveredIndexFutbol(index)} onMouseLeave={() => setHoveredIndexFutbol(null)} onClick={(e) => e.stopPropagation()} 
                    className={`flex flex-row items-center border rounded shadow p-2 gap-2 w-[250px] mx-auto cursor-pointer 
                     transform transition-all duration-300 ease-in-out
                     ${hoveredIndexFutbol === null ? '' : hoveredIndexFutbol === index ? 'scale-110 blur-0' : 'scale-90 blur-[2px]'}
                   `}>
+                  <Link to={`/${camiseta.deporte}/${generarSlug(camiseta.name)}`} className="flex items-center">
                     {imagenPrincipal && (
-                      <img
+                    <img
                         src={imagenPrincipal}
                         alt={camiseta.name}
                         className="w-[80px] h-[80px] object-cover rounded"
-                      />
+                    />
                     )}
                     <div className="mx-2 flex flex-col">
-                      <h2>{camiseta.country} {camiseta.year}</h2>
+                    <h2>{camiseta.country} {camiseta.year}</h2>
                     </div>
-                    
+                    </Link>
                   </div>
                 )
               })}
             </div>
           </div>
           {/* Contenedor 2 */}
-          <div onClick={() => navigate("/nba")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
+          <div onClick={() => navigate("/NBA")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
               style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">NBA</p>
             <div className="flex flex-col gap-4 overflow-visible">
@@ -184,17 +194,16 @@ const Login = () => {
                     transform transition-all duration-300 ease-in-out
                     ${hoveredIndexNBA === null ? '' : hoveredIndexNBA === index ? 'scale-110 blur-0' : 'scale-90 blur-[2px]'}
                   `}>
-                    {imagenPrincipal && ( 
-                      <img
-                        src={imagenPrincipal}
-                        alt={camiseta.name}
-                        className="mx-2 w-[80px] h-[80px] object-cover rounded"
-                      />
-                    )}
-                    <div className="flex flex-col">
-                      <h2>{camiseta.player ? camiseta.player : camiseta.team} {camiseta.year}</h2>
-                    </div>
-                    
+                    <Link to={`/${camiseta.deporte}/${generarSlug(camiseta.name)}`} className="flex items-center" onClick={(e) => e.stopPropagation()}>
+                        {imagenPrincipal && ( 
+                            <img
+                                src={imagenPrincipal}
+                                alt={camiseta.name}
+                                className="mx-2 w-[80px] h-[80px] object-cover rounded"
+                            />
+                        )}
+                        <p>{camiseta.player ? camiseta.player : camiseta.team} {camiseta.year}</p>
+                    </Link>
                   </div>
                 )
               })}
@@ -202,7 +211,7 @@ const Login = () => {
           </div>
 
           {/* Contenedor 3 */}
-          <div onClick={() => navigate("/f1")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
+          <div onClick={() => navigate("/F1")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
               style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">F1</p>
             <div className="flex flex-col gap-4 overflow-visible">
@@ -216,6 +225,7 @@ const Login = () => {
                     transform transition-all duration-300 ease-in-out
                     ${hoveredIndexF1 === null ? '' : hoveredIndexF1 === index ? 'scale-110 blur-0' : 'scale-90 blur-[2px]'}
                   `}>
+                  <Link to={`/${camiseta.category}/${generarSlug(camiseta.name)}`} className="flex items-center" onClick={(e) => e.stopPropagation()}>
                     {imagenPrincipal && ( 
                       <img
                         src={imagenPrincipal}
@@ -226,7 +236,7 @@ const Login = () => {
                     <div className="flex flex-col">
                       <h2>{camiseta.team} {camiseta.driver ? camiseta.driver : camiseta.year}</h2>
                     </div>
-                    
+                    </Link>
                   </div>
                 )
               })}

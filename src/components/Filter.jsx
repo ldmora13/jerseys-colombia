@@ -20,9 +20,9 @@ const Filter = ({
 
 
     let categorias = ["Todo"];
-    if (location.pathname.includes("/f1")){
+    if (location.pathname.includes("/F1")){
         categorias = ["Todo", "Jerseys", "Polos", "Hoodies"];
-    } else if (location.pathname.includes("/nba")){
+    } else if (location.pathname.includes("/NBA")){
         categorias = ["Todo", "Jerseys", "Shorts"];
     }else if (location.pathname.includes("/futbol")){
         categorias = ["Todo", "Fans", "Players", "Chaquetas"];
@@ -62,7 +62,7 @@ const Filter = ({
                         exit={{ opacity: 0 }}
                     />
                     <motion.div ref={filterRef}
-                        className='fixed top-0 left-0 sm:w-1/3 w-1/2 h-full bg-[#E8E8E8] p-4 gap-4 gap-y-6 flex flex-col z-[1000] overflow-auto'
+                        className='fixed top-0 left-0 sm:w-1/3 w-full h-full bg-[#E8E8E8] p-4 gap-4 gap-y-6 flex flex-col z-[1000] overflow-auto'
                         initial={{ x: '-100%' }}
                         animate={{ x: 0 }}
                         exit={{ x: '-100%' }}
@@ -71,20 +71,15 @@ const Filter = ({
                         <div className='flex flex-col items-center'>
                             <div className='flex items-center flex-row justify-between w-full p-2'>
                                 <h2 className='text-[16px] font-bold sm:text-2xl'>Filtros disponibles</h2>
-                                <svg className='h-3 sm:h-6 cursor-pointer hover:scale-110 transition' role='button' onClick={toggleFilter} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#000000"></path>
-                                    </g>
-                                </svg>
+                                <p onClick={toggleFilter}
+                                    className='text-2xl sm:text-3xl text-gray-400 hover:text-black cursor-pointer'>x</p>
                             </div>
                         <div className="mt-3 sm:mt-1 w-full h-[2px] bg-gradient-to-r from-transparent via-[#252525] to-transparent">
                         </div>
                         </div>
                         {/* Filter bar */}
-                        <div className='flex flex-col items-start gap-6 w-full mt-5'>
-                            <div className='w-2/3 sm:h-full '>
+                        <div className='flex flex-col items-start w-full mt-5'>
+                            <div className='w-[90%] sm:h-full '>
                                 <form>
                                     <input
                                         type='text'
@@ -96,13 +91,13 @@ const Filter = ({
                                 </form>    
                             </div>      
                         </div>
-                        <div className='mt-2 sm:mt-5 flex items-start justify-between flex-col w-full'>
+                        <div className='mt-2 sm:mt-5 flex items-start justify-b etween flex-col w-full'>
                             <div className='flex flex-row w-full gap-3'>
                                 <div className='mt-1 h-3 w-1 sm:h-5 sm:w-2 bg-[#252525]'></div>
                                 <h3 className='text-sm sm:text-[20px]'>Stock</h3>
                             </div>
                             <div className='flex flex-row items-center justify-start w-full sm:gap-x-8 gap-x-2 mt-2 text-black'>
-                                {['Todo', 'Disponible', 'Agotado'].map((stock) => (
+                                {['Todo', 'Disponible'].map((stock) => (
                                     <div
                                     key={stock}
                                     className={`sm:p-2 p-2 h-auto sm:px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer transition
@@ -155,7 +150,7 @@ const Filter = ({
                         <div className='mt-2 sm:mt-5 flex items-start justify-between flex-col w-full'>
                             <div className='flex flex-row w-full gap-3'>
                                 <div className='mt-1 h-3 w-1 sm:h-5 sm:w-2 bg-[#252525]'></div>
-                                <h3 className='text-[20px]'>Categoria</h3>
+                                <h3 className='text-sm sm:text-[20px]'>Categoria</h3>
                             </div>
                             <div className='flex flex-row items-center justify-start w-full sm:gap-x-8 gap-x-2 mt-2 text-black'>
                                 {categorias.map((cat) => (

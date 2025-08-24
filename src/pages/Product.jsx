@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, useMemo} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 
@@ -69,7 +69,7 @@ const PersonalizationPanel = ({ setCustomName, setCustomNumber }) => {
 
 const Product = ({ cartVisible, setCartVisible }) => {
 
-    const { cartItems, setCartItems} = useCart();
+    const { cartItems, setCartItems } = useCart();
     const { wishlistItems, setWishlistItems } = useWishlist();
     const { category, name } = useParams();
     
@@ -83,7 +83,6 @@ const Product = ({ cartVisible, setCartVisible }) => {
 
     const [tasaCOP, setTasaCOP] = useState(null);
     const topRef = useRef(null);
-    const [userUID, setUserUID] = useState(null);
 
     const [selectedSize, setSelectedSize] = useState(null);
     const [customName, setCustomName] = useState('');
@@ -155,54 +154,6 @@ const Product = ({ cartVisible, setCartVisible }) => {
         return () => clearInterval(interval);
     }, []);
 
-    useEffect(() => {
-        const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-            if (session?.user) {
-                setUserUID(session.user.id);
-            } else {
-                setUserUID(null);
-                const savedCart = localStorage.getItem('guest_cart');
-                if (savedCart) { setCartItems(JSON.parse(savedCart)); } else { setCartItems([]); }
-            }
-        });
-        return () => { authListener.subscription.unsubscribe(); };
-    }, []);
-
-    useEffect(() => {
-        if (!userUID) {
-            localStorage.setItem('guest_cart', JSON.stringify(cartItems));
-        }
-    }, [cartItems, userUID]);
-
-    useEffect(() => {
-        async function loadAndMergeCart() {
-            try {
-                const { data, error } = await supabase.from('carts').select('items').eq('user_uid', userUID).maybeSingle();
-                if (error) throw error;
-                const supabaseCart = data?.items || [];
-                const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
-                const mergedCart = [...supabaseCart];
-                guestCart.forEach(item => {
-                    const existingIndex = mergedCart.findIndex(i => i.name === item.name && i.team === item.team && i.year === item.year && i.size === item.size);
-                    if (existingIndex !== -1) { mergedCart[existingIndex].quantity += item.quantity; } else { mergedCart.push(item); }
-                });
-                setCartItems(mergedCart);
-                localStorage.removeItem('guest_cart');
-            } catch (err) { console.error('Error cargando/fusionando carrito:', err.message); } finally { setLoading(false); }
-        }
-        if (userUID) { setLoading(true); loadAndMergeCart(); }
-    }, [userUID]);
-
-    useEffect(() => {
-        async function saveCart(items) {
-            try {
-                const { error } = await supabase.from('carts').upsert([{ user_uid: userUID, items }], { onConflict: ['user_uid'] });
-                if (error) throw error;
-            } catch (err) { console.error('Error guardando carrito:', err.message); }
-        }
-        if (userUID && !loading) { saveCart(cartItems); }
-    }, [cartItems, userUID, loading]);
-
     const addToCart = (product) => {
         const selectedSizeFinal = selectedSize;
         if (!selectedSizeFinal) {
@@ -226,6 +177,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
         setAlert({ show: true, message, severity: "success", title: '¡Añadido!' });
         setCartVisible(true);
     };
+    
     const toggleWishlist = (product) => {
         const productName = product.name;
         setWishlistItems(prevItems => {

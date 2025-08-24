@@ -30,12 +30,9 @@ const F1 = ({cartVisible, setCartVisible}) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [order, setOrder] = useState('');
-  const [liked, setLiked] = useState({});
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const [filterVisible, setFilterVisible] = useState(false);
 
-  const [userUID, setUserUID] = useState(null);
   const [selectedSizes, setSelectedSizes] = useState({});
   
   const [page, setPage] = useState(1);
@@ -85,99 +82,6 @@ const F1 = ({cartVisible, setCartVisible}) => {
     }
     return matchSearch && matchStock && matchPromo && matchYear && matchCat;
   });
-
-  {/* Verificar user */}
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        setUserUID(session.user.id); // ID de Supabase Auth
-      } else {
-        setUserUID(null);
-        const savedCart = localStorage.getItem('guest_cart');
-        if (savedCart) {
-          setCartItems(JSON.parse(savedCart));
-        } else {
-          setCartItems([]);
-        }
-      }
-    });
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
-
-  {/* Guardar carrito !auth */}
-  useEffect(() => {
-    if (!userUID) {
-      localStorage.setItem('guest_cart', JSON.stringify(cartItems));
-    }
-  }, [cartItems, userUID]);
-
-  {/* Cargar carrito */}
-  useEffect(() => {
-    async function loadAndMergeCart() {
-      try {
-        const { data, error } = await supabase
-          .from('carts')
-          .select('items')
-          .eq('user_uid', userUID)
-          .maybeSingle();
-
-        if (error) throw error;
-
-        const supabaseCart = data?.items || [];
-        const guestCart = JSON.parse(localStorage.getItem('guest_cart') || '[]');
-
-        const mergedCart = [...supabaseCart];
-        guestCart.forEach(item => {
-          const existingIndex = mergedCart.findIndex(
-            i =>
-              i.name === item.name &&
-              i.team === item.team &&
-              i.year === item.year &&
-              i.size === item.size
-          );
-          if (existingIndex !== -1) {
-            mergedCart[existingIndex].quantity += item.quantity;
-          } else {
-            mergedCart.push(item);
-          }
-        });
-
-        setCartItems(mergedCart);
-        localStorage.removeItem('guest_cart');
-      } catch (err) {
-        console.error('Error cargando/fusionando carrito:', err.message);
-      } finally {
-        setIsInitialLoad(false);
-      }
-    }
-
-    if (userUID) {
-      setIsInitialLoad(true);
-      loadAndMergeCart();
-    }
-  }, [userUID]);
-
-  {/* Guardar carrito */}
-  useEffect(() => {
-    async function saveCart(items) {
-      try {
-        const { error } = await supabase
-          .from('carts')
-          .upsert([{ user_uid: userUID, items }], { onConflict: ['user_uid'] });
-
-        if (error) throw error;
-      } catch (err) {
-        console.error('Error guardando carrito:', err.message);
-      }
-    }
-
-    if (userUID && !isInitialLoad) {
-      saveCart(cartItems);
-    }
-  }, [cartItems, userUID, isInitialLoad]);
 
   {/* Añadir elementos al carrito */}
   const addToCart = (product) => {
@@ -355,7 +259,6 @@ const F1 = ({cartVisible, setCartVisible}) => {
             {camisetasPagina.map((camiseta, index) => {
                 const categoria = camiseta.category
                 const slug = generarSlug(camiseta.name)
-                const isLiked = liked[index];
                 const imagenes = camiseta.img || []
                 const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null;
                 const imagenSecundaria = imagenes.length > 1 ? imagenes[imagenes.length -2] : null;

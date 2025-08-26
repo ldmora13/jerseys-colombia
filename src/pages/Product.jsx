@@ -263,7 +263,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                                 title = `${producto.category} de ${producto.team} ${producto.year}`;
                             } else if (sport === 'futbol') {
                                 logoSrc = futbolsuit;
-                                title = `Jersey ${producto.category} edition de ${producto.country} ${producto.year}`;
+                                title = `${producto.category === 'windbreaker' ? producto.category : `${producto.category} edition`} de ${producto.country} ${producto.year} ${producto.type}`;
                             }
 
                             return (

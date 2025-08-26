@@ -25,7 +25,7 @@ const Filter = ({
     } else if (location.pathname.includes("/NBA")){
         categorias = ["Todo", "Jerseys", "Shorts"];
     }else if (location.pathname.includes("/futbol")){
-        categorias = ["Todo", "Fans", "Players", "Chaquetas"];
+        categorias = ["Todo", "Fan", "Player", "Windbreaker"];
     }
 
     const toggleFilter = () => {

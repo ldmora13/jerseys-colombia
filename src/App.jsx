@@ -17,6 +17,7 @@ import Futbol from './pages/Futbol';
 import NBA from './pages/NBA';
 import F1 from './pages/F1';
 import Product from './pages/Product';
+import SearchResults from './pages/SearchResults';
 
 function App() {
 
@@ -48,6 +49,7 @@ function App() {
           <Route path='/NBA' element={<NBA setCartVisible={setCartVisible} />} />
           <Route path='/F1' element={<F1 setCartVisible={setCartVisible}  />} />
           <Route path='/:category/:name' element={<Product setCartVisible={setCartVisible} />} />
+          <Route path="/searchs/:query" element={<SearchResults />} />
         </Routes>
       </WishlistProvider>
     </CartProvider>

@@ -14,19 +14,22 @@ const Filter = ({
   yearRange, setYearRange
 }) => {
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const filterRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const filterRef = useRef(null);
 
+  // Definir las categorías basadas en la ruta
+  const getCategorias = (pathname) => {
+    if (pathname.includes("/F1")) return ["Todo", "Jerseys", "Polos", "Hoodies"];
+    if (pathname.includes("/NBA")) return ["Todo", "Jerseys", "Shorts"];
+    if (pathname.includes("/futbol")) return ["Todo", "Fan", "Player", "Windbreaker"];
+    return ["Todo"];
+  };
 
-    let categorias = ["Todo"];
-    if (location.pathname.includes("/F1")){
-        categorias = ["Todo", "Jerseys", "Polos", "Hoodies"];
-    } else if (location.pathname.includes("/NBA")){
-        categorias = ["Todo", "Jerseys", "Shorts"];
-    }else if (location.pathname.includes("/futbol")){
-        categorias = ["Todo", "Fan", "Player", "Windbreaker"];
-    }
+  const [categorias, setCategorias] = useState(getCategorias(location.pathname));
+  useEffect(() => {
+    setCategorias(getCategorias(location.pathname));
+  }, [location.pathname]);
 
     const toggleFilter = () => {
         setFilterVisible(false);

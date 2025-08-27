@@ -95,7 +95,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
       const index = prevCart.findIndex(
         item =>
           item.name === product.name &&
-          item.team === product.team &&
+          item.country === product.country &&
           item.year === product.year &&
           item.size === selectedSize
       );
@@ -252,7 +252,6 @@ const Futbol = ({cartVisible, setCartVisible}) => {
           </div>
           <div className='-ml-5 sm:ml-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-[80%] h-full p-2'>
             {camisetasPagina.map((camiseta, index) => {
-                const categoria = camiseta.category
                 const slug = generarSlug(camiseta.name)
                 const imagenes = camiseta.img || []
                 const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null;

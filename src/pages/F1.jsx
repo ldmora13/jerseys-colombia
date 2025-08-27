@@ -265,10 +265,10 @@ const F1 = ({cartVisible, setCartVisible}) => {
 
                 return (
                   <div key={index}
-                    className="flex flex-col items-center justify-center sm:justify-between w-[300px] h-[450px] rounded-2xl bg-white border-2 border-[#252525] mb-5 hover:scale-105 transition-transform "
+                    className="flex flex-col overflow-hidden items-center justify-center sm:justify-between w-[300px] h-[450px] rounded-2xl bg-white border-2 border-[#252525] mb-5 hover:scale-105 transition-transform "
                     style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
                     <Link to={`/${categoria}/${slug}`} className="w-full">
-                      <div className="w-full h-[300px] relative rounded-t-2xl overflow-hidden bg-[#f3f3f3] group border-b-2 border-b-[#252525]">
+                      <div className="w-full h-[300px] -mt-7 md:mt-0 relative rounded-t-2xl overflow-hidden bg-[#f3f3f3] group border-b-2 border-b-[#252525]">
                         {imagenPrincipal && (
                           <img
                             src={imagenPrincipal}
@@ -286,19 +286,19 @@ const F1 = ({cartVisible, setCartVisible}) => {
                       </div>
                     </Link>
                     <div className="flex flex-col items-start group w-full p-2">
-                      <div className='flex items-center justify-between w-full'>
-                        <div className='flex items-center w-auto bg-[#252525] text-white px-4 py-2 rounded-[12px]'>
-                          <p className='text-[12px] text-center'>Nuevo</p>
+                      <div className='flex items-center justify-between flex-row-reverse w-full'>
+                       <div className='-mr-5 flex items-center justify-center w-20'>
+                          <svg className='flex h-8 w-auto cursor-pointer mr-2 sm:opacity-0 group-hover:opacity-100 active:scale-110 transition' viewBox="0 0 24 24" 
+                            onClick={() => toggleWishlist(camiseta)}>
+                            <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" 
+                              fill={wishlistItems.includes(camiseta.name) ? '#FF0000' : '#292F36'}> 
+                            </path>
+                          </svg>
                         </div>
-                        <svg className='flex h-8 w-auto cursor-pointer mr-2 sm:opacity-0 group-hover:opacity-100 active:scale-110 transition' viewBox="0 0 24 24" 
-                          onClick={() => toggleWishlist(camiseta)}>
-                          <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" 
-                          fill={wishlistItems.includes(camiseta.name) ? '#FF0000' : '#292F36'}> 
-                          </path>
-                        </svg>
+                        <p className='font-semibold cursor-pointer capitalize justify-start'>
+                          {camiseta.type} de {camiseta.team} {camiseta.year} {camiseta.driver} 
+                        </p> 
                       </div>
-                      
-                      <p className='font-semibold cursor-pointer'>{camiseta.type} {camiseta.team} {camiseta.driver} {camiseta.year}</p>
                       <div className='flex flex-row items-center w-full gap-x-1'>
                         <p className='text-blue-500'>${camiseta.price} USD</p>
                         <p className='text-gray-500 italic text-[12px] ml-2'>{tasaCOP

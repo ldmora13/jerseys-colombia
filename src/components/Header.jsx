@@ -14,6 +14,8 @@ const Header = ({setCartVisible}) => {
     const { setWishlistVisible } = useWishlist();
 
     const navigate = useNavigate();
+    const [query, setQuery] = useState("");
+
     const [alert, setAlert] = useState({
         show: false,
         message: "",
@@ -38,8 +40,6 @@ const Header = ({setCartVisible}) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const navRef = useRef(null);
     const buttonNav = useRef(null);
-
-    const [query, setQuery] = useState("");
 
 
     const handleLogin = async (e) => {
@@ -122,39 +122,45 @@ const Header = ({setCartVisible}) => {
         };
     }, []);
 
-useEffect(() => {
-    function handleClickOutside(event) {
-        if (
-            dropdownRef.current &&
-            !dropdownRef.current.contains(event.target) &&
-            !buttonRef.current.contains(event.target)
-        ) {
-            setDropdownVisible(false);
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target) &&
+                !buttonRef.current.contains(event.target)
+            ) {
+                setDropdownVisible(false);
+            }
         }
-    }
 
-    document.addEventListener("click", handleClickOutside);
+        document.addEventListener("click", handleClickOutside);
 
-    if (dropdownVisible) {
-        document.body.classList.add('overflow-hidden');
-        document.documentElement.classList.add('overflow-hidden');
-    } else {
-        document.body.classList.remove('overflow-hidden');
-        document.documentElement.classList.remove('overflow-hidden');
-    }
+        if (dropdownVisible) {
+            document.body.classList.add('overflow-hidden');
+            document.documentElement.classList.add('overflow-hidden');
+        } else {
+            document.body.classList.remove('overflow-hidden');
+            document.documentElement.classList.remove('overflow-hidden');
+        }
 
-    return () => {
-        document.removeEventListener("click", handleClickOutside);
-        document.body.classList.remove('overflow-hidden');
-        document.documentElement.classList.remove('overflow-hidden');
-    };
-}, [dropdownVisible, setDropdownVisible]);
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+            document.body.classList.remove('overflow-hidden');
+            document.documentElement.classList.remove('overflow-hidden');
+        };
+    }, [dropdownVisible, setDropdownVisible]);
 
     const handleQuery = (e) => {
+        e.preventDefault();
+
         if (query.trim() !== "") {
             navigate(`/searchs/${query}`);
         } else {
-            console.log("Error en busqueda");
+            setAlert({
+                show: true,
+                message: "Error en la busqueda",
+                severity: "error",
+            });
         }
     }
     
@@ -223,8 +229,9 @@ useEffect(() => {
 
                             {/* Barra de búsqueda */}
                             <div className="w-full px-4 flex-row">
-                                <form className='flex items-center gap-2' onSubmit={e => {e.preventDefault(); handleQuery(); }}>
-                                    <input type="text" placeholder="Buscar" value={query} onChange={(e) => setQuery(e.target.value)}
+                                <form className='flex items-center gap-2' onSubmit={handleQuery}>
+                                    <input type="text" 
+                                        placeholder="Buscar" value={query} onChange={(e) => setQuery(e.target.value)}
                                         className="h-[45px] flex-1 px-4 text-black rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"/>
                                     <button type="submit" className="h-[45px] px-6 rounded-[13px] bg-[#2f3545] text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
                                         Buscar
@@ -372,7 +379,7 @@ useEffect(() => {
                 {/* Search bar */}
                 <div className={`md:flex hidden flex-col md:flex-row md:items-center items-center gap-4 md:gap-6 w-full md:w-auto mt-4 md:mt-0  `}>
                     <div className='w-full md:w-[300px]'>
-                        <form className='hidden md:flex' onSubmit={e => {e.preventDefault(); handleQuery(); }}>
+                        <form className='hidden md:flex' onSubmit={handleQuery}>
                             <input
                                 type='text'
                                 placeholder="Buscar"

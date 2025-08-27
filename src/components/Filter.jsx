@@ -155,7 +155,7 @@ const Filter = ({
                                 <div className='mt-1 h-3 w-1 sm:h-5 sm:w-2 bg-[#252525]'></div>
                                 <h3 className='text-sm sm:text-[20px]'>Categoria</h3>
                             </div>
-                            <div className='flex flex-row items-center justify-start w-full sm:gap-x-8 gap-x-2 mt-2 text-black'>
+                            <div className='flex flex-row items-center justify-start w-full md:gap-x-4 gap-x-2 mt-2 text-black'>
                                 {categorias.map((cat) => (
                                     <div
                                     key={cat}

@@ -11,6 +11,8 @@ import Loader from '../components/Loader';
 import Filter from '../components/Filter';
 import Footer from '../components/Footer';
 
+import futbolsuit from '../assets/soccer-equipment.svg'
+
 
 const Futbol = ({cartVisible, setCartVisible}) => {
 
@@ -231,11 +233,8 @@ const Futbol = ({cartVisible, setCartVisible}) => {
         <div ref={topRef} className='h-20'></div>
         <main className="flex flex-col items-center w-full p-4 text-black">
           <div className='flex flex-col items-center w-auto h-auto'>
-            <svg className='h-12' fill="#000000" height="200px" width="200px" viewBox="0 0 500.152 500.152" xml:space="preserve">
-              <path d="M463.776,116.236c-9.688-30.68-32.52-54.76-62.656-66.056l-79.048-29.648V2.076h-144v18.456l-79.048,29.64 c-30.136,11.304-52.968,35.376-62.656,66.056L0,231.412l95.44,28.632l18.632-62.128v300.16h272v-300.16l18.64,62.12l95.44-28.632 L463.776,116.236z M306.072,18.076v6.112L292.4,51.532l-23.752,7.92l25.856-41.376H306.072z M275.632,18.076l-25.56,40.904 l-25.568-40.904H275.632z M194.072,18.076h11.568l25.856,41.376l-23.752-7.92l-13.672-27.344V18.076z M130.072,482.076v-185.56 c12.52,9.52,21.88,22.864,26.336,38.144l43,147.416H130.072z M171.768,330.188c-6.504-22.32-21.616-41.232-41.696-52.76v-73.96 l6.928,5.936c21.68,18.584,36.056,44.36,40.464,72.584l22.792,145.864L171.768,330.188z M370.072,482.076h-69.336l43-147.416 c4.456-15.28,13.816-28.624,26.336-38.144V482.076z M370.072,277.428c-20.08,11.52-35.184,30.432-41.696,52.76l-28.488,97.664 l22.792-145.864c4.408-28.216,18.784-54,40.464-72.584l6.928-5.936V277.428z M392.024,162.076h-21.952v20.32l-17.336,14.864 c-24.576,21.064-40.856,50.28-45.856,82.264l-31.656,202.552h-50.312l-31.648-202.56c-5-31.984-21.28-61.192-45.856-82.264 l-17.336-14.856v-20.32H108.12l-23.408,78.04l-64.56-19.368l5.808-18.384l53.92,15.408l4.4-15.384L30.776,187.1l20.856-66.048 c8.192-25.96,27.52-46.336,53.016-55.896l77.496-29.064l14.264,28.52l53.664,17.896l53.672-17.888l14.264-28.52l77.496,29.064 C421,74.724,440.328,95.1,448.52,121.06l20.856,66.048l-53.504,15.288l4.4,15.384l53.92-15.408L480,220.756l-64.56,19.368 L392.024,162.076z">
-              </path>
-            </svg>
-            <h1 className='font-bold text-2xl'>Jerseys de Selecciones de Fútbol</h1>
+            <img src={futbolsuit} className='h-15 w-auto' />
+            <h1 className='font-bold text-2xl text-center'>Jerseys de Selecciones de Fútbol</h1>
           </div>
           <div className='flex flex-row items-center justify-center md:justify-between sm:w-[80%] w-5 h-auto sm:gap-4 p-4 mt-4'>
             <div onClick={() => setFilterVisible(true)} className='hover:bg-[#252525] hover:text-white hover:scale-110 transition p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer' role='button'>
@@ -262,7 +261,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
                     className="flex flex-col items-center justify-center sm:justify-between w-[300px] h-[450px] rounded-2xl bg-white border-2 border-[#252525] mb-5 hover:scale-105 transition-transform "
                     style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
                     <Link to={`/futbol/${slug}`} className="w-full">
-                      <div className="w-full h-[300px] relative rounded-t-2xl overflow-hidden bg-[#f3f3f3] group border-b-2 border-b-[#252525]">
+                      <div className="w-full h-[300px] -mt-3 md:mt-0 relative rounded-t-2xl overflow-hidden bg-[#f3f3f3] group border-b-2 border-b-[#252525]">
                         {imagenPrincipal && (
                           <img
                             src={imagenPrincipal}
@@ -280,19 +279,19 @@ const Futbol = ({cartVisible, setCartVisible}) => {
                       </div>
                     </Link>
                     <div className="flex flex-col items-start group w-full p-2">
-                      <div className='flex items-center justify-between w-full'>
-                        <div className='flex items-center w-auto bg-[#252525] text-white px-4 py-2 rounded-[12px]'>
-                          <p className='text-[12px] text-center'>Nuevo</p>
+                      <div className='flex items-center justify-between flex-row-reverse w-full'>
+                       <div className='flex items-center justify-center p-2 w-20'>
+                          <svg className='flex h-8 w-auto cursor-pointer mr-2 sm:opacity-0 group-hover:opacity-100 active:scale-110 transition' viewBox="0 0 24 24" 
+                            onClick={() => toggleWishlist(camiseta)}>
+                            <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" 
+                              fill={wishlistItems.includes(camiseta.name) ? '#FF0000' : '#292F36'}> 
+                            </path>
+                          </svg>
                         </div>
-                        <svg className='flex h-8 w-auto cursor-pointer mr-2 sm:opacity-0 group-hover:opacity-100 active:scale-110 transition' viewBox="0 0 24 24" 
-                          onClick={() => toggleWishlist(camiseta)}>
-                          <path d="M2 9.1371C2 14 6.01943 16.5914 8.96173 18.9109C10 19.7294 11 20.5 12 20.5C13 20.5 14 19.7294 15.0383 18.9109C17.9806 16.5914 22 14 22 9.1371C22 4.27416 16.4998 0.825464 12 5.50063C7.50016 0.825464 2 4.27416 2 9.1371Z" 
-                          fill={wishlistItems.includes(camiseta.name) ? '#FF0000' : '#292F36'}> 
-                          </path>
-                        </svg>
+                        <p className='font-semibold cursor-pointer capitalize'>
+                          {camiseta.category === 'windbreaker' ? camiseta.category : `${camiseta.category} edition`} {camiseta.country} {camiseta.year}
+                        </p> 
                       </div>
-                      
-                      <p className='font-semibold cursor-pointer capitalize'>{camiseta.category} edition {camiseta.country} {camiseta.year}</p>
                       <div className='flex flex-row items-center w-full gap-x-1'>
                         <p className='text-blue-500'>${camiseta.price} USD</p>
                         <p className='text-gray-500 italic text-[12px] ml-2'>{tasaCOP

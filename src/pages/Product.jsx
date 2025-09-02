@@ -304,7 +304,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             ))}
                         </ul>
 
-                        {(producto.sport === 'nba' || (producto.sport === 'futbol' && ['fan', 'player'].includes(producto.category.toLowerCase()))) && (
+                        {(producto.sport === 'futbol' && ['fan', 'player'].includes(producto.category.toLowerCase())) && (
                             <PersonalizationPanel setCustomName={setCustomName} setCustomNumber={setCustomNumber} />
                         )}
 

@@ -18,6 +18,8 @@ import NBA from './pages/NBA';
 import F1 from './pages/F1';
 import Product from './pages/Product';
 import SearchResults from './pages/SearchResults';
+import Checkout from './pages/Checkout';
+
 
 function App() {
 
@@ -50,6 +52,7 @@ function App() {
           <Route path='/F1' element={<F1 setCartVisible={setCartVisible}  />} />
           <Route path='/:category/:name' element={<Product setCartVisible={setCartVisible} />} />
           <Route path="/searchs/:query" element={<SearchResults />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </WishlistProvider>
     </CartProvider>

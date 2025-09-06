@@ -145,8 +145,8 @@ const Cart = ({ cartVisible, setCartVisible }) => {
                             <h2 className="font-bold text-sm capitalize">
                               {renderProductTitle(producto)}
                             </h2>
-                            <span className="text-xs text-gray-500">
-                              {producto.type} - ${producto.price} USD {producto.quantity < 2 ? '' : ` x ${producto.quantity}`}
+                            <span className="text-xs text-gray-500 capitalize">
+                              {producto.category} - ${producto.price} USD {producto.quantity < 2 ? '' : ` x ${producto.quantity}`}
                             </span>
                             <span className="text-xs text-gray-500">
                               {producto.size ? `Talla: ${producto.size}` : ''}
@@ -181,9 +181,10 @@ const Cart = ({ cartVisible, setCartVisible }) => {
                     </p>
                   </div>
                   <div className="w-full">
-                    <button className="bg-[#292F36] text-white w-full px-4 py-2 hover:bg-[#1a1a1a] transition" onClick={handleCheckout}>
-                      {cartItems.length > 0 ? 'Proceder al pago' : 'Carrito vacío'}
-                    </button>
+                    <button onClick={handleCheckout} className='group relative w-full h-10 flex items-center justify-center bg-[#252525] hover:text-black text-white font-bold gap-2 cursor-pointer shadow-md overflow-hidden transition-all duration-300 active:translate-x-1 active:translate-y-1 before:content-[""] before:absolute before:w-full before:h-[130px] before:top-0 before:left-[-100%] before:bg-white before:transition-all before:duration-300 before:mix-blend-difference hover:before:transform hover:before:translate-x-full hover:before:-translate-y-1/2 hover:before:rounded-none'>
+                      <span className='relative z-10'>Pagar</span>
+                      <svg className='relative z-10 h-3 ' viewBox="0 0 576 512"><path className='fill-white group-hover:fill-black transition-colors duration-200' d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"/></svg>
+                  </button>
                   </div>
                 </div>
               </div>

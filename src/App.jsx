@@ -19,7 +19,7 @@ import F1 from './pages/F1';
 import Product from './pages/Product';
 import SearchResults from './pages/SearchResults';
 import Checkout from './pages/Checkout';
-
+import TransactionResult from './pages/TransactionResult';
 
 function App() {
 
@@ -53,6 +53,7 @@ function App() {
           <Route path='/:category/:name' element={<Product setCartVisible={setCartVisible} />} />
           <Route path="/searchs/:query" element={<SearchResults />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout/success" element={<TransactionResult />} />
         </Routes>
       </WishlistProvider>
     </CartProvider>

@@ -5,4 +5,13 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
   ],
+  server: {
+    host: true, 
+    hmr: {
+      host: 'localhost',
+    },
+    allowedHosts: [
+      '.ngrok-free.app'
+    ]
+  }
 })

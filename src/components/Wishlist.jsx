@@ -85,21 +85,21 @@ const Wishlist = () => {
                     exit={{ opacity: 0 }}
                 />
                     <motion.div ref={wishlistRef}
-                        className="fixed top-20 right-5 sm:w-1/4 w-3/4 max-h-[70vh] bg-white flex flex-col shadow-2xl z-[1000] rounded-lg"
+                        className="fixed top-20 right-5 sm:w-1/4 w-3/4 max-h-[70vh] flex flex-col shadow-2xl z-[1000] rounded-lg"
                         initial={{ y: "-100%" }}
                         animate={{ y: 0 }}
                         exit={{ y: "-100%" }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}>
 
                         {/* Header */}
-                        <div className="bg-white w-full p-4 border-b-[0.5px] flex flex-row justify-between items-center rounded-t-lg">
+                        <div className=" w-full bg-gradient-to-br from-blue-50 to-indigo-100 p-4 border-b-[0.5px] flex flex-row justify-between items-center rounded-t-lg">
                             <h2 className="text-sm sm:text-xl font-semibold">Lista de deseos</h2>
                             <p onClick={() => setWishlistVisible(false)}
                                 className='text-sm sm:text-xl text-gray-400 hover:text-black cursor-pointer font-bold'>x</p>
                         </div>
 
                         {/* Contenido */}
-                        <div className="w-full h-full p-2 overflow-y-auto bg-[#E8E8E8]">
+                        <div className="w-full h-full p-2 overflow-y-auto bg-indigo-100">
                             {loading ? (
                                 <p className='p-4'>Cargando...</p>
                             ) : products.length > 0 ? (
@@ -113,7 +113,7 @@ const Wishlist = () => {
                                             />
                                             <div>
                                                 <p className='text-sm sm:text-xl'>{product.name}</p>
-                                                <p className='text-blue-500'>${product.price} USD</p>
+                                                <p className='text-blue-300'>${product.price} USD</p>
                                             </div>
                                         </Link>
                                         <button 

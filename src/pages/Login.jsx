@@ -138,18 +138,17 @@ const Login = () => {
     <div>
        {/* LOADER SUPERPUESTO */}
        {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 z-[2000]">
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 fixed inset-0 flex items-center justify-center bg-opacity-90 z-[2000]">
           <Loader />
         </div>
       )}
 
 
-      <main className="bg-[#E8E8E8] flex items-center md:justify-start h-full w-full p-[20px] flex-col mt-20">
+      <main className="flex items-center md:justify-start h-full w-full pt-40 flex-col">
         <div className="mt-2 flex md:flex-row flex-col justify-center items-center gap-10 w-full">
 
           {/* Contenedor 1 */}
-          <div onClick={() => navigate("/futbol")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]"
-           style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
+          <div onClick={() => navigate("/futbol")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-gradient-to-br from-blue-200 to-indigo-100 shadow">
             <p className="-mt-4 mb-2 text-center text-[16px] font-semibold cursor-pointer">Fútbol</p>
             <div className="flex flex-col gap-4 overflow-visible">
               {camisetasFutbol.map((camiseta, index) => {
@@ -180,8 +179,7 @@ const Login = () => {
             </div>
           </div>
           {/* Contenedor 2 */}
-          <div onClick={() => navigate("/NBA")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
-              style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
+          <div onClick={() => navigate("/NBA")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-gradient-to-br from-blue-200 to-indigo-100 shadow">
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">NBA</p>
             <div className="flex flex-col gap-4 overflow-visible">
               {camisetasNBA.map((camiseta, index) => {
@@ -211,8 +209,7 @@ const Login = () => {
           </div>
 
           {/* Contenedor 3 */}
-          <div onClick={() => navigate("/F1")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-[#e0e0e0]" 
-              style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
+          <div onClick={() => navigate("/F1")} className="group flex flex-col items-center justify-center w-[300px] h-[400px] rounded-2xl bg-gradient-to-br from-blue-200 to-indigo-100 shadow">
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">F1</p>
             <div className="flex flex-col gap-4 overflow-visible">
               {camisetasF1.map((camiseta, index) => {

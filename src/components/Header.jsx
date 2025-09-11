@@ -167,7 +167,7 @@ const Header = ({setCartVisible}) => {
 
   return (
     <div>
-        <header className="bg-[#E8E8E8] p-4 w-full z-[999] top-0 left-0 h-[70px] border-b-[2px] border-transparent fixed">
+        <header className="bg-blue-200 p-4 w-full z-[999] top-0 left-0 h-[70px] border-b-[2px] border-transparent fixed">
             <div className="max-w-[1200px] mx-auto px-5 sm:-mt-1.5 flex items-center flex-wrap justify-between md:flex-nowrap">
                 {/* Logo */}
                 <div className="flex items-center">
@@ -209,19 +209,19 @@ const Header = ({setCartVisible}) => {
                             <ul className="flex flex-col items-center gap-3 bg-white/80 rounded-xl shadow-md px-6 py-4 w-full max-w-xs mx-auto mb-4">
                                 <li>
                                     <a onClick={() => navigate("/futbol")}
-                                        className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:bg-[#00ff2a]/80 hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
+                                        className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525]  hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
                                         Fútbol
                                     </a>
                                 </li>
                                 <li>
                                     <a onClick={() => navigate("/NBA")}
-                                        className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:bg-[#EE6730]/80 hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
+                                        className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
                                         Basketball
                                     </a>
                                 </li>
                                 <li>
                                     <a onClick={() => navigate("/F1")} 
-                                        className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:bg-black/80 hover:text-white hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
+                                        className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
                                         Fórmula 1
                                     </a>
                                 </li>
@@ -233,7 +233,7 @@ const Header = ({setCartVisible}) => {
                                     <input type="text" 
                                         placeholder="Buscar" value={query} onChange={(e) => setQuery(e.target.value)}
                                         className="h-[45px] flex-1 px-4 text-black rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"/>
-                                    <button type="submit" className="h-[45px] px-6 rounded-[13px] bg-[#2f3545] text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
+                                    <button type="submit" className="h-[45px] px-6 rounded-[13px] bg-[#252525] text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
                                         Buscar
                                     </button>
                                 </form>
@@ -244,7 +244,7 @@ const Header = ({setCartVisible}) => {
                                 <div ref={buttonRef} onClick={() => setDropdownVisible(!dropdownVisible)}
                                     className="w-full h-[45px] md:w-[131px] rounded-[15px] cursor-pointer">
                                     {/* Dynamic Button */}
-                                    <div className="w-full h-[43px] rounded-[13px] bg-[#2f3545] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
+                                    <div className="w-full h-[43px] rounded-[13px] bg-[#252525] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
                                         <svg aria-hidden="true" viewBox="0 0 24 24" className="w-[24px] h-[24px] fill-white">
                                             <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
                                         </svg>
@@ -267,9 +267,9 @@ const Header = ({setCartVisible}) => {
                                                 </Alert>
                                             )}
                                                 {isAuthenticated ? (
-                                                <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)] mx-auto" style={{ backgroundImage: "linear-gradient(163deg, ##bebebe 0%, #bebebe 100%)" }}>
+                                                <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 bg-blue-200 mx-auto">
                                                     <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px] ">
-                                                        <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-[#e0e0e0] rounded-[25px]">
+                                                        <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-[25px]">
                                                         <div className="flex flex-col gap-3 sm:gap-4 items-center justify-center">
                                                             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
                                                                 className="w-[24px] sm:w-[26px] md:w-[27px] h-[24px] sm:h-[26px] md:h-[27px] fill-black">
@@ -284,7 +284,7 @@ const Header = ({setCartVisible}) => {
                                                             <button className="p-2 mb-3 rounded-md bg-[#252525] hover:bg-black">
                                                                 Compras
                                                             </button>
-                                                            <button className="p-2  rounded-md bg-[#252525] hover:bg-black">
+                                                            <button onClick={() => navigate("/soporte")} className="p-2  rounded-md bg-[#252525] hover:bg-black">
                                                                 Soporte
                                                             </button>
                                                             <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#252525] to-transparent">
@@ -357,19 +357,19 @@ const Header = ({setCartVisible}) => {
                     <ul className="hidden md:flex items-center gap-10">
                         <li>
                             <a onClick={() => navigate("/futbol")} 
-                                className="cursor-pointer font-medium py-2 px-3 rounded-sm transition-all duration-300 ease-in-out hover:bg-[#00ff2a] active:text-[#4a6cf7] active:bg-green-100">
+                                className="cursor-pointer font-medium py-2 px-3 rounded-sm scale-110 transition-all duration-300 ease-in-out ">
                                 Fútbol
                             </a>
                         </li>
                         <li>
                             <a onClick={() => navigate("/NBA")}
-                                className="cursor-pointer font-medium py-2 px-3 rounded-sm transition-all duration-300 ease-in-out hover:bg-[#EE6730] active:text-[#4a6cf7] active:bg-red-100">
+                                className="cursor-pointer font-medium py-2 px-3 rounded-sm scale-110 transition-all duration-300 ease-in-out ">
                                 Basketball
                             </a>
                         </li>
                         <li>
                             <a onClick={() => navigate("/F1")}
-                                className="cursor-pointer font-medium py-2 px-3 rounded-sm transition-all duration-300 ease-in-out hover:text-white hover:bg-black active:text-[#4a6cf7] active:bg-gray-200">
+                                className="cursor-pointer font-medium py-2 px-3 rounded-sm scale-110 transition-all duration-300 ease-in-out ">
                                 Fórmula 1
                             </a>
                         </li>
@@ -385,7 +385,7 @@ const Header = ({setCartVisible}) => {
                                 placeholder="Buscar"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
-                                className="h-[45px] w-full px-4 rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"
+                                className="h-[45px] w-full px-4 rounded-[13px] bg-blue-50 font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"
                             />
                         </form>    
                     </div>      
@@ -407,7 +407,7 @@ const Header = ({setCartVisible}) => {
                     <div ref={buttonRef} onClick={() => setDropdownVisible(!dropdownVisible)}
                         className="w-full h-[45px] md:w-[131px] rounded-[15px] cursor-pointer">
                         {/* Dynamic Button */}
-                        <div className="w-full h-[43px] rounded-[13px] bg-[#292F36] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
+                        <div className="w-full h-[43px] rounded-[13px] bg-[#252525] flex items-center justify-center gap-2 text-white font-semibold transition transform duration-200 ease-in-out hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3] active:text-[#3B92BA]">
                             <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-[24px] h-[24px] fill-white">
                                 <path d="m15.626 11.769a6 6 0 1 0 -7.252 0 9.008 9.008 0 0 0 -5.374 8.231 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 9.008 9.008 0 0 0 -5.374-8.231zm-7.626-4.769a4 4 0 1 1 4 4 4 4 0 0 1 -4-4zm10 14h-12a1 1 0 0 1 -1-1 7 7 0 0 1 14 0 1 1 0 0 1 -1 1z"></path>
                             </svg>
@@ -430,9 +430,9 @@ const Header = ({setCartVisible}) => {
                                         </Alert>
                                     )}
                                     {isAuthenticated ? (
-                                    <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)] mx-auto" style={{ backgroundImage: "linear-gradient(163deg, #bebebe 0%, #bebebe 100%)" }}>
+                                    <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto transition-all duration-300 bg-blue-200 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)] mx-auto">
                                         <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px] ">
-                                            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-[#e0e0e0] rounded-[25px]">
+                                            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-[25px]">
                                             <div className="flex flex-col gap-3 sm:gap-4 items-center justify-center">
                                                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
                                                     className="w-[24px] sm:w-[26px] md:w-[27px] h-[24px] sm:h-[26px] md:h-[27px] fill-black">
@@ -447,7 +447,7 @@ const Header = ({setCartVisible}) => {
                                                 <button className="p-2 mb-3 rounded-md bg-[#252525] hover:bg-black">
                                                     Compras
                                                 </button>
-                                                <button className="p-2 rounded-md bg-[#252525] hover:bg-black">
+                                                <button onClick={() => navigate("/soporte")} className="p-2 rounded-md bg-[#252525] hover:bg-black">
                                                     Soporte
                                                 </button>
                                                 <div className="mt-3 mb-3 bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#252525] to-transparent">

@@ -13,18 +13,8 @@ const Policies = () => {
   
   return (
     <div>
-       <header className="p-4 relative w-full z-[1000] top-0 left-0 h-[70px] border-b-[2px] border-transparent">
-            {/* Logo */}
-            <div className="flex items-center justify-center ">
-              <a href="/">
-                <img src={logo} onClick={() => navigate("/")} alt="logo" className="h-[40px]"/>
-              </a>
-            </div>
-          <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff2a] to-transparent">
-          </div>
-        </header>
         <div>
-          <div className="max-w-[1000px] mx-auto px-5 py-10">
+          <div className="min-h-screen mx-auto px-5 py-10 mt-20">
             <h1 className='text-center text-[30px] font-bold'>Políticas de Jerseys Colombia</h1>
             <p className='text-center text-[16px]'>Última actualización: 2025-05-01</p>
             <div className='mt-10'>

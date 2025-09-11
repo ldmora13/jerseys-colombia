@@ -65,7 +65,7 @@ const Filter = ({
                         exit={{ opacity: 0 }}
                     />
                     <motion.div ref={filterRef}
-                        className='fixed top-0 left-0 sm:w-1/3 w-full h-full bg-[#E8E8E8] p-4 gap-4 gap-y-6 flex flex-col z-[1000] overflow-auto'
+                        className='fixed top-0 left-0 sm:w-1/3 w-full h-full bg-gradient-to-br from-blue-200 to-indigo-100 p-4 gap-4 gap-y-6 flex flex-col z-[1000] overflow-auto'
                         initial={{ x: '-100%' }}
                         animate={{ x: 0 }}
                         exit={{ x: '-100%' }}
@@ -77,7 +77,7 @@ const Filter = ({
                                 <p onClick={toggleFilter}
                                     className='text-2xl sm:text-3xl text-gray-400 hover:text-black cursor-pointer'>x</p>
                             </div>
-                        <div className="mt-3 sm:mt-1 w-full h-[2px] bg-gradient-to-r from-transparent via-[#252525] to-transparent">
+                        <div className="mt-3 md:mt-0.5 w-full h-[1.5px] bg-gradient-to-r from-transparent via-[#252525] to-transparent">
                         </div>
                         </div>
                         {/* Filter bar */}
@@ -89,7 +89,7 @@ const Filter = ({
                                         placeholder="Buscar"
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
-                                        className="h-auto py-2 sm:py-0 sm:h-[45px] w-full px-4 rounded-[13px] bg-[#F3F3F3] font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"
+                                        className="h-auto py-2 sm:py-0 sm:h-[45px] w-full px-4 rounded-[13px] bg-indigo-100 font-semibold outline-none focus:shadow-[0_0_10px_rgba(45,64,75,1)]"
                                     />
                                 </form>    
                             </div>      

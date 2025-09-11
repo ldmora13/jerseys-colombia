@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import { supabase } from '../lib/supabaseClient';
 import CryptoJS from 'crypto-js';
 import BoldButton from '../components/BoldButton';
+import { Loader2 } from 'lucide-react';
 
 const Checkout = () => {
     const { cartItems } = useCart();
@@ -20,19 +21,14 @@ const Checkout = () => {
         postalCode: '',
         phone: ''
     });
-
+    const [paymentData, setPaymentData] = useState(null);
+    const [isPreparing, setIsPreparing] = useState(false);
 
     const [user, setUser] = useState(null);
+    const [isLoadingUser, setIsLoadingUser] = useState(true);
+
     const [subtotal, setSubtotal] = useState(0); 
     const shippingCost = 15;
-
-    const orderId = `order_${Date.now()}`;
-    
-    const amount = Math.round((subtotal + shippingCost) * tasaCOP);
-    const currency = "COP";
-    const secret = import.meta.env.VITE_BOLD_INTEGRITY_SECRET;
-    const signatureString = `${orderId}${amount}${currency}${secret}`;
-    const integritySignature = CryptoJS.SHA256(signatureString).toString();
 
     useEffect(() => {
         const fetchTasa = async () => {
@@ -61,33 +57,35 @@ const Checkout = () => {
         }
     }, [location.state, cartItems, navigate]);
 
-  useEffect(() => {
-    const getSession = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
+    useEffect(() => {
+        const getSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            const currentUser = session?.user ?? null;
+            setUser(currentUser);
 
-      if (error) {
-        console.error("Error obteniendo sesión:", error);
-        return;
-      }
+            if (currentUser) {
+                setFormData((prev) => ({ 
+                    ...prev, 
+                    email: currentUser.email, 
+                    fullName: currentUser.user_metadata?.full_name || '' 
+                }));
+            }
+            setIsLoadingUser(false); 
+        };
 
-      if (session?.user) {
-        setUser(session.user);
-        setFormData((prev) => ({ ...prev, email: session.user.email, fullName: session.user.user_metadata.full_name }));
-      }
-    };
+        getSession();
+    }, []);
 
-    getSession();
-  }, []);
+    useEffect(() => {
+        if (!isLoadingUser && !user) {
+            alert("Por favor, inicia sesión para continuar con la compra.");
+        }
+    }, [user, isLoadingUser]);
 
     useEffect(() => {
         const newSubtotal = itemsToCheckout.reduce((total, item) => {
             let itemPrice = item.price;
-            if(item.customName || item.customNumber) {
-                itemPrice += 5; 
-            }
+            if(item.customName || item.customNumber) { itemPrice += 5; }
             return total + itemPrice * item.quantity;
         }, 0);
         setSubtotal(newSubtotal);
@@ -98,35 +96,37 @@ const Checkout = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const paymentData = useMemo(() => {
-        // No calcular nada hasta que tengamos la tasa de cambio
-        if (!tasaCOP || subtotal === 0) {
-            return {
-                orderId: null,
-                amount: 0,
-                integritySignature: null,
-                isReady: false // Añadimos una bandera para saber si estamos listos
-            };
+    const handlePreparePayment = async () => {
+        setIsPreparing(true);
+        try {
+            const { data, error } = await supabase.functions.invoke('create-pending-order', {
+                body: {
+                    customerInfo: { ...formData, userId: user?.id },
+                    itemsToCheckout,
+                    subtotal,
+                    shippingCost,
+                    tasaCOP
+                },
+            });
+
+            if (error) throw error;
+            setPaymentData(data); 
+
+        } catch (error) {
+            console.error("Error al preparar el pago:", error);
+            alert("Hubo un error al preparar tu orden. Por favor, intenta de nuevo.");
+        } finally {
+            setIsPreparing(false);
         }
+    };
 
-        const orderId = `order_${Date.now()}`;
-        const totalUSD = subtotal + shippingCost;
-        const amountInCOP = Math.round(totalUSD * tasaCOP);
-        const currency = "COP";
-        const secret = import.meta.env.VITE_BOLD_INTEGRITY_SECRET;
-        const signatureString = `${orderId}${amountInCOP}${currency}${secret}`;
-        const integritySignature = CryptoJS.SHA256(signatureString).toString();
 
-        return { orderId, amount: amountInCOP, integritySignature, isReady: true };
-
-    }, [subtotal, shippingCost, tasaCOP]);
-
-    if (itemsToCheckout.length === 0) {
+    if (isLoadingUser || itemsToCheckout.length === 0) {
         return <div className="flex items-center justify-center h-screen">Cargando...</div>;
     }
 
     return (
-        <div className="bg-[#e8e8e8] min-h-screen">
+        <div className="h-min-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-45">
             <div className="container mx-auto px-4 py-8 pt-24 max-w-6xl">
                 <form className="flex flex-col lg:flex-row gap-12">
                     {/* Columna Izquierda: Formulario de Datos */}
@@ -191,21 +191,29 @@ const Checkout = () => {
                                   </span>
                                 </div>
                             </div>
-                            <div className='flex items-center justify-center mt-5'>
-                                <BoldButton
-                                    orderId={orderId}
-                                    amount={amount}
-                                    description="Compra en Jerseys Colombia"
-                                    integritySignature={integritySignature}
-                                    customerData={formData}
-                                    billingAddress={{
-                                        address: formData.address,
-                                        city: formData.city,
-                                        zipCode: formData.postalCode,
-                                        state: "Colombia",
-                                        country: "CO"
-                                    }}
-                                />
+                             <div className='flex items-center justify-center mt-5'>
+                                {!paymentData ? (
+                                    <button
+                                        type="button"
+                                        onClick={handlePreparePayment}
+                                        disabled={isPreparing}
+                                        className='group relative w-full h-12 flex items-center justify-center bg-blue-200 hover:bg-blue-300 text-white font-bold ...'
+                                    >
+                                        {isPreparing ? <Loader2 className="animate-spin" /> : 'Confirmar y Continuar al Pago'}
+                                    </button>
+                                ) : (
+                                    <BoldButton
+                                        orderId={paymentData.orderId}
+                                        amount={paymentData.amount}
+                                        description="Compra en Jerseys Colombia"
+                                        integritySignature={paymentData.integritySignature}
+                                        customerData={
+                                            { 
+                                                email: formData.email, fullName: formData.fullName 
+                                                }}
+                                        billingAddress={{ address: formData.address, city: formData.city, country: "CO" }}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>

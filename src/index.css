@@ -2,7 +2,7 @@
 @import "@fontsource/cascadia-code";
 
 body{
-    background-color: #E8E8E8;
+    background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
     font-family: 'Cascadia Code', monospace;
 }
 

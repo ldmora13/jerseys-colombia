@@ -21,6 +21,8 @@ import SearchResults from './pages/SearchResults';
 import Checkout from './pages/Checkout';
 import TransactionResult from './pages/TransactionResult';
 
+import Soporte from './pages/Soporte';
+
 function App() {
 
   const [user, setUser] = useState(null);
@@ -46,7 +48,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/policies" element={<Policies />} />
+          <Route path="/politicas" element={<Policies />} />
           <Route path='/futbol' element={<Futbol setCartVisible={setCartVisible} />} />
           <Route path='/NBA' element={<NBA setCartVisible={setCartVisible} />} />
           <Route path='/F1' element={<F1 setCartVisible={setCartVisible}  />} />
@@ -54,6 +56,7 @@ function App() {
           <Route path="/searchs/:query" element={<SearchResults />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkout/success" element={<TransactionResult />} />
+          <Route path="/soporte" element={<Soporte />} />
         </Routes>
       </WishlistProvider>
     </CartProvider>

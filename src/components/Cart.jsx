@@ -112,7 +112,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
 
             <motion.div
               ref={cartRef}
-              className="fixed top-0 right-0 sm:w-1/4 lg:w-[350px] w-full h-full bg-[#E8E8E8] p-4 gap-4 gap-y-6 flex flex-col z-[1000] overflow-auto"
+              className="fixed top-0 right-0 sm:w-1/4 lg:w-[350px] w-full h-full bg-gradient-to-br from-blue-200 to-indigo-100 p-4 gap-4 gap-y-6 flex flex-col z-[1000] overflow-auto"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
@@ -169,7 +169,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
 
                 {/* Total y botón */}
                 <div className="absolute bottom-0 flex flex-col items-center justify-start mt-4 w-full">
-                  <div className="flex flex-row items-center justify-start w-full gap-2 bg-[#e0e0e0] rounded-t-2xl p-2 shadow-lg">
+                  <div className="flex flex-row items-center justify-start w-full gap-2 bg-blue-200 rounded-t-2xl p-2 shadow-lg">
                     <p className="text-[14px] sm:text-[16px]">Tu compra: ${precioTotal} USD</p>
                     <p className="text-gray-500 italic text-[10px] sm:text-[12px] ml-2">
                       {tasaCOP
@@ -181,7 +181,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
                     </p>
                   </div>
                   <div className="w-full">
-                    <button onClick={handleCheckout} className='group relative w-full h-10 flex items-center justify-center bg-[#252525] hover:text-black text-white font-bold gap-2 cursor-pointer shadow-md overflow-hidden transition-all duration-300 active:translate-x-1 active:translate-y-1 before:content-[""] before:absolute before:w-full before:h-[130px] before:top-0 before:left-[-100%] before:bg-white before:transition-all before:duration-300 before:mix-blend-difference hover:before:transform hover:before:translate-x-full hover:before:-translate-y-1/2 hover:before:rounded-none'>
+                    <button onClick={handleCheckout} className='group relative w-full h-10 flex items-center justify-center bg-black hover:text-black text-white font-bold gap-2 cursor-pointer shadow-md overflow-hidden transition-all duration-300 active:translate-x-1 active:translate-y-1 before:content-[""] before:absolute before:w-full before:h-[130px] before:top-0 before:left-[-100%] before:bg-white before:transition-all before:duration-300 before:mix-blend-difference hover:before:transform hover:before:translate-x-full hover:before:-translate-y-1/2 hover:before:rounded-none'>
                       <span className='relative z-10'>Pagar</span>
                       <svg className='relative z-10 h-3 ' viewBox="0 0 576 512"><path className='fill-white group-hover:fill-black transition-colors duration-200' d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"/></svg>
                   </button>

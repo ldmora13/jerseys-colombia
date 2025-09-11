@@ -281,7 +281,7 @@ const Header = ({setCartVisible}) => {
                                                             <button onClick={() => navigate("/profile")} className="text-center p-2 mb-3 rounded-md bg-[#252525]  hover:bg-black">
                                                                 Perfil
                                                             </button>
-                                                            <button className="p-2 mb-3 rounded-md bg-[#252525] hover:bg-black">
+                                                            <button onClick={() => navigate("/compras")} className="p-2 mb-3 rounded-md bg-[#252525] hover:bg-black">
                                                                 Compras
                                                             </button>
                                                             <button onClick={() => navigate("/soporte")} className="p-2  rounded-md bg-[#252525] hover:bg-black">
@@ -444,7 +444,7 @@ const Header = ({setCartVisible}) => {
                                                 <button onClick={() => navigate("/profile")} className="bg-[#252525] text-center p-2 mb-3 rounded-md hover:bg-black">
                                                     Perfil
                                                 </button>
-                                                <button className="p-2 mb-3 rounded-md bg-[#252525] hover:bg-black">
+                                                <button onClick={() => navigate("/compras")} className="p-2 mb-3 rounded-md bg-[#252525] hover:bg-black">
                                                     Compras
                                                 </button>
                                                 <button onClick={() => navigate("/soporte")} className="p-2 rounded-md bg-[#252525] hover:bg-black">

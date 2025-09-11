@@ -5,6 +5,11 @@ import { Buffer } from "https://deno.land/std@0.177.0/node/buffer.ts";
 import { createHmac } from "https://deno.land/std@0.177.0/node/crypto.ts";
 import { timingSafeEqual } from "https://deno.land/std@0.177.0/crypto/timing_safe_equal.ts";
 
+const generarSlug = (str: string) => {
+    if (!str) return '';
+    return str.toLowerCase().normalize("NFD").replace(/[\u0000-\u036f]/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").trim();
+};
+
 // La función verifySignature no cambia.
 function verifySignature(secret: string, rawBody: string, boldSignature: string): boolean {
   try {
@@ -128,7 +133,9 @@ serve(async (req) => {
             team: item.team,
             year: item.year,
             driver: item.driver,
-            country: item.country
+            country: item.country,
+            imageUrl: (item.img && item.img.length > 0) ? item.img[item.img.length - 1] : null,
+            slug: generarSlug(item.name)
         }
       }));
 

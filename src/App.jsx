@@ -23,6 +23,7 @@ import TransactionResult from './pages/TransactionResult';
 
 import Soporte from './pages/Soporte';
 import Compras from './pages/Compras';
+import Profile from './pages/Profile';
 
 function App() {
 
@@ -59,6 +60,7 @@ function App() {
           <Route path="/checkout/success" element={<TransactionResult />} />
           <Route path="/soporte" element={<Soporte />} />
           <Route path="/compras" element={<Compras />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </WishlistProvider>
     </CartProvider>

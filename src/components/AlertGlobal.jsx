@@ -19,10 +19,15 @@ const AlertGlobal = ({ alert, setAlert, autoHideDuration = 3000 }) => {
         severity={alert.severity || "info"}
         onClose={() => setAlert((prev) => ({ ...prev, show: false }))}
         className="rounded-[16px]"
+        sx={{
+          backgroundColor: "White", 
+          color: "#252525",          
+          border: "1px solid #252525" 
+        }}
       >
-        {alert.title && <AlertTitle>{alert.title}</AlertTitle>}
-        {alert.message}
-      </Alert>
+  {alert.title && <AlertTitle>{alert.title}</AlertTitle>}
+  {alert.message}
+</Alert>
     </div>
   );
 };

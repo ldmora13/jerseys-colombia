@@ -1,13 +1,25 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+import { calculateShippingCost } from '../utils/shippingUtils';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../lib/supabaseClient';
-import CryptoJS from 'crypto-js';
+
+import AlertGlobal from '../components/AlertGlobal';
 import BoldButton from '../components/BoldButton';
+
 import { Loader2 } from 'lucide-react';
-import { calculateShippingCost } from '../utils/shippingUtils';
+
 
 const Checkout = () => {
+
+    const [alert, setAlert] = useState({
+        show: false,
+        message: '',
+        severity: '',
+        title: ''
+    });
+    
     const { cartItems } = useCart();
     const location = useLocation();
     const navigate = useNavigate();
@@ -18,6 +30,7 @@ const Checkout = () => {
         fullName: '',
         address: '',
         city: '',
+        state: '',
         country: 'Colombia',
         postalCode: '',
         phone: ''
@@ -37,6 +50,19 @@ const Checkout = () => {
     const totalProductCount = useMemo(() => {
         return itemsToCheckout.reduce((total, item) => total + (item.quantity || 1), 0);
     }, [itemsToCheckout]);
+
+    const isFormValid = () => {
+        return (
+            formData.email.trim() &&
+            formData.fullName.trim() &&
+            formData.address.trim() &&
+            formData.city.trim() &&
+            formData.state.trim() &&
+            formData.country.trim() &&
+            formData.postalCode.trim() &&
+            formData.phone.trim()
+        );
+    };
 
     useEffect(() => {
         const fetchTasa = async () => {
@@ -86,7 +112,11 @@ const Checkout = () => {
 
     useEffect(() => {
         if (!isLoadingUser && !user) {
-            alert("Por favor, inicia sesión para continuar con la compra.");
+            setAlert({
+            show: true,
+            message: "Inicia sesión para continuar con la compra.",
+            severity: "error",
+        });
         }
     }, [user, isLoadingUser]);
 
@@ -105,6 +135,14 @@ const Checkout = () => {
     };
 
     const handlePreparePayment = async () => {
+        if (!isFormValid()) {
+            setAlert({
+                show: true,
+                message: "Por favor completa todos los campos antes de continuar.",
+                severity: "error",
+            });
+        return;
+    }
         setIsPreparing(true);
         try {
             const { data, error } = await supabase.functions.invoke('create-pending-order', {
@@ -122,7 +160,11 @@ const Checkout = () => {
 
         } catch (error) {
             console.error("Error al preparar el pago:", error);
-            alert("Hubo un error al preparar tu orden. Por favor, intenta de nuevo.");
+            setAlert({
+                show: true,
+                message: "Inicia sesión para continuar con la compra.",
+                severity: "error",
+            });
         } finally {
             setIsPreparing(false);
         }
@@ -147,37 +189,77 @@ const Checkout = () => {
     }
 
     return (
-        <div className="h-min-screen bg-gradient-to-br from-blue-50 to-indigo-100 pb-45">
+        <div className="h-min-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+            <div className='relative'>
+                <AlertGlobal alert={alert} setAlert={setAlert}/>
+            </div>
             <div className="container mx-auto px-4 py-8 pt-24 max-w-6xl">
                 <form className="flex flex-col lg:flex-row gap-12">
                     {/* Columna Izquierda: Formulario de Datos */}
-                    <div className="w-full lg:w-2/3">
-                        <div className="bg-white p-6 rounded-lg shadow-md">
-                            <h2 className="text-2xl font-semibold mb-6">Información de Contacto y Envío</h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div className="sm:col-span-2">
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                                    <input type="email" name="email" id="email" value={formData.email} onChange={handleInputChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required />
+                    <div className="w-full lg:w-2/3 bg-gradient-to-br from-blue-100 to-indigo-200 p-8 rounded-lg shadow-md text-black">
+                        <div class="pb-12">
+                            <h2 class="text-lg font-semibold text-black">Información personal</h2>
+                            <p class="mt-1 text-sm/6 text-gray-500">Use datos verídicos donde pueda recibir sus compras</p>
+                            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                                
+                                <div class="sm:col-span-4">
+                                    <label for="first-name" class="block text-sm/6 font-medium ">Nombre completo</label>
+                                    <div class="mt-2">
+                                        <input id='first-name' type='text' name='first-name' value={formData.fullName} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
+                                    </div>
                                 </div>
-                                <div className="sm:col-span-2">
-                                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                                    <input type="text" name="fullName" id="fullName" value={formData.fullName} onChange={handleInputChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required />
+                                <div class="sm:col-span-2">
+                                    <label for="phone" class="block text-sm/6 font-medium">Número de telefono</label>
+                                    <div class="mt-2">
+                                        <input type="tel" name="phone" id="phone" value={formData.phone} onChange={handleInputChange}  class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
+                                    </div>
                                 </div>
-                                <div className="sm:col-span-2">
-                                    <label htmlFor="address" className="block text-sm font-medium text-gray-700">Dirección de Envío</label>
-                                    <input type="text" name="address" id="address" value={formData.address} onChange={handleInputChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required />
+
+                                <div class="sm:col-span-4">
+                                    <label for="email" class="block text-sm/6 font-medium">Email</label>
+                                    <div class="mt-2">
+                                        <input id="email" type="email" name="email" value={formData.email} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label htmlFor="city" className="block text-sm font-medium text-gray-700">Ciudad</label>
-                                    <input type="text" name="city" id="city" value={formData.city} onChange={handleInputChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required />
+
+                                <div class="sm:col-span-2 sm:col-start-1">
+                                    <label for="city" class="block text-sm/6 font-medium">Ciudad / Minicipio</label>
+                                    <div class="mt-2">
+                                        <input id="city" type="text" name="city" value={formData.city} onChange={handleInputChange}  class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Código Postal</label>
-                                    <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} onChange={handleInputChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+
+                                <div class="sm:col-span-2">
+                                    <label for="region" class="block text-sm/6 font-medium">Departamento</label>
+                                    <div class="mt-2">
+                                        <input id="region" type="text" name="state" value={formData.state} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                    </div>
                                 </div>
-                                <div className="sm:col-span-2">
-                                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Teléfono</label>
-                                    <input type="tel" name="phone" id="phone" value={formData.phone} onChange={handleInputChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required/>
+
+                                <div class="sm:col-span-2">
+                                    <label for="postal-code" class="block text-sm/6 font-medium">Codigo postal</label>
+                                    <div class="mt-2">
+                                        <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-3">
+                                    <label for="country" class="block text-sm/6 font-medium">País</label>
+                                    <div class="mt-2 grid grid-cols-1">
+                                        <select id="country" name="country" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/50 py-1.5 pr-8 pl-3 text-base outline-1 -outline-offset-1 outline-white/10 *:bg-gray-800 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
+                                            <option>Colombia</option>
+                                        </select>
+                                        <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4">
+                                        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-full">
+                                    <label for="street-address" class="block text-sm/6 font-medium">Dirección</label>
+                                    <div class="mt-2">
+                                        <input id="street-address" type="text" name="address" autocomplete="street-address" value={formData.address} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -248,7 +330,7 @@ const Checkout = () => {
                                             { 
                                                 email: formData.email, fullName: formData.fullName 
                                                 }}
-                                        billingAddress={{ address: formData.address, city: formData.city, country: "CO" }}
+                                        billingAddress={{ address: formData.address, city: formData.city, state: formData.state, country: "CO" }}
                                     />
                                 )}
                             </div>

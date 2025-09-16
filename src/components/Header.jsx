@@ -461,10 +461,10 @@ const Header = ({setCartVisible}) => {
                                     </div>
                                 </div>
                                 ): (
-                                <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto mx-auto transition-all duration-300 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)]" style={{ backgroundImage: "linear-gradient(163deg, #bebebe 0%, #bebebe 100%)",}}>
+                                <div id="card" className="rounded-[25px] w-full max-w-sm sm:max-w-md md:max-w-lg h-auto mx-auto transition-all duration-300 bg-blue-200 hover:shadow-[0_0_30px_1px_rgba(0,255,117,0.3)]">
                                     <div id="card2" className="w-full h-auto rounded-[25px] transition-all duration-200 hover:scale-[0.98] hover:rounded-[30px]">
                                     {/* Form */}
-                                        <form id="form" className="flex flex-col gap-5 sm:gap-6 p-4 sm:p-5 md:p-6 bg-[#e0e0e0] rounded-[25px]">
+                                        <form id="form" className="flex flex-col gap-5 sm:gap-6 p-4 sm:p-5 md:p-6 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-[25px]">
                                         <p id="heading" className="text-center text-[1.1em] sm:text-[1.2em] text-black"> Iniciar sesión </p>
 
                                         {/* Email input */}

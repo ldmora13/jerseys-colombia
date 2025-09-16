@@ -58,12 +58,7 @@ const ForgotPassword = () => {
     <div className="h-screen w-screen flex justify-center items-center">
       <div
         id="card"
-        className="flex justify-center items-center rounded-[25px] w-[500px] h-[400px]"
-        style={{
-          backgroundImage:
-            "linear-gradient(163deg, #C9FCD4 0%, #AFFCBE 100%)",
-        }}
-      >
+        className="flex justify-center bg-blue-200 items-center rounded-[25px] w-[500px] h-[400px]">
         <div
           id="card2"
           className="rounded-0 w-[500px] h-[400px] transition-all duration-200 hover:scale-[0.98]"
@@ -71,7 +66,7 @@ const ForgotPassword = () => {
           {!isRecovery ? (
             <form
               onSubmit={handleResetPassword}
-              className="flex flex-col gap-6 p-6 bg-[#A4CEAC] rounded-[25px] h-full w-full"
+              className="flex flex-col gap-6 p-6 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-[25px] h-full w-full"
             >
               <img src={logo} alt="logo" className="h-[40px]" />
               <p className="text-center text-2xl -mt-5">Jerseys Colombia</p>
@@ -93,7 +88,7 @@ const ForgotPassword = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="flex items-center justify-center text-center w-[300px] p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black"
+                  className="flex items-center justify-center text-center w-[300px] p-2 rounded-md bg-[#252525] text-white hover:bg-blue-50 hover:text-black"
                 >
                   Enviar correo de restablecimiento
                 </button>
@@ -103,7 +98,7 @@ const ForgotPassword = () => {
           ) : (
             <form
               onSubmit={handleUpdatePassword}
-              className="flex flex-col gap-6 p-6 bg-[#A4CEAC] rounded-[25px] h-full w-full"
+              className="flex flex-col gap-6 p-6 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-[25px] h-full w-full"
             >
               <p className="text-center text-xl">Nueva contraseña</p>
               <input
@@ -115,7 +110,7 @@ const ForgotPassword = () => {
               />
               <button
                 type="submit"
-                className="flex items-center justify-center text-center w-[300px] p-2 rounded-md bg-[#252525] text-white hover:bg-[#AFFCBE] hover:text-black"
+                className="flex items-center justify-center text-center w-[300px] p-2 rounded-md bg-[#252525] text-white hover:bg-blue-50 hover:text-black"
               >
                 Actualizar contraseña
               </button>

@@ -94,17 +94,17 @@ const Register = () => {
   };
     
     return (
-        <div className="h-screen w-screen flex justify-center items-center bg-[#e0e0e00d]">
+        <div className="h-screen w-screen flex justify-center items-center bg-gradient-to-br from-blue-50 to-indigo-200">
             {alert.show && (
                 <Alert severity={alert.severity} variant="filled" className="absolute top-5 left-1/2 transform -translate-x-1/2 w-[300px] z-50" onClose={() => setAlert({ ...alert, show: false })}>
                     <AlertTitle>{alert.severity === "error" ? "Error" : "Éxito"}</AlertTitle>
                     {alert.message}
                 </Alert>
             )}
-            <div id="card" className="flex justify-center items-center rounded-[25px] w-[250px] h-[300px] md:w-[500px] md:h-[600px] " style={{backgroundImage: 'linear-gradient(163deg, #BEBEBE 0%, #BEBEBE 100%)',}}>
+            <div id="card" className="flex justify-center items-center bg-blue-400 rounded-[25px] w-[250px] h-[300px] md:w-[500px] md:h-[600px]">
                 <div id="card2" className="rounded-0 w-[500px] h-[600px] transition-all duration-200 hover:scale-[0.98] hover:rouded-[30px]">
                 
-                    <form onSubmit={handleRegister} className=" text-black flex flex-col gap-6 p-6 bg-[#e0e0e0] rounded-[25px] h-full w-full">
+                    <form onSubmit={handleRegister} className=" text-black flex flex-col gap-6 p-6 bg-blue-200 rounded-[25px] h-full w-full">
                         <img src={logo} alt="logo" className="h-[50px]" />
                         <p className="text-center text-[1.2em] -mt-5">Registro</p>
 

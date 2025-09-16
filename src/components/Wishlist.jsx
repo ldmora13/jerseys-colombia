@@ -29,22 +29,49 @@ const Wishlist = () => {
         setWishlistItems(prevItems => prevItems.filter(item => item !== productName));
     };
 
-    useEffect(() => {
+       useEffect(() => {
         const fetchWishlistProducts = async () => {
             if (wishlistVisible && wishlistItems.length > 0) {
                 setLoading(true);
-                const { data, error } = await supabase
-                    .from('f1')
-                    .select('name, price, img, category')
-                    .in('name', wishlistItems);
+                
+                try {
+                    let allProducts = [];
 
-                if (error) {
-                    console.error("Error fetching wishlist products:", error);
+                    const { data: f1Data, error: f1Error } = await supabase
+                        .from('f1')
+                        .select('name, price, img, category')
+                        .in('name', wishlistItems);
+                    
+                    if (f1Error) console.error("Error buscando en F1:", f1Error);
+                    if (f1Data) allProducts.push(...f1Data.map(p => ({ ...p, sport_path: 'f1' })));
+
+                    // 2. Buscar en la tabla 'nba'
+                    const { data: nbaData, error: nbaError } = await supabase
+                        .from('nba')
+                        .select('name, price, img, deporte')
+                        .in('name', wishlistItems);
+
+                    if (nbaError) console.error("Error buscando en NBA:", nbaError);
+                    if (nbaData) allProducts.push(...nbaData.map(p => ({ ...p, sport_path: p.deporte })));
+
+                    // 3. Buscar en la tabla 'futbol'
+                    const { data: futbolData, error: futbolError } = await supabase
+                        .from('futbol')
+                        .select('name, price, img, deporte')
+                        .in('name', wishlistItems);
+                    
+                    if (futbolError) console.error("Error buscando en Futbol:", futbolError);
+                    if (futbolData) allProducts.push(...futbolData.map(p => ({ ...p, sport_path: p.deporte })));
+
+                    setProducts(allProducts);
+
+                } catch (error) {
+                    console.error("Error general al buscar productos de la wishlist:", error);
                     setProducts([]);
-                } else {
-                    setProducts(data);
+                } finally {
+                    setLoading(false);
                 }
-                setLoading(false);
+
             } else {
                 setProducts([]);
             }
@@ -94,8 +121,11 @@ const Wishlist = () => {
                         {/* Header */}
                         <div className=" w-full bg-gradient-to-br from-blue-50 to-indigo-100 p-4 border-b-[0.5px] flex flex-row justify-between items-center rounded-t-lg">
                             <h2 className="text-sm sm:text-xl font-semibold">Lista de deseos</h2>
-                            <p onClick={() => setWishlistVisible(false)}
-                                className='text-sm sm:text-xl text-gray-400 hover:text-black cursor-pointer font-bold'>x</p>
+                            <button 
+                                onClick={() => setWishlistVisible(false)}
+                                className='text-gray-500 hover:text-black font-bold hover:scale-110 text-xl p-2 transition-all duration-200'>
+                                &times;
+                            </button>
                         </div>
 
                         {/* Contenido */}
@@ -103,26 +133,29 @@ const Wishlist = () => {
                             {loading ? (
                                 <p className='p-4'>Cargando...</p>
                             ) : products.length > 0 ? (
-                                products.map((product) => (
-                                    <div key={product.name} className="flex items-center justify-between w-full p-2 border-b">
-                                        <Link to={`/${product.category}/${generarSlug(product.name)}`} className="flex items-center gap-4">
-                                            <img 
-                                                src={product.img && product.img.length > 0 ? product.img[product.img.length - 1] : 'https://via.placeholder.com/50'} 
-                                                alt={product.name}
-                                                className='w-16 h-16 object-cover rounded-md'
-                                            />
-                                            <div>
-                                                <p className='text-sm sm:text-xl'>{product.name}</p>
-                                                <p className='text-blue-300'>${product.price} USD</p>
-                                            </div>
-                                        </Link>
-                                        <button 
-                                            onClick={() => removeFromWishlist(product.name)}
-                                            className='text-red-500 hover:text-red-700 font-bold text-xl p-2'>
-                                            &times;
-                                        </button>
-                                    </div>
-                                ))
+                                products.map((product) => {
+                                    const link = product.deporte === 'f1' ? product.category : product.deporte;
+                                    return (
+                                        <div key={product.name} className="flex items-center justify-between w-full p-2 border-b">
+                                            <Link to={`/${link}/${generarSlug(product.name)}`} className="flex items-center gap-4">
+                                                <img 
+                                                    src={product.img && product.img.length > 0 ? product.img[product.img.length - 1] : 'https://via.placeholder.com/50'} 
+                                                    alt={product.name}
+                                                    className='w-16 h-16 object-cover rounded-md'
+                                                />
+                                                <div>
+                                                    <p className='text-sm'>{product.name}</p>
+                                                    <p className='text-blue-400'>${product.price} USD</p>
+                                                </div>
+                                            </Link>
+                                            <button 
+                                                onClick={() => removeFromWishlist(product.name)}
+                                                className='text-red-500 hover:text-red-700 font-bold text-xl p-2'>
+                                                &times;
+                                            </button>
+                                        </div>
+                                    );
+                                })
                             ) : (
                                 <p className='p-4'>Tu lista de deseos está vacía.</p>
                             )}

@@ -9,7 +9,6 @@ import Loader from '../components/Loader';
 import AlertGlobal from '../components/AlertGlobal';
 
 import SizeRules from '../components/SizeRules';
-import Footer from '../components/Footer';
 
 import f1logo from '../assets/f1.png';
 import nbasuit from '../assets/basketball-suit.svg';
@@ -207,7 +206,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
         </div>
         <div className="flex-1">
             {loading && ( 
-                <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 z-[2000]">
+                <div className="fixed inset-0 flex items-center justify-center bg-opacity-90 z-[2000] bg-gradient-to-br from-blue-50 to-indigo-100">
                     <Loader />
                 </div> 
             )}

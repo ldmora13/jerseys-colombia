@@ -210,7 +210,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
       </div>
       <div className="flex-1">
         {loading && (
-          <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 z-[2000]">
+          <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 bg-opacity-90 z-[2000]">
             <Loader />
           </div>
         )}

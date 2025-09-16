@@ -64,9 +64,9 @@ const Login = () => {
       try {
         const [futbolRes, nbaRes, f1Res] = await Promise.all([
           supabase
-            .from('selecciones')
-            .select('name, img, country, year, index, deporte')
-            .order('year', { ascending: true })
+            .from('futbol')
+            .select('name, img, team, year, index, category')
+            .order('year', { ascending: false })
             .limit(3),
   
           supabase
@@ -161,7 +161,7 @@ const Login = () => {
                     transform transition-all duration-300 ease-in-out
                     ${hoveredIndexFutbol === null ? '' : hoveredIndexFutbol === index ? 'scale-110 blur-0' : 'scale-90 blur-[2px]'}
                   `}>
-                  <Link to={`/${camiseta.deporte}/${generarSlug(camiseta.name)}`} className="flex items-center">
+                  <Link to={`/futbol/${generarSlug(camiseta.name)}`} className="flex items-center">
                     {imagenPrincipal && (
                     <img
                         src={imagenPrincipal}
@@ -170,7 +170,7 @@ const Login = () => {
                     />
                     )}
                     <div className="mx-2 flex flex-col">
-                    <h2>{camiseta.country} {camiseta.year}</h2>
+                    <h2>{camiseta.team} {camiseta.year}</h2>
                     </div>
                     </Link>
                   </div>

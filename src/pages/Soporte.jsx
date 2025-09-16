@@ -37,7 +37,7 @@ const Soporte = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-200 to-indigo-100 text-white flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 text-white flex items-center justify-center p-6">
       <div className="w-full max-w-3xl">
         <h1 className="text-6xl font-normal mb-16 text-center text-black">Soporte</h1>
             <form onSubmit={handleSubmit} className="space-y-12 text-black">

@@ -90,7 +90,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
       case 'F1':
         return <>{producto.team} {producto.driver ? producto.driver : producto.year}</>;
       case 'futbol':
-        return <>{producto.category} {producto.country} {producto.year}</>;
+        return <>{producto.team} {producto.year}</>;
       default:
         return <>{producto.name}</>;
     }

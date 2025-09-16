@@ -58,7 +58,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
     const searchLower = search.toLowerCase();
     const matchSearch =
       (camiseta.name || '').toLowerCase().includes(searchLower) ||
-      (camiseta.country || '').toLowerCase().includes(searchLower) ||
+      (camiseta.team || '').toLowerCase().includes(searchLower) ||
       (search && camiseta.year && camiseta.year.toString().includes(searchLower));
 
     let matchStock = true;
@@ -157,8 +157,8 @@ const Futbol = ({cartVisible, setCartVisible}) => {
     const fetchCamisetasFutbol = async () => {
       try {
         const futbolRes = await supabase
-          .from('selecciones')
-          .select('name, img, country, category, type, year, index, price, stock')
+          .from('futbol')
+          .select('name, img, team, category, year, index, price, stock')
           .order('year', { ascending: true });
         if (futbolRes.error) {
           console.error('Error en Futbol:', futbolRes.error);
@@ -289,7 +289,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
                           </svg>
                         </div>
                         <p className='font-semibold cursor-pointer capitalize'>
-                          {camiseta.category === 'windbreaker' ? camiseta.category : `${camiseta.category} edition`} {camiseta.country} {camiseta.year}
+                         {camiseta.team} {camiseta.year} {camiseta.category === 'manga_larga' ? 'manga larga' : camiseta.category}
                         </p> 
                       </div>
                       <div className='flex flex-row items-center w-full gap-x-1'>

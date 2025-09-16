@@ -33,11 +33,13 @@ const ProductInfo = ({ producto }) => {
     if (producto.sport === 'f1') {
         qualityType = 'Fan';
         descriptionKey = 'f1';
-    } else if (producto.sport === 'nba' || producto.sport === 'futbol') {
+    } else if (producto.sport === 'nba') {
         qualityType = producto.category;
         descriptionKey = producto.category.toLowerCase();
+    } else if (producto.sport === 'futbol') {
+        qualityType = 'Fan';
+        descriptionKey = 'fan'
     }
-
     const qualityDescription = qualityDescriptions[descriptionKey] || 'Descripción detallada no disponible.';
 
     return (
@@ -114,7 +116,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
             setLoading(true);
             let table = category.toLowerCase();
             if (table === 'futbol') {
-                table = 'selecciones';
+                table = 'futbol';
             }
             const { data, error } = await supabase.from(table).select('*');
             if (error) {
@@ -263,7 +265,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                                 title = `${producto.category} de ${producto.team} ${producto.year}`;
                             } else if (sport === 'futbol') {
                                 logoSrc = futbolsuit;
-                                title = `${producto.category === 'windbreaker' ? producto.category : `${producto.category} edition`} de ${producto.country} ${producto.year} ${producto.type}`;
+                                title = `Jersey de ${producto.team} ${producto.year} ${producto.category === 'manga_larga' ? 'Manga Larga' : producto.category}`;
                             }
 
                             return (
@@ -304,7 +306,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             ))}
                         </ul>
 
-                        {(producto.sport === 'futbol' && ['fan', 'player'].includes(producto.category.toLowerCase())) && (
+                        {producto.sport === 'futbol'  && (
                             <PersonalizationPanel setCustomName={setCustomName} setCustomNumber={setCustomNumber} />
                         )}
 

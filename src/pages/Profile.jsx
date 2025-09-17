@@ -109,21 +109,21 @@ const Profile = () => {
         <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-100">
             <div className="container mx-auto px-4 py-8 pt-24 max-w-2xl">
                 <h1 className="text-4xl font-bold mb-8 text-center">Mi Perfil</h1>
-                <form onSubmit={handleProfileUpdate} className="bg-white p-8 rounded-lg shadow-md space-y-6">
+                <form onSubmit={handleProfileUpdate} className="bg-gradient-to-br from-blue-100 to-indigo-200 p-8 rounded-lg shadow-md space-y-6">
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                         <input type="email" id="email" value={user?.email || ''} disabled
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed" />
+                            className="mt-1 block w-full p-2 border border-blue-50 rounded-md bg-blue-50 cursor-not-allowed" />
                     </div>
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nombre Completo</label>
                         <input type="text" id="name" name="name" value={profile.name} onChange={handleInputChange}
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                            className="mt-1 block w-full p-2 border border-blue-50 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                     </div>
                      <div>
                         <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Teléfono</label>
                         <input type="tel" id="phone" name="phone" value={profile.phone} onChange={handleInputChange}
-                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                            className="mt-1 block w-full p-2 border border-blue-50 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                     </div>
                     
                     <div className="pt-4 border-t">
@@ -131,18 +131,18 @@ const Profile = () => {
                         <div>
                             <label htmlFor="address" className="block text-sm font-medium text-gray-700">Dirección</label>
                             <input type="text" id="address" name="address" value={profile.address.address} onChange={handleAddressChange}
-                                className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                                className="mt-1 block w-full p-2 border border-blue-50 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                         </div>
                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label htmlFor="city" className="block text-sm font-medium text-gray-700">Ciudad</label>
                                 <input type="text" id="city" name="city" value={profile.address.city} onChange={handleAddressChange}
-                                    className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                                    className="mt-1 block w-full p-2 border border-blue-50 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                             </div>
                             <div>
                                 <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Código Postal</label>
                                 <input type="text" id="postalCode" name="postalCode" value={profile.address.postalCode} onChange={handleAddressChange}
-                                    className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
+                                    className="mt-1 block w-full p-2 border border-blue-50 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" />
                             </div>
                          </div>
                     </div>

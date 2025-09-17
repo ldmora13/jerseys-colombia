@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 const SuccessIcon = () => (
-    <div className="mx-auto bg-green-100 rounded-full h-20 w-20 flex items-center justify-center">
+    <div className="mx-auto bg-blue-50 rounded-full h-20 w-20 flex items-center justify-center">
         <svg className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
         </svg>
@@ -10,7 +10,7 @@ const SuccessIcon = () => (
 );
 
 const FailureIcon = () => (
-    <div className="mx-auto bg-red-100 rounded-full h-20 w-20 flex items-center justify-center">
+    <div className="mx-auto bg-blue-50 rounded-full h-20 w-20 flex items-center justify-center">
         <svg className="h-12 w-12 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -38,8 +38,8 @@ const TransactionResult = () => {
     }
 
     return (
-        <div className="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-            <div className="bg-white p-8 md:p-12 rounded-xl shadow-2xl max-w-lg w-full text-center">
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+            <div className="bg-gradient-to-br from-blue-100 to-indigo-200 p-8 md:p-12 rounded-xl shadow-2xl max-w-lg w-full text-center">
                 
                 {isSuccess ? <SuccessIcon /> : <FailureIcon />}
 
@@ -66,7 +66,7 @@ const TransactionResult = () => {
                     </div>
                 </div>
 
-                <Link to="/" className="inline-block mt-8 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+                <Link to="/compras" className="inline-block mt-8 bg-blue-100 text-black font-bold py-3 px-6 rounded-lg hover:bg-blue-200 transition-colors">
                     Volver a la tienda
                 </Link>
             </div>

@@ -101,8 +101,8 @@ const Compras = () => {
                 <h1 className="text-4xl font-bold mb-8 text-center">Mis Compras</h1>
 
                 {orders.length === 0 ? (
-                    <div className="text-center py-16 bg-white rounded-lg shadow-md">
-                        <Package className="w-16 h-16 mx-auto text-gray-400" />
+                    <div className="text-center py-16 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-lg shadow-md">
+                        <Package className="w-16 h-16 mx-auto text-black" />
                         <h2 className="mt-4 text-2xl font-semibold">Aún no tienes compras</h2>
                         <p className="text-gray-600 mt-2">¡Explora nuestros productos y haz tu primer pedido!</p>
                         <div className="mt-6 flex justify-center w-1/2 mx-auto">
@@ -115,7 +115,7 @@ const Compras = () => {
                 ) : (
                     <div className="space-y-6">
                         {orders.map(order => (
-                            <div key={order.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                            <div key={order.id} className="bg-gradient-to-br from-blue-100 to-indigo-200 rounded-lg shadow-md overflow-hidden">
                                 <div className="p-4 bg-gray-50 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                                     <div>
                                         <p className="font-bold text-lg">Orden #{order.id}</p>

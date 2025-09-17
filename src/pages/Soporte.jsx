@@ -38,10 +38,10 @@ const Soporte = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 text-white flex items-center justify-center p-6">
-      <div className="w-full max-w-3xl">
-        <h1 className="text-6xl font-normal mb-16 text-center text-black">Soporte</h1>
-            <form onSubmit={handleSubmit} className="space-y-12 text-black">
-            <div className="space-y-4">
+      <div className="w-full max-w-3xl mt-20 md:mt-0">
+        <h1 className="text-4xl font-normal mb-10 md:mt-16 text-center text-black">Soporte</h1>
+            <form onSubmit={handleSubmit} className="space-y-6 md:space-y-12 text-black">
+            <div className="space-y-2 md:space-y-4">
                 <label htmlFor="email" className="block text-xl text-gray-800">
                     Correo electrónico
                 </label>
@@ -55,7 +55,7 @@ const Soporte = () => {
                 />
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-2 md:space-y-4">
                 <label htmlFor="message" className="block text-xl text-gray-800">
                     ¿En que le podemos ayudar?
                 </label>

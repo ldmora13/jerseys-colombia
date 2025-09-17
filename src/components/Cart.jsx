@@ -100,9 +100,9 @@ const Cart = ({ cartVisible, setCartVisible }) => {
       case 'F1':
         return <>{producto.team} {producto.driver ? producto.driver : producto.year}</>;
       case 'futbol':
-        return <>{producto.team} {producto.year}</>;
+        return <> {producto.team} {producto.year}</>;
       default:
-        return <>{producto.name}</>;
+        return <> {producto.name}</>;
     }
   };
 
@@ -158,10 +158,10 @@ const Cart = ({ cartVisible, setCartVisible }) => {
                 {cartItems.map((producto, index) => { // CAMBIO: camiseta -> producto
                   const imagenPrincipal = producto.img?.length > 0 ? producto.img[producto.img.length - 1] : null;
                   return (
-                    <div key={index} className="mt-3 flex flex-row items-center border-2 rounded-2xl shadow p-2 gap-2 w-[90%] mx-auto cursor-pointer bg-white transform transition-all duration-300 ease-in-out hover:scale-110">
+                    <div key={index} className="mt-3 flex flex-row items-center border-2 rounded-2xl shadow p-2 gap-2 w-full bg-blue-50 mx-auto cursor-pointer">
                       <Link to={`/${producto.category}/${generarSlug(producto.name)}`} className="flex items-center">
                         {imagenPrincipal && (
-                          <img src={imagenPrincipal} alt={producto.name} className="w-[80px] h-[80px] object-contain rounded" />
+                          <img src={imagenPrincipal} alt={producto.name} className="w-[80px] h-[80px] object-contain rounded-2xl" />
                         )}
                       </Link>
 

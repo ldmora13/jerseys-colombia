@@ -22,7 +22,7 @@ const BoldButton = ({ orderId, amount, description, integritySignature, customer
         data-api-key={import.meta.env.VITE_BOLD_PUBLIC_KEY}
         data-integrity-signature={integritySignature}
         data-description={description}
-        data-redirection-url="https://74685fee434c.ngrok-free.app/checkout/success"
+        data-redirection-url="jerseyscol/checkout/success"
         data-customer-data={JSON.stringify(customerData)}
         data-billing-address={JSON.stringify(billingAddress)}
       />

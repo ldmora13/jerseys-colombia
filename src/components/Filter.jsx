@@ -22,7 +22,6 @@ const Filter = ({
   const getCategorias = (pathname) => {
     if (pathname.includes("/F1")) return ["Todo", "Jerseys", "Polos", "Hoodies"];
     if (pathname.includes("/NBA")) return ["Todo", "Jerseys", "Shorts"];
-    if (pathname.includes("/futbol")) return ["Todo", "Fan", "Player", "Windbreaker"];
     return ["Todo"];
   };
 

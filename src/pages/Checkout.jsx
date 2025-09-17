@@ -267,7 +267,7 @@ const Checkout = () => {
 
                     {/* Columna Derecha: Resumen de la Orden */}
                     <div className="w-full lg:w-1/3">  
-                        <div className="bg-white p-6 rounded-lg shadow-md">
+                        <div className="bg-gradient-to-br from-blue-100 to-indigo-200 p-6 rounded-lg shadow-md">
                             <h2 className="text-2xl font-semibold mb-6">Resumen de tu Orden</h2>
                             <div className="space-y-4">
                                 {itemsToCheckout.map(item => (

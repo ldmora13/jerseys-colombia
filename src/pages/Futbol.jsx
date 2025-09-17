@@ -47,11 +47,6 @@ const Futbol = ({cartVisible, setCartVisible}) => {
   const [yearRange, setYearRange] = useState([1950, 2025]);
 
   const [tasaCOP, setTasaCOP] = useState(null);
-  const categoryMap = {
-  'Fan': 'fan',
-  'Player': 'player',
-  'Windbreaker': 'windbreaker'
-  };
 
 
   const camisetasFiltradas = camisetasFutbol.filter((camiseta) => {
@@ -73,11 +68,8 @@ const Futbol = ({cartVisible, setCartVisible}) => {
       matchYear = camiseta.year >= yearRange[0] && camiseta.year <= yearRange[1];
     }
     let matchCat = true;
-    if (categorySelected !== 'Todo') {
-      const singular = categoryMap[categorySelected] || categorySelected;
-      matchCat = camiseta.category === singular;
-    }
-    return matchSearch && matchStock && matchPromo && matchYear && matchCat;
+    
+    return matchSearch && matchStock && matchPromo && matchYear;
   });
 
   {/* Añadir elementos al carrito */}
@@ -97,7 +89,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
       const index = prevCart.findIndex(
         item =>
           item.name === product.name &&
-          item.country === product.country &&
+          item.team === product.team &&
           item.year === product.year &&
           item.size === selectedSize
       );
@@ -158,7 +150,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
       try {
         const futbolRes = await supabase
           .from('futbol')
-          .select('name, img, team, category, year, index, price, stock')
+          .select('name, img, team, category, year, index, price, stock, provider, deporte')
           .order('year', { ascending: true });
         if (futbolRes.error) {
           console.error('Error en Futbol:', futbolRes.error);
@@ -224,8 +216,6 @@ const Futbol = ({cartVisible, setCartVisible}) => {
           setStockSelected={setStockSelected}
           promoSelected={promoSelected}
           setPromoSelected={setPromoSelected}
-          categorySelected={categorySelected}
-          setCategorySelected={setCategorySelected}
           yearRange={yearRange}
           setYearRange={setYearRange}
         />

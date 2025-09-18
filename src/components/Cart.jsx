@@ -212,7 +212,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
                   )}
                   <div className="flex flex-row items-center justify-start w-full gap-2 bg-blue-200 rounded-t-2xl p-2 shadow-lg">
                     <p className="text-[14px] sm:text-[16px]">
-                      Tu compra: ${(precioTotal + shippingCost).toFixed(2)} USD
+                      Tu compra: ${(precioTotal + shippingCost)} USD
                     </p>
                     <p className="text-gray-500 italic text-[10px] sm:text-[12px] ml-2">
                       {tasaCOP

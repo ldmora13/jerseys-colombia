@@ -5,7 +5,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import AlertGlobal from './AlertGlobal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
+
 import { calculateShippingCost } from '../utils/shippingUtils';
+import { calculateItemPrice, calculateSubtotal } from '../utils/priceCalculations';
 
 const Cart = ({ cartVisible, setCartVisible }) => {
   const { cartItems, setCartItems } = useCart();
@@ -13,7 +15,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
   const cartRef = useRef(null);
 
   const precioTotal = cartItems.reduce(
-    (acc, item) => acc + item.price * (item.quantity || 1),
+    (acc, item) => acc + calculateItemPrice(item) * (item.quantity || 1),
     0
   );
 
@@ -172,7 +174,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
                               {renderProductTitle(producto)}
                             </h2>
                             <span className="text-xs text-gray-500 capitalize">
-                              {producto.category} - ${producto.price} USD {producto.quantity < 2 ? '' : ` x ${producto.quantity}`}
+                              {producto.category} - ${calculateItemPrice(producto)} USD {producto.quantity < 2 ? '' : ` x ${producto.quantity}`}
                             </span>
                             <span className="text-xs text-gray-500">
                               {producto.size ? `Talla: ${producto.size}` : ''}

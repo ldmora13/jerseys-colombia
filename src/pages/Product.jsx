@@ -42,7 +42,7 @@ const ProductInfo = ({ producto }) => {
     const qualityDescription = qualityDescriptions[descriptionKey] || 'Descripción detallada no disponible.';
 
     return (
-        <div className='w-full text-sm text-gray-600 mt-2 p-1 md:p-3 bg-gray-50 rounded-lg'>
+        <div className='w-full text-sm text-black mt-2 p-1 md:p-3 bg-blue-50 rounded-lg'>
             <p><span className='font-semibold'>Calidad:</span> <span className='capitalize'>{qualityType}</span></p>
             <p><span className='font-semibold'>Descripción:</span> {qualityDescription}</p>
         </div>
@@ -57,11 +57,11 @@ const PersonalizationPanel = ({ setCustomName, setCustomNumber }) => {
             <div className='flex flex-col sm:flex-row gap-4'>
                 <div className='flex-1'>
                     <label htmlFor="customName" className='block text-sm font-medium text-gray-700'>Nombre (Opcional)</label>
-                    <input type="text" id="customName" placeholder='Ej: MESSI' className='mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500' onChange={(e) => setCustomName(e.target.value.toUpperCase())} maxLength={12} />
+                    <input type="text" id="customName" placeholder='Ej: MESSI' className='mt-1 block w-full p-2 border border-blue-50 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500' onChange={(e) => setCustomName(e.target.value.toUpperCase())} maxLength={12} />
                 </div>
                 <div className='flex-1'>
                     <label htmlFor="customNumber" className='block text-sm font-medium text-gray-700'>Número (Opcional)</label>
-                    <input type="number" id="customNumber" placeholder='Ej: 10' className='mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500' onChange={(e) => setCustomNumber(e.target.value)} onInput={(e) => { e.target.value = e.target.value.slice(0, 2) }} />
+                    <input type="number" id="customNumber" placeholder='Ej: 10' className='mt-1 block w-full p-2 border border-blue-50 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500' onChange={(e) => setCustomNumber(e.target.value)} onInput={(e) => { e.target.value = e.target.value.slice(0, 2) }} />
                 </div>
             </div>
         </div>
@@ -298,7 +298,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             {['S', 'M', 'L', 'XL', 'XXL'].map(size => (
                                 <li key={size}>
                                     <button onClick={() => setSelectedSize(size)} 
-                                        className={`cursor-pointer p-2 px-4 rounded-sm border-2 transition-all duration-300 ${selectedSize === size ? 'bg-[#E8E8E8] shadow-sm text-black border-white' : 'bg-[#252525] text-white hover:border-white'}`}>{size}
+                                        className={`cursor-pointer p-2 px-4 rounded-sm border-2 transition-all duration-300 ${selectedSize === size ? 'bg-blue-50 shadow-sm text-black border-white' : 'bg-[#252525] text-white hover:border-white'}`}>{size}
 
                                     </button>
                                 </li>

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { calculateShippingCost } from '../utils/shippingUtils';
+import { calculateItemPrice, calculateSubtotal } from '../utils/priceCalculations';
+
 import { useCart } from '../context/CartContext';
 import { supabase } from '../lib/supabaseClient';
 
@@ -122,8 +124,7 @@ const Checkout = () => {
 
     useEffect(() => {
         const newSubtotal = itemsToCheckout.reduce((total, item) => {
-            let itemPrice = item.price;
-            if(item.customName || item.customNumber) { itemPrice += 5; }
+            const itemPrice = calculateItemPrice(item);
             return total + itemPrice * item.quantity;
         }, 0);
         setSubtotal(newSubtotal);
@@ -189,7 +190,7 @@ const Checkout = () => {
     }
 
     return (
-        <div className="h-min-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="min-h-screen">
             <div className='relative'>
                 <AlertGlobal alert={alert} setAlert={setAlert}/>
             </div>
@@ -272,7 +273,7 @@ const Checkout = () => {
                             <div className="space-y-4">
                                 {itemsToCheckout.map(item => (
                                     <div key={`${item.name}-${item.size}-${item.customName}-${item.customNumber}`} className="flex items-center gap-4 border-b pb-4">
-                                        <img src={item.img[0]} alt={item.name} className="w-20 h-20 object-contain rounded-md bg-gray-100" />
+                                        <img src={item.img && item.img.length > 0 ? item.img[item.img.length - 1] : 'https://via.placeholder.com/50'} className="w-20 h-20 object-contain rounded-md bg-blue-50" />
                                         <div className="flex-grow text-sm">
                                             <p className="font-semibold">
                                                 {item.name.replace(/[_-]/g, " ")}
@@ -282,7 +283,7 @@ const Checkout = () => {
                                             {item.customNumber && <p className="text-gray-600">Número: {item.customNumber}</p>}
                                             <p className="text-gray-600">Cantidad: {item.quantity}</p>
                                         </div>
-                                        <p className="font-semibold text-sm">${(item.price + ((item.customName || item.customNumber) ? 5 : 0)).toFixed(2)}</p>
+                                        <p className="font-semibold text-sm">${calculateItemPrice(item).toFixed(2)}</p>
                                     </div>
                                 ))}
                             </div>

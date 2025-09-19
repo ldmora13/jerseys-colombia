@@ -38,10 +38,22 @@ const SearchResults = () => {
       setError(null);
 
       try {
-        // Consultas para cada tabla.
-        const f1Query = supabase.from('f1').select('*').or(`name.ilike.%${query}%,team.ilike.%${query}%,driver.ilike.%${query}%`);
-        const nbaQuery = supabase.from('nba').select('*').or(`name.ilike.%${query}%,team.ilike.%${query}%,player.ilike.%${query}%`);
-        const futbolQuery = supabase.from('selecciones').select('*').or(`name.ilike.%${query}%,country.ilike.%${query}%`);
+
+        const safeQuery = query.replace(/[%_]/g, ""); 
+        const f1Query = supabase
+          .from("f1")
+          .select("*")
+          .or(`name.ilike.%${safeQuery}%,team.ilike.%${safeQuery}%,driver.ilike.%${safeQuery}%`);
+
+        const nbaQuery = supabase
+          .from("nba")
+          .select("*")
+          .or(`name.ilike.%${safeQuery}%,team.ilike.%${safeQuery}%,player.ilike.%${safeQuery}%`);
+
+        const futbolQuery = supabase
+          .from("futbol")
+          .select("*")
+          .or(`name.ilike.%${safeQuery}%,team.ilike.%${safeQuery}%`);
 
         // Buscar en paralelo
         const [f1Res, nbaRes, futbolRes] = await Promise.all([f1Query, nbaQuery, futbolQuery]);
@@ -76,7 +88,7 @@ const SearchResults = () => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-90 z-[2000]">
+      <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 bg-opacity-90 z-[2000]">
         <Loader />
       </div>
     );
@@ -118,7 +130,7 @@ const SearchResults = () => {
                       {/* Lógica para mostrar el título correctamente */}
                       {item.page === 'F1' && `${item.type || ''} de ${item.team || ''} ${item.year || ''}`}
                       {item.page === 'NBA' && `${item.category || ''} ${item.player || ''} ${item.team || ''} ${item.year || ''}`}
-                      {item.page === 'futbol' && `${item.category || ''} ${item.country || ''} ${item.year || ''}`}
+                      {item.page === 'futbol' && `${item.team || ''} ${item.year || ''} ${item.category || ''}`}
                     </p>
                     <p className='text-blue-500 mt-1'>${item.price} USD</p>
                   </div>

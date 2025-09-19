@@ -75,14 +75,10 @@ const Product = ({ cartVisible, setCartVisible }) => {
     const { cartItems, setCartItems } = useCart();
     const { wishlistItems, setWishlistItems } = useWishlist();
     const { category, name } = useParams();
-    const seoData = useSEO(producto, category, name);
-    
     const Navigate = useNavigate();
     
     const [producto, setProducto] = useState(null);
-
     const [loading, setLoading] = useState(true);
-
     const [sizeRulesVisible, setSizeRulesVisible] = useState(false);
 
     const [tasaCOP, setTasaCOP] = useState(null);
@@ -101,6 +97,8 @@ const Product = ({ cartVisible, setCartVisible }) => {
         severity: '', 
         title: '' 
     });
+
+    const seoData = useSEO(producto, category, name);
 
     const generarSlug = (str) => {
         return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").trim();

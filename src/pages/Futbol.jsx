@@ -6,6 +6,7 @@ import {supabase, getSupabaseClient } from '../lib/supabaseClient';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 
+import SEO from '../components/SEO';
 import AlertGlobal from '../components/AlertGlobal';
 import Loader from '../components/Loader';
 import Filter from '../components/Filter';
@@ -16,6 +17,14 @@ import futbolsuit from '../assets/soccer-equipment.svg'
 
 const Futbol = ({cartVisible, setCartVisible}) => {
 
+  const seoData = {
+    title: 'Jerseys de Fútbol - Equipos Internacionales',
+    description: 'Compra jerseys de fútbol de los mejores equipos del mundo. Real Madrid, Barcelona, PSG, Manchester United y más. Calidad Fan con envío gratis en Colombia. Personalización disponible.',
+    keywords: 'jerseys futbol, camisetas retro, jerseys retro, camisetas de futbol colombia, camisetas futbol, real madrid, barcelona, psg, manchester united, jerseys colombia, futbol, camisetas personalizadas de futbol, envio gratis, camisetas retro futbol, camisetas de futbol baratas',
+    url: `${window.location.origin}/futbol`,
+    type: 'website'
+  };
+
   const [alert, setAlert] = useState({
     show: false,
     message: '',
@@ -25,7 +34,6 @@ const Futbol = ({cartVisible, setCartVisible}) => {
 
   const { cartItems, setCartItems} = useCart();
   const { wishlistItems, setWishlistItems } = useWishlist();
-
 
   const topRef = useRef(null);
   const [camisetasFutbol, setCamisetasFutbol] = useState([]);
@@ -197,6 +205,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
 
  return (
     <div className="flex overflow-auto h-screen w-screen">
+    <SEO {...seoData} />
       <div className='relative'>
         <AlertGlobal alert={alert} setAlert={setAlert} />
       </div>
@@ -222,6 +231,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
         
         <div ref={topRef} className='h-20'></div>
         <main className="flex flex-col items-center w-full p-4 text-black">
+          
           <div className='flex flex-col items-center w-auto h-auto'>
             <img src={futbolsuit} className='h-15 w-auto' />
             <h1 className='font-bold text-2xl text-center'>Jerseys de Selecciones de Fútbol</h1>

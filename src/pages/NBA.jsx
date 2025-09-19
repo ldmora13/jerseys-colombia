@@ -6,6 +6,7 @@ import {supabase, getSupabaseClient } from '../lib/supabaseClient';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 
+import SEO from '../components/SEO';
 import AlertGlobal from '../components/AlertGlobal';
 import Loader from '../components/Loader';
 import Filter from '../components/Filter';
@@ -14,6 +15,14 @@ import Footer from '../components/Footer';
 import nbasuit from '../assets/basketball-suit.svg'
 
 const NBA = ({cartVisible, setCartVisible}) => {
+
+  const seoData = {
+    title: 'Jerseys de NBA - Baloncesto',
+    description: 'Compra jerseys de NBA. Los Angeles Lakers, Brooklyn Nets, Golden State Warriors, Chicago Bulls, Miami Heat, Boston Celtics, New York Knicks y más. Calidad superior con envío gratis en Colombia y personalización disponible',
+    keywords: 'jerseys nba, camisetas nba, camisetas de baloncesto, jerseys de baloncesto, camiseta de Los Angeles Lakers, camiseta de Brooklyn Nets, camiseta de Golden State Warriors, camiseta de Chicago Bulls, camiseta de Miami Heat, camiseta de Boston Celtics, camiseta de New York Knicks, camiseta de jerseys colombia, nba, baloncesto, basketball, jerseys baloncesto, camisetas baloncesto, camisetas de baloncesto, ropa nba, ropa baloncesto, Sthepen Curry, LeBron James, Kevin Durant, Giannis Antetokounmpo, James Harden, Luka Doncic, Anthony Davis, Kyrie Irving',
+    url: `${window.location.origin}/NBA`,
+    type: 'website'
+  };
 
   const [alert, setAlert] = useState({
     show: false,

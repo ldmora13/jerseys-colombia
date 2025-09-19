@@ -136,6 +136,7 @@ const Login = () => {
 
   return (
     <div>
+    <SEO {...seoData} />
        {/* LOADER SUPERPUESTO */}
        {loading && (
         <div className="bg-gradient-to-br from-blue-50 to-indigo-100 fixed inset-0 flex items-center justify-center bg-opacity-90 z-[2000]">
@@ -145,6 +146,33 @@ const Login = () => {
 
 
       <main className="flex items-center md:justify-start h-full w-full pt-40 flex-col">
+        <title>Jerseys Colombia - Jerseys Oficiales de Fútbol, NBA y F1</title>
+        <meta name="description" content="La mejor tienda de jerseys oficiales en Colombia. Encuentra jerseys de fútbol, NBA y Fórmula 1 de tus equipos favoritos. Calidad premium, envío gratis y personalización disponible." />
+        <meta name="keywords" content="jerseys colombia, camisetas futbol, jerseys NBA, F1 merchandise, deportes colombia" />
+        <meta property="og:title" content="Jerseys Colombia - Jerseys Oficiales" />
+        <meta property="og:description" content="La mejor tienda de jerseys oficiales en Colombia. Fútbol, NBA y F1." />
+        <meta property="og:image" content={`${window.location.origin}/og-home.jpg`} />
+        <meta property="og:url" content={window.location.origin} />
+        <link rel="canonical" href={window.location.origin} />
+        
+        {/* Schema.org para la organización */}
+        <script 
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Jerseys Colombia",
+              "url": window.location.origin,
+              "logo": `${window.location.origin}/logo.png`,
+              "description": "Tienda especializada en jerseys oficiales de fútbol, NBA y Fórmula 1",
+              "sameAs": [
+                "https://www.instagram.com/jerseyscolombia",
+                "https://www.facebook.com/jerseyscolombia"
+              ]
+            })
+          }}
+        />
         <div className="mt-2 flex md:flex-row flex-col justify-center items-center gap-10 w-full">
 
           {/* Contenedor 1 */}

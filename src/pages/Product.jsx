@@ -1,13 +1,15 @@
 import React, {useEffect, useRef, useState, useMemo} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+
 import { supabase } from '../lib/supabaseClient';
+import { useSEO } from '../hooks/useSEO';
 
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 
 import Loader from '../components/Loader';
 import AlertGlobal from '../components/AlertGlobal';
-
+import SEO from '../components/SEO';
 import SizeRules from '../components/SizeRules';
 
 import f1logo from '../assets/f1.png';
@@ -73,6 +75,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
     const { cartItems, setCartItems } = useCart();
     const { wishlistItems, setWishlistItems } = useWishlist();
     const { category, name } = useParams();
+    const seoData = useSEO(producto, category, name);
     
     const Navigate = useNavigate();
     
@@ -201,6 +204,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
         
   return (    
     <div className='flex justify-center w-full min-h-screen'>
+        {seoData && <SEO {...seoData} />}
         <div className='relative'>
             <AlertGlobal alert={alert} setAlert={setAlert} />
         </div>

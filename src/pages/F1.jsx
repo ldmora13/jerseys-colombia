@@ -6,6 +6,7 @@ import {supabase, getSupabaseClient } from '../lib/supabaseClient';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 
+import SEO from '../components/SEO';
 import AlertGlobal from '../components/AlertGlobal';
 import Loader from '../components/Loader';
 import Filter from '../components/Filter';
@@ -13,6 +14,14 @@ import Footer from '../components/Footer';
 
 
 const F1 = ({cartVisible, setCartVisible}) => {
+
+  const seoData = {
+    title: 'Jerseys de Formula 1 - F1',
+    description: 'Compra jerseys de F1. Ferrari, Mercedes, Red Bull Racing, Aston Martin, McLaren, Williams. Haas, Sauber, RB, Alpine. Calidad superior con envío gratis en Colombia',
+    keywords: 'jerseys f1, jerseys de Formula 1, camisetas f1, Ferrari, Mercedes, Red Bull Racing, Aston Martin, McLaren, Williams. Haas, Sauber, RB, Alpine, jerseys colombia, f1, formula 1, formula uno, Hoodies f1, Polos f1, Chaquetas f1, jerseys formula 1, camisetas formula 1, camisetas de formula 1, ropa f1, ropa formula 1, Charles Leclerc, Lewis Hamilton, Max Verstappen, Sergio Perez, Lando Norris, George Russell, Fernando Alonso, Sebastian Vettel, Valtteri Bottas, Michael Schumacher, Ayrton Senna, F1 retro',
+    url: `${window.location.origin}/f1`,
+    type: 'website'
+  };
 
   const [alert, setAlert] = useState({
     show: false,
@@ -179,7 +188,7 @@ const F1 = ({cartVisible, setCartVisible}) => {
     fetchCamisetasF1();
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchTasa = async () => {
       try {
         const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
@@ -208,6 +217,7 @@ const F1 = ({cartVisible, setCartVisible}) => {
 
  return (
     <div className="flex overflow-auto h-screen w-screen">
+    <SEO {...seoData} />
       <div className='relative'>
         <AlertGlobal alert={alert} setAlert={setAlert} />
       </div>

@@ -1,14 +1,25 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
+
 import Loader from "../components/Loader.jsx"
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
+
+import SEO from '../components/SEO';
 import {supabase} from "../lib/supabaseClient"
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 
 const Login = () => {
+  
+   const seoData = {
+    title: 'Jerseys Colombia - Jerseys Oficiales de Fútbol, NBA y F1',
+    description: 'La mejor tienda de jerseys oficiales en Colombia. Encuentra jerseys de fútbol, NBA y Fórmula 1 de tus equipos favoritos. Calidad premium, envío gratis y personalización disponible.',
+    keywords: 'jerseys colombia, camisetas futbol, jerseys NBA, F1 merchandise, deportes colombia',
+    url: window.location.origin,
+    image: `${window.location.origin}/og-home.jpg`
+  };
 
   const [loading, setLoading] = useState(true);
 

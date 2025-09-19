@@ -73,7 +73,7 @@ const PersonalizationPanel = ({ setCustomName, setCustomNumber }) => {
 const Product = ({ cartVisible, setCartVisible }) => {
 
     const { cartItems, setCartItems } = useCart();
-    const { wishlistItems, setWishlistItems } = useWishlist();
+    const { wishlistItems, setWishlistItems, setWishlistVisible } = useWishlist();
     const { category, name } = useParams();
     const Navigate = useNavigate();
     
@@ -186,6 +186,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
             if (prevItems.includes(productName)) {
                 return prevItems.filter(item => item !== productName);
             } else {
+                setWishlistVisible(true);
                 return [...prevItems, productName];
             }
         });

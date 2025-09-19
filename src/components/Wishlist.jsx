@@ -39,7 +39,7 @@ const Wishlist = () => {
 
                     const { data: f1Data, error: f1Error } = await supabase
                         .from('f1')
-                        .select('name, price, img, category')
+                        .select('name, price, team, year, img, category, deporte')
                         .in('name', wishlistItems);
                     
                     if (f1Error) console.error("Error buscando en F1:", f1Error);
@@ -48,7 +48,7 @@ const Wishlist = () => {
                     // 2. Buscar en la tabla 'nba'
                     const { data: nbaData, error: nbaError } = await supabase
                         .from('nba')
-                        .select('name, price, img, deporte')
+                        .select('name, price, team, year, img, deporte')
                         .in('name', wishlistItems);
 
                     if (nbaError) console.error("Error buscando en NBA:", nbaError);
@@ -57,7 +57,7 @@ const Wishlist = () => {
                     // 3. Buscar en la tabla 'futbol'
                     const { data: futbolData, error: futbolError } = await supabase
                         .from('futbol')
-                        .select('name, price, img, deporte')
+                        .select('name, price, team, year, img, deporte')
                         .in('name', wishlistItems);
                     
                     if (futbolError) console.error("Error buscando en Futbol:", futbolError);
@@ -135,6 +135,7 @@ const Wishlist = () => {
                             ) : products.length > 0 ? (
                                 products.map((product) => {
                                     const link = product.deporte === 'f1' ? product.category : product.deporte;
+                                    const nombre = product.deporte === 'futbol' ? product.team + ' ' + product.year : product.name;
                                     return (
                                         <div key={product.name} className="flex items-center justify-between w-full p-2 border-b">
                                             <Link to={`/${link}/${generarSlug(product.name)}`} className="flex items-center gap-4">
@@ -144,7 +145,7 @@ const Wishlist = () => {
                                                     className='w-16 h-16 object-cover rounded-md'
                                                 />
                                                 <div>
-                                                    <p className='text-sm'>{product.name}</p>
+                                                    <p className='text-sm'>{nombre}</p>
                                                     <p className='text-blue-400'>${product.price} USD</p>
                                                 </div>
                                             </Link>

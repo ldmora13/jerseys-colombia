@@ -31,7 +31,7 @@ const F1 = ({cartVisible, setCartVisible}) => {
   });
 
   const { cartItems, setCartItems} = useCart();
-  const { wishlistItems, setWishlistItems } = useWishlist();
+  const { wishlistItems, setWishlistItems, setWishlistVisible } = useWishlist();
 
 
   const topRef = useRef(null);
@@ -137,7 +137,9 @@ const F1 = ({cartVisible, setCartVisible}) => {
         return prevItems.filter(item => item !== productName);
       } else {
         // Si no existe, lo añadimos
+        setWishlistVisible(true);
         return [...prevItems, productName];
+        
       }
     });
   };

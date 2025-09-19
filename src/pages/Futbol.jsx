@@ -33,7 +33,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
   });
 
   const { cartItems, setCartItems} = useCart();
-  const { wishlistItems, setWishlistItems } = useWishlist();
+  const { wishlistItems, setWishlistItems, setWishlistVisible } = useWishlist();
 
   const topRef = useRef(null);
   const [camisetasFutbol, setCamisetasFutbol] = useState([]);
@@ -124,7 +124,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
         // Si existe, lo eliminamos (devuelve un nuevo array sin ese item)
         return prevItems.filter(item => item !== productName);
       } else {
-        // Si no existe, lo añadimos
+        setWishlistVisible(true);
         return [...prevItems, productName];
       }
     });

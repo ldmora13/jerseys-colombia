@@ -20,8 +20,8 @@ const Filter = ({
 
   // Definir las categorías basadas en la ruta
   const getCategorias = (pathname) => {
-    if (pathname.includes("/F1")) return ["Todo", "Jerseys", "Polos", "Hoodies"];
-    if (pathname.includes("/NBA")) return ["Todo", "Jerseys", "Shorts"];
+    if (pathname.includes("/F1" | "/f1")) return ["Todo", "Jerseys", "Polos", "Hoodies"];
+    if (pathname.includes("/NBA" | "nba")) return ["Todo", "Jerseys", "Shorts"];
     return ["Todo"];
   };
 

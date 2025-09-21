@@ -3,27 +3,28 @@
   
   <url>
     <loc>https://www.jerseyscol.com/</loc>
-    <lastmod>2025-09-19</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.jerseyscol.com/futbol</loc>
-    <lastmod>2025-09-19</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.jerseyscol.com/nba</loc>
-    <lastmod>2025-09-19</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.jerseyscol.com/f1</loc>
-    <lastmod>2025-09-19</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://www.jerseyscol.com/soporte</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.jerseyscol.com/politicas</loc>
+    <priority>0.7</priority>
   </url>
 
   <url>

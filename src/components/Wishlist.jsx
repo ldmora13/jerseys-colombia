@@ -134,7 +134,7 @@ const Wishlist = () => {
                                 <p className='p-4'>Cargando...</p>
                             ) : products.length > 0 ? (
                                 products.map((product) => {
-                                    const link = product.deporte === 'f1' ? product.category : product.deporte;
+                                    const link = product.deporte === 'f1' ? product.category.toLowerCase() : product.deporte.toLowerCase();
                                     const nombre = product.deporte === 'futbol' ? product.team + ' ' + product.year : product.name;
                                     return (
                                         <div key={product.name} className="flex items-center justify-between w-full p-2 border-b">

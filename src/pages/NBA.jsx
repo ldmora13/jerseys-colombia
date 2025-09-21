@@ -268,7 +268,7 @@ const NBA = ({cartVisible, setCartVisible}) => {
                   <div key={index}
                     className="flex flex-col items-center justify-center sm:justify-between w-[300px] h-[450px] rounded-2xl bg-white border-2 border-[#252525] mb-5 hover:scale-105 transition-transform "
                     style={{ boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff' }}>
-                    <Link to={`/NBA/${slug}`} className="w-full">
+                    <Link to={`/nba/${slug}`} className="w-full">
                       <div className="w-full h-[300px] -mt-2 md:mt-0 relative rounded-t-2xl overflow-hidden bg-[#f3f3f3] group border-b-2 border-b-[#252525]">
                         {imagenPrincipal && (
                           <img

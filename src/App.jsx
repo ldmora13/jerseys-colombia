@@ -52,8 +52,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/politicas" element={<Policies />} />
           <Route path='/futbol' element={<Futbol setCartVisible={setCartVisible} />} />
-          <Route path='/NBA' element={<NBA setCartVisible={setCartVisible} />} />
-          <Route path='/F1' element={<F1 setCartVisible={setCartVisible}  />} />
+          <Route path='/nba' element={<NBA setCartVisible={setCartVisible} />} />
+          <Route path='/f1' element={<F1 setCartVisible={setCartVisible}  />} />
           <Route path='/:category/:name' element={<Product setCartVisible={setCartVisible} />} />
           <Route path="/searchs/:query" element={<SearchResults />} />
           <Route path="/checkout" element={<Checkout />} />

@@ -218,7 +218,7 @@ const Login = () => {
             </div>
           </div>
           {/* Contenedor 2 */}
-          <div onClick={() => navigate("/NBA")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-gradient-to-br from-blue-200 to-indigo-100 shadow">
+          <div onClick={() => navigate("/nba")} className="group flex flex-col items-center justify-center  w-[300px] h-[400px] rounded-2xl bg-gradient-to-br from-blue-200 to-indigo-100 shadow">
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">NBA</p>
             <div className="flex flex-col gap-4 overflow-visible">
               {camisetasNBA.map((camiseta, index) => {
@@ -231,7 +231,7 @@ const Login = () => {
                     transform transition-all duration-300 ease-in-out
                     ${hoveredIndexNBA === null ? '' : hoveredIndexNBA === index ? 'scale-110 blur-0' : 'scale-90 blur-[2px]'}
                   `}>
-                    <Link to={`/${camiseta.deporte}/${generarSlug(camiseta.name)}`} className="flex items-center" onClick={(e) => e.stopPropagation()}>
+                    <Link to={`/nba/${generarSlug(camiseta.name)}`} className="flex items-center" onClick={(e) => e.stopPropagation()}>
                         {imagenPrincipal && ( 
                             <img
                                 src={imagenPrincipal}
@@ -248,7 +248,7 @@ const Login = () => {
           </div>
 
           {/* Contenedor 3 */}
-          <div onClick={() => navigate("/F1")} className="group flex flex-col items-center justify-center w-[300px] h-[400px] rounded-2xl bg-gradient-to-br from-blue-200 to-indigo-100 shadow">
+          <div onClick={() => navigate("/f1")} className="group flex flex-col items-center justify-center w-[300px] h-[400px] rounded-2xl bg-gradient-to-br from-blue-200 to-indigo-100 shadow">
             <p className="cursor-pointer -mt-4 mb-2 text-center text-[16px] font-semibold">F1</p>
             <div className="flex flex-col gap-4 overflow-visible">
               {camisetasF1.map((camiseta, index) => {
@@ -261,7 +261,7 @@ const Login = () => {
                     transform transition-all duration-300 ease-in-out
                     ${hoveredIndexF1 === null ? '' : hoveredIndexF1 === index ? 'scale-110 blur-0' : 'scale-90 blur-[2px]'}
                   `}>
-                  <Link to={`/${camiseta.category}/${generarSlug(camiseta.name)}`} className="flex items-center" onClick={(e) => e.stopPropagation()}>
+                  <Link to={`/${camiseta.category.toLowerCase()}/${generarSlug(camiseta.name)}`} className="flex items-center" onClick={(e) => e.stopPropagation()}>
                     {imagenPrincipal && ( 
                       <img
                         src={imagenPrincipal}

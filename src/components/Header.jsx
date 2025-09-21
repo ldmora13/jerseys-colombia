@@ -214,13 +214,13 @@ const Header = ({setCartVisible}) => {
                                     </a>
                                 </li>
                                 <li>
-                                    <a onClick={() => navigate("/NBA")}
+                                    <a onClick={() => navigate("/nba")}
                                         className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
                                         Basketball
                                     </a>
                                 </li>
                                 <li>
-                                    <a onClick={() => navigate("/F1")} 
+                                    <a onClick={() => navigate("/f1")} 
                                         className="block cursor-pointer text-center font-medium py-2 px-4 rounded-lg transition-all duration-200 ease-in-out text-[#252525] hover:scale-105 hover:shadow-xl active:scale-95 active:bg-[#c9ffd3]">
                                         Fórmula 1
                                     </a>
@@ -362,13 +362,13 @@ const Header = ({setCartVisible}) => {
                             </a>
                         </li>
                         <li>
-                            <a onClick={() => navigate("/NBA")}
+                            <a onClick={() => navigate("/nba")}
                                 className="cursor-pointer font-medium py-2 px-3 rounded-sm scale-110 transition-all duration-300 ease-in-out ">
                                 Basketball
                             </a>
                         </li>
                         <li>
-                            <a onClick={() => navigate("/F1")}
+                            <a onClick={() => navigate("/f1")}
                                 className="cursor-pointer font-medium py-2 px-3 rounded-sm scale-110 transition-all duration-300 ease-in-out ">
                                 Fórmula 1
                             </a>

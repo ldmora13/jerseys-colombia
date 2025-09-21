@@ -61,6 +61,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
 
   const handleCheckout = () => {
     if (cartItems.length > 0) {
+      setCartVisible(false)
       navigate('/checkout');
     } else {
       setAlert({ show: true, message: "Añade productos al carrito antes de continuar", severity: "error", title: "Carrito vacío" });

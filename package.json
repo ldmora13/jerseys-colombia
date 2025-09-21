@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest"
+    "generate-sitemap": "node scripts/generateSitemap.js",
+    "build:sitemap": "npm run generate-sitemap && npm run build",
+    "prebuild": "npm run generate-sitemap"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

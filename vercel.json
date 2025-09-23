@@ -1,27 +1,6 @@
 {
   "version": 2,
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": "(?i)(bot|crawler|spider|crawling)"
-        }
-      ],
-      "destination": "https://service.prerender.io/https://www.jerseyscol.com/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Prerender-Token",
-          "value": "cQOaz3M17aRgXQDb76P9"
-        }
-      ]
-    }
+    { "source": "/(.*)", "destination": "/" }
   ]
 }

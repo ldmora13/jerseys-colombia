@@ -1,6 +1,16 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    {
+      "source": "/(.*)",
+      "has": [
+        { "type": "header", "key": "user-agent", "value": "(?i)(bot|crawler|spider|crawling|googlebot|bingbot|duckduckbot|yandex|baiduspider)" }
+      ],
+      "destination": "https://service.prerender.io/https://www.jerseyscol.com/$1?prerenderToken=cQOaz3M17aRgXQDb76P9"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
   ]
 }

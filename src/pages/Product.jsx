@@ -25,32 +25,64 @@ const qualityDescriptions = {
     'f1': 'Tela piqué de alta densidad (Triple A+), logos y patrocinadores bordados y estampados con precisión.'
 };
 
-const ProductInfo = ({ producto }) => {
-    if (!producto) return null;
+const ProductInfoMejorado = ({ producto }) => {
+  if (!producto) return null;
 
-    let qualityType = '';
-    let descriptionKey = '';
+  let qualityType = '';
+  let descriptionKey = '';
+  let technicalSpecs = '';
 
-    if (producto.sport === 'f1') {
-        qualityType = 'Fan';
-        descriptionKey = 'f1';
-    } else if (producto.sport === 'nba') {
-        qualityType = producto.category;
-        descriptionKey = producto.category.toLowerCase();
-    } else if (producto.sport === 'futbol') {
-        qualityType = 'Fan';
-        descriptionKey = 'fan'
-    }
-    const qualityDescription = qualityDescriptions[descriptionKey] || 'Descripción detallada no disponible.';
+  if (producto.sport === 'f1') {
+    qualityType = 'Fan Premium';
+    descriptionKey = 'f1';
+    technicalSpecs = '100% Poliéster, Tela piqué de alta densidad, Transpirable, Resistente al lavado';
+  } else if (producto.sport === 'nba') {
+    qualityType = producto.category;
+    descriptionKey = producto.category.toLowerCase();
+    technicalSpecs = 'Poliéster ultra-ligero, Microperforaciones, Fit ajustado, Secado rápido';
+  } else if (producto.sport === 'futbol') {
+    qualityType = 'Fan Premium';
+    descriptionKey = 'fan';
+    technicalSpecs = 'Poliéster con Dri-FIT, Logos bordados, Resistente, Transpirable';
+  }
 
-    return (
-        <div className='w-full text-sm text-black mt-2 p-1 md:p-3 bg-blue-50 rounded-lg'>
-            <p><span className='font-semibold'>Calidad:</span> <span className='capitalize'>{qualityType}</span></p>
-            <p><span className='font-semibold'>Descripción:</span> {qualityDescription}</p>
-        </div>
-    );
+  const qualityDescription = qualityDescriptions[descriptionKey] || 'Descripción detallada no disponible.';
+
+  return (
+    <div className='w-full space-y-3'>
+      {/* Información de calidad */}
+      <div className='text-sm text-black p-3 bg-blue-50 rounded-lg'>
+        <p><span className='font-semibold'>Calidad:</span> <span className='capitalize'>{qualityType}</span></p>
+        <p><span className='font-semibold'>Descripción:</span> {qualityDescription}</p>
+      </div>
+      
+      {/* Especificaciones técnicas */}
+      <div className='text-sm text-black p-3 bg-green-50 rounded-lg'>
+        <p><span className='font-semibold'>Especificaciones:</span> {technicalSpecs}</p>
+        <p><span className='font-semibold'>Tallas disponibles:</span> S, M, L, XL, XXL</p>
+      </div>
+      
+      {/* Información de envío */}
+      <div className='text-sm text-black p-3 bg-yellow-50 rounded-lg'>
+        <p><span className='font-semibold'>🚚 Envío:</span> Gratis en pedidos de 4+ productos</p>
+        <p><span className='font-semibold'>📦 Entrega:</span> 5-15 días hábiles</p>
+        <p><span className='font-semibold'>💳 Pago:</span> Tarjeta, PayPal, Contraentrega</p>
+      </div>
+      
+      {/* Sección de características adicionales */}
+      <div className='text-sm text-black p-3 bg-purple-50 rounded-lg'>
+        <h4 className='font-semibold mb-2'>✨ Características destacadas:</h4>
+        <ul className='space-y-1 text-xs'>
+          <li>• Material oficial licenciado</li>
+          <li>• Diseño idéntico al usado por profesionales</li>
+          <li>• Tecnología anti-transpiración</li>
+          {producto.sport === 'futbol' && <li>• Personalización con nombre y número</li>}
+          <li>• Resistente a múltiples lavados</li>
+        </ul>
+      </div>
+    </div>
+  );
 };
-
 
 const PersonalizationPanel = ({ setCustomName, setCustomNumber }) => {
     return (
@@ -68,6 +100,91 @@ const PersonalizationPanel = ({ setCustomName, setCustomNumber }) => {
             </div>
         </div>
     );
+};
+
+const Breadcrumbs = ({ category, producto }) => {
+  if (!producto) return null;
+  
+  const breadcrumbItems = [
+    { name: 'Inicio', url: '/' },
+    { name: category.toUpperCase(), url: `/${category}` },
+    { name: producto.name, url: '' }
+  ];
+  
+  return (
+    <nav className="flex mb-4 text-sm text-gray-600 p-2" aria-label="Breadcrumb">
+      <ol className="flex items-center space-x-2">
+        {breadcrumbItems.map((item, index) => (
+          <li key={index} className="flex items-center">
+            {index > 0 && <span className="mx-2 text-gray-400">/</span>}
+            {item.url ? (
+              <a href={item.url} className="hover:text-blue-600 transition-colors">
+                {item.name}
+              </a>
+            ) : (
+              <span className="text-gray-900 font-medium">{item.name}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+};
+
+const ProductSEOContent = ({ producto }) => {
+  if (!producto) return null;
+  
+  const { sport, team, year, category } = producto;
+  
+  let seoContent = '';
+  
+  if (sport === 'futbol') {
+    seoContent = `
+      Esta jersey oficial de ${team} temporada ${year} representa la excelencia en diseño deportivo. 
+      Fabricado con materiales de primera calidad, incluye la tecnología Dri-FIT para manejo de humedad y logos bordados para mayor durabilidad. 
+      Ideal para aficionados que buscan autenticidad y comodidad.
+      
+      El jersey ${category === 'home' ? 'local' : category === 'away' ? 'visitante' : category} de ${team} ha sido diseñado pensando en el rendimiento y la comodidad. 
+      Su corte ergonómico y materiales transpirables lo convierten en la elección perfecta para usar en el estadio o en actividades cotidianas.
+    `;
+  } else if (sport === 'nba') {
+    seoContent = `
+      Jersey oficial NBA de ${team} temporada ${year}. 
+      Esta camiseta replica exactamente los uniformes utilizados por los jugadores profesionales en la cancha. 
+      Fabricado con poliéster ultra-ligero y microperforaciones estratégicas para máxima ventilación durante el juego.
+      
+      Las jerseys NBA de ${team} son reconocidos mundialmente por su calidad premium y diseño innovador. 
+      Perfecto para fanáticos del baloncesto que valoran la autenticidad y el estilo deportivo urbano.
+    `;
+  } else if (sport === 'f1') {
+    seoContent = `
+      Camiseta oficial del equipo ${team} de Fórmula 1 temporada ${year}. 
+      Fabricada con tela piqué de alta densidad y tecnología Triple A+ que garantiza durabilidad excepcional. 
+      Incluye todos los logos de patrocinadores oficiales bordados con precisión.
+      
+      La indumentaria de Fórmula 1 de ${team} representa la velocidad, la precisión y la tecnología de punta del automovilismo. 
+      Esta camiseta es perfecta para fanáticos del motorsport que buscan llevar los colores de su escudería favorita con orgullo.
+    `;
+  }
+  
+  return (
+    <div className='mt-8 max-w-4xl mx-auto px-4'>
+      <div className='bg-white rounded-lg shadow-sm p-6 text-sm text-gray-700 leading-relaxed'>
+        <h3 className='text-lg font-semibold mb-4 text-gray-800'>
+          Descripción detallada del producto
+        </h3>
+        <div className='prose prose-sm max-w-none'>
+          {seoContent.split('\n').map((paragraph, index) => (
+            paragraph.trim() && (
+              <p key={index} className='mb-3'>
+                {paragraph.trim()}
+              </p>
+            )
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const Product = ({ cartVisible, setCartVisible }) => {
@@ -100,8 +217,37 @@ const Product = ({ cartVisible, setCartVisible }) => {
 
     const seoData = useSEO(producto, category, name);
 
-    const generarSlug = (str) => {
-        return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").trim();
+    const generarSlugOptimizado = (product, category) => {
+        let team = product.team || '';
+        let year = product.year || '';
+        let type = product.type || product.category || '';
+        
+        // Limpiar nombres de equipos
+        team = team.replace(/\s+(FC|CF|AC|SC|United|City|Real|Club)\s*/gi, '');
+        
+        if (category === 'f1') {
+            return `${team}-${year}`.toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9-]/g, "")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "");
+        }
+        
+        let parts = [team, year];
+        if (type && !['fan', 'player', 'jersey'].includes(type.toLowerCase())) {
+            parts.push(type);
+        }
+        
+        return parts
+            .filter(Boolean)
+            .join('-')
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9-]/g, "")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "");
     };
 
     useEffect(() => {
@@ -115,15 +261,27 @@ const Product = ({ cartVisible, setCartVisible }) => {
         const fetchProducto = async () => {
             setLoading(true);
             let table = category.toLowerCase();
-            if (table === 'futbol') {
-                table = 'futbol';
-            }
+            
             const { data, error } = await supabase.from(table).select('*');
             if (error) {
                 console.error('Error al buscar el producto:', error);
                 setProducto(null);
             } else {
-                const encontrado = data.find((p) => generarSlug(p.name) === name);
+                // Buscar por slug optimizado
+                const encontrado = data.find((p) => {
+                    const slugOptimizado = generarSlugOptimizado(p, category);
+                    // También mantener compatibilidad con URLs antiguas
+                    const slugAntiguo = p.name.toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .replace(/\s+/g, "-")
+                        .replace(/[^a-z0-9-]/g, "")
+                        .replace(/-+/g, "-")
+                        .trim();
+                    
+                    return slugOptimizado === name || slugAntiguo === name;
+                });
+                
                 if (encontrado) {
                     let sportIdentifier;
                     if (encontrado.deporte) {
@@ -215,7 +373,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
             )}
             <SizeRules sizeRulesVisible={sizeRulesVisible} setSizeRulesVisible={setSizeRulesVisible} />
             <div ref={topRef} className='h-20'></div>
-            
+            <Breadcrumbs category={category} producto={producto} />
             {producto && (
                 <div className='flex flex-col md:flex-row items-start justify-center w-full max-w-6xl mx-auto gap-8 p-4'>
                     <div className="w-full md:w-1/2 flex flex-col gap-4 items-center">
@@ -253,6 +411,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                                 </div>
                             </div>
                         )}
+                        <ProductSEOContent producto={producto} />
                     </div>
                     <div className="w-full md:w-1/2 flex flex-col gap-4 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-2xl p-5">
                         {(() => {
@@ -308,14 +467,15 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             ))}
                         </ul>
 
+                        <ProductInfoMejorado producto={producto} />
+
                         {producto.sport === 'futbol'  && (
                             <PersonalizationPanel setCustomName={setCustomName} setCustomNumber={setCustomNumber} />
                         )}
 
-                        <ProductInfo producto={producto} />
 
                         <div className='flex flex-col md:flex-row items-center justify-center gap-3 mt-2'>
-                           <button onClick={() => goToCheackout(producto)} className='group relative w-full md:w-[130px] h-10 flex items-center justify-center bg-black hover:text-white md:hover:text-black text-white font-bold gap-2 cursor-pointer shadow-md overflow-hidden transition-all duration-300 active:translate-x-1 active:translate-y-1 before:content-[""] before:absolute before:w-[130px] before:h-[130px] before:top-0 before:left-[-100%] before:bg-white before:transition-all before:duration-300 before:mix-blend-difference hover:before:transform hover:before:translate-x-full hover:before:-translate-y-1/2 hover:before:rounded-none'>
+                        <button onClick={() => goToCheackout(producto)} className='group relative w-full md:w-[130px] h-10 flex items-center justify-center bg-black hover:text-white md:hover:text-black text-white font-bold gap-2 cursor-pointer shadow-md overflow-hidden transition-all duration-300 active:translate-x-1 active:translate-y-1 before:content-[""] before:absolute before:w-[130px] before:h-[130px] before:top-0 before:left-[-100%] before:bg-white before:transition-all before:duration-300 before:mix-blend-difference hover:before:transform hover:before:translate-x-full hover:before:-translate-y-1/2 hover:before:rounded-none'>
                                 <span className='relative z-10'>Pagar</span>
                                 <svg className='relative z-10 h-3 ' viewBox="0 0 576 512"><path className='fill-white group-hover:fill-white  md:group-hover:fill-black transition-colors duration-200' d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"/></svg>
                             </button>

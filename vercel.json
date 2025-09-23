@@ -1,16 +1,91 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "build/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/sitemap.xml",
+      "dest": "/sitemap.xml",
+      "headers": {
+        "Content-Type": "application/xml; charset=utf-8",
+        "Cache-Control": "public, max-age=3600, s-maxage=3600"
+      }
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/robots.txt",
+      "headers": {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "public, max-age=3600, s-maxage=3600"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i)(bot|crawler|spider|crawling|googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora|showyoubot|outbrain|pinterest|developers\\.google\\.com)"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
       "has": [
-        { "type": "header", "key": "user-agent", "value": "(?i)(bot|crawler|spider|crawling|googlebot|bingbot|duckduckbot|yandex|baiduspider)" }
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i)(bot|crawler|spider|crawling|googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora|showyoubot|outbrain|pinterest|developers\\.google\\.com)"
+        }
       ],
-      "destination": "https://service.prerender.io/https://www.jerseyscol.com/$1?prerenderToken=cQOaz3M17aRgXQDb76P9"
-    },
+      "destination": "https://service.prerender.io/https://www.jerseyscol.com/$1"
+    }
+  ],
+  "headers": [
     {
       "source": "/(.*)",
-      "destination": "/"
+      "headers": [
+        {
+          "key": "X-Prerender-Token",
+          "value": "cQOaz3M17aRgXQDb76P9"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/(futbol|nba|f1)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400"
+        }
+      ]
     }
   ]
 }

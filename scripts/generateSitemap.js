@@ -35,7 +35,7 @@ async function getAllProducts() {
     
     const [futbolRes, nbaRes, f1Res] = await Promise.all([
       supabase.from('futbol').select('name, category, index'),
-      supabase.from('nba').select('name, deporte as category, index'),
+      supabase.from('nba').select('name, category, index'),
       supabase.from('f1').select('name, category, index')
     ]);
 
@@ -60,7 +60,7 @@ async function getAllProducts() {
       futbolRes.data.forEach(product => {
         products.push({
           url: `${BASE_URL}/futbol/${generarSlug(product.name)}`,
-          lastmod: product.index ? new Date(product.index).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          lastmod: new Date().toISOString().split('T')[0],
           priority: '0.8',
           category: 'futbol',
           name: product.name
@@ -73,7 +73,7 @@ async function getAllProducts() {
       nbaRes.data.forEach(product => {
         products.push({
           url: `${BASE_URL}/nba/${generarSlug(product.name)}`,
-          lastmod: product.index ? new Date(product.index).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          lastmod: new Date().toISOString().split('T')[0],
           priority: '0.8',
           category: 'nba',
           name: product.name
@@ -86,7 +86,7 @@ async function getAllProducts() {
       f1Res.data.forEach(product => {
         products.push({
           url: `${BASE_URL}/${product.category.toLowerCase()}/${generarSlug(product.name)}`,
-          lastmod: product.index ? new Date(product.index).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          lastmod: new Date().toISOString().split('T')[0],
           priority: '0.8',
           category: 'f1',
           name: product.name

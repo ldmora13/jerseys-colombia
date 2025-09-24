@@ -15,109 +15,115 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 const BASE_URL = 'https://www.jerseyscol.com';
 
-// Función mejorada para generar URLs más cortas
-const generarSlugOptimizado = (product, category) => {
-  let team = product.team || '';
-  let year = product.year || '';
-  let type = product.type || product.category || '';
+// FUNCIÓN PARA GENERAR SLUG DESDE PRODUCT.NAME (igual que en Product.jsx)
+const generarSlugDesdeNombre = (name) => {
+  if (!name) return '';
   
-  // Limpiar y acortar nombres de equipos
-  team = team.replace(/\s+(FC|CF|AC|SC|United|City|Real|Club)\s*/gi, '');
-  
-  
-  if (category === 'f1') {
-    return `${team}-${year}`.toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9-]/g, "")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "");
-  }
-  
-  // Para fútbol y NBA, team-year-type
-  let parts = [team, year];
-  if (type && !['fan', 'player', 'jersey'].includes(type.toLowerCase())) {
-    parts.push(type);
-  }
-  
-  return parts
-    .filter(Boolean)
-    .join('-')
+  return name
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9-]/g, "")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replace(/[\u0300-\u036f]/g, "") // Remover acentos
+    .replace(/\s+/g, "-") // Espacios por guiones
+    .replace(/[^a-z0-9-]/g, "") // Solo letras, números y guiones
+    .replace(/-+/g, "-") // Múltiples guiones por uno solo
+    .replace(/^-|-$/g, ""); // Remover guiones al inicio/final
 };
 
-async function getAllProductsOptimized() {
+async function getAllProducts() {
   try {
     console.log('🔌 Conectando a Supabase...');
     
     const [futbolRes, nbaRes, f1Res] = await Promise.all([
-      supabase.from('futbol').select('name, team, year, category, index'),
-      supabase.from('nba').select('name, team, year, category, index'),
-      supabase.from('f1').select('name, team, year, category, index')
+      supabase.from('futbol').select('name, team, year, category, index, price, img'),
+      supabase.from('nba').select('name, team, year, category, index, price, img'),
+      supabase.from('f1').select('name, team, year, type, category, index, price, img')
     ]);
+
+    console.log('📊 Respuestas de la base de datos:');
+    console.log('⚽ Fútbol:', futbolRes.error ? `❌ ${futbolRes.error.message}` : `✅ ${futbolRes.data?.length} productos`);
+    console.log('🏀 NBA:', nbaRes.error ? `❌ ${nbaRes.error.message}` : `✅ ${nbaRes.data?.length} productos`);
+    console.log('🏎️ F1:', f1Res.error ? `❌ ${f1Res.error.message}` : `✅ ${f1Res.data?.length} productos`);
+
+    // Verificar errores
+    if (futbolRes.error || nbaRes.error || f1Res.error) {
+      console.log('\n❌ Errores encontrados:');
+      if (futbolRes.error) console.log('- Fútbol:', futbolRes.error.message);
+      if (nbaRes.error) console.log('- NBA:', nbaRes.error.message);
+      if (f1Res.error) console.log('- F1:', f1Res.error.message);
+      return [];
+    }
 
     const products = [];
 
-    // Procesar productos con URLs optimizadas
-    if (futbolRes.data) {
+    // Procesar productos de fútbol
+    if (futbolRes.data && futbolRes.data.length > 0) {
       futbolRes.data.forEach(product => {
-        const slug = generarSlugOptimizado(product, 'futbol');
-        products.push({
-          url: `${BASE_URL}/futbol/${slug}`,
-          lastmod: new Date().toISOString().split('T')[0],
-          priority: '0.8',
-          category: 'futbol',
-          name: product.name,
-          team: product.team,
-          year: product.year
-        });
+        const slug = generarSlugDesdeNombre(product.name);
+        if (slug) { 
+          products.push({
+            url: `${BASE_URL}/futbol/${slug}`,
+            lastmod: new Date().toISOString().split('T')[0],
+            priority: '0.8',
+            category: 'futbol',
+            name: product.name,
+            team: product.team,
+            year: product.year,
+            price: product.price,
+            image: product.img?.[-1]
+          });
+        }
       });
     }
 
-    if (nbaRes.data) {
+    // Procesar productos de NBA
+    if (nbaRes.data && nbaRes.data.length > 0) {
       nbaRes.data.forEach(product => {
-        const slug = generarSlugOptimizado(product, 'nba');
-        products.push({
-          url: `${BASE_URL}/nba/${slug}`,
-          lastmod: new Date().toISOString().split('T')[0],
-          priority: '0.8',
-          category: 'nba',
-          name: product.name,
-          team: product.team,
-          year: product.year
-        });
+        const slug = generarSlugDesdeNombre(product.name);
+        if (slug) {
+          products.push({
+            url: `${BASE_URL}/nba/${slug}`,
+            lastmod: new Date().toISOString().split('T')[0],
+            priority: '0.8',
+            category: 'nba',
+            name: product.name,
+            team: product.team,
+            year: product.year,
+            price: product.price,
+            image: product.img?.[-1]
+          });
+        }
       });
     }
 
-    if (f1Res.data) {
+    // Procesar productos de F1
+    if (f1Res.data && f1Res.data.length > 0) {
       f1Res.data.forEach(product => {
-        const slug = generarSlugOptimizado(product, 'f1');
-        products.push({
-          url: `${BASE_URL}/f1/${slug}`,
-          lastmod: new Date().toISOString().split('T')[0],
-          priority: '0.8',
-          category: 'f1',
-          name: product.name,
-          team: product.team,
-          year: product.year
-        });
+        const slug = generarSlugDesdeNombre(product.name);
+        if (slug) {
+          products.push({
+            url: `${BASE_URL}/f1/${slug}`,
+            lastmod: new Date().toISOString().split('T')[0],
+            priority: '0.8',
+            category: 'f1',
+            name: product.name,
+            team: product.team,
+            year: product.year,
+            price: product.price,
+            image: product.img?.[-1]
+          });
+        }
       });
     }
 
     return products;
   } catch (error) {
-    console.error('Error:', error);
+    console.error('💥 Error crítico al obtener productos:', error.message);
     return [];
   }
 }
 
-// 3. SITEMAP XML OPTIMIZADO CON MEJORES PRÁCTICAS
-function generateOptimizedSitemapXML(products) {
+// Función para generar el XML del sitemap con metadatos mejorados
+function generateSitemapXML(products) {
   const currentDate = new Date().toISOString().split('T')[0];
   
   const staticRoutes = [
@@ -134,7 +140,7 @@ function generateOptimizedSitemapXML(products) {
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 `;
 
-  // Rutas estáticas
+  // Agregar rutas estáticas
   staticRoutes.forEach(route => {
     xml += `  <url>
     <loc>${route.url}</loc>
@@ -145,69 +151,163 @@ function generateOptimizedSitemapXML(products) {
 `;
   });
 
-  // Productos con metadatos mejorados
+  // Agregar productos dinámicos con información de imagen
   products.forEach(product => {
     xml += `  <url>
     <loc>${product.url}</loc>
     <lastmod>${product.lastmod}</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>${product.priority}</priority>
+    <priority>${product.priority}</priority>`;
+    
+    // Agregar información de imagen si existe
+    if (product.image) {
+      xml += `
+    <image:image>
+      <image:loc>${product.image}</image:loc>
+      <image:title>${product.name}</image:title>
+      <image:caption>Jersey ${product.team} ${product.year} - $${product.price} USD</image:caption>
+    </image:image>`;
+    }
+    
+    xml += `
   </url>
 `;
   });
 
   xml += `</urlset>`;
+
   return xml;
 }
 
-// 4. FUNCIÓN PRINCIPAL ACTUALIZADA
-async function generateOptimizedSitemap() {
-  console.log('🚀 Generando sitemap optimizado para SEO...\n');
-  
-  const products = await getAllProductsOptimized();
-  
-  if (products.length === 0) {
-    console.log('❌ No se encontraron productos');
-    return;
-  }
-
-  const sitemapXML = generateOptimizedSitemapXML(products);
-  
-  const publicDir = path.join(__dirname, '..', 'public');
-  if (!fs.existsSync(publicDir)) {
-    fs.mkdirSync(publicDir, { recursive: true });
-  }
-  
-  const sitemapPath = path.join(publicDir, 'sitemap.xml');
-  fs.writeFileSync(sitemapPath, sitemapXML, 'utf8');
-  
-  console.log('✅ Sitemap SEO-optimizado generado!');
-  console.log(`📊 ${products.length + 6} URLs totales`);
-  console.log(`📁 ${sitemapPath}`);
-  
-  // Crear también robots.txt mejorado
-  const robotsContent = `User-agent: *
+// Función para crear robots.txt optimizado
+function generateRobotsTxt() {
+  return `User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://www.jerseyscol.com/sitemap.xml
+Sitemap: ${BASE_URL}/sitemap.xml
 
 # Crawl-delay para evitar sobrecarga del servidor
 Crawl-delay: 1
 
-# Bloquear archivos innecesarios
+# Bloquear archivos y rutas innecesarias
 Disallow: /api/
 Disallow: /_next/
+Disallow: /build/
+Disallow: /node_modules/
 Disallow: /*.json$
 Disallow: /*?*utm_*
 Disallow: /*?*fbclid*
 Disallow: /*?*gclid*
-`;
+Disallow: /*?*ref=*
+Disallow: /admin/
+Disallow: /private/
+Disallow: /checkout/
+Disallow: /cart/
 
+# Permitir específicamente URLs importantes
+Allow: /futbol/
+Allow: /nba/
+Allow: /f1/
+Allow: /soporte/
+Allow: /politicas/
+
+# Directrices específicas para diferentes bots
+User-agent: Googlebot
+Crawl-delay: 1
+
+User-agent: Bingbot
+Crawl-delay: 2
+
+User-agent: Slurp
+Crawl-delay: 2
+
+# Bloquear bots maliciosos
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /`;
+}
+
+// Función principal
+async function generateSitemap() {
+  console.log('🚀 Generando sitemap con slugs basados en product.name...\n');
+  
+  const products = await getAllProducts();
+  
+  if (products.length === 0) {
+    console.log('\n❌ No se encontraron productos.');
+    console.log('🔧 Posibles causas:');
+    console.log('   1. Credenciales de Supabase incorrectas');
+    console.log('   2. Tablas vacías o nombres incorrectos');
+    console.log('   3. Permisos insuficientes (RLS activo sin políticas)');
+    console.log('   4. URL de Supabase incorrecta\n');
+    return;
+  }
+
+  // Verificar duplicados
+  const urls = products.map(p => p.url);
+  const duplicates = urls.filter((item, index) => urls.indexOf(item) !== index);
+  
+  if (duplicates.length > 0) {
+    console.log('⚠️ URLs duplicadas encontradas:');
+    duplicates.forEach(url => console.log(`   - ${url}`));
+    console.log('');
+  }
+
+  const sitemapXML = generateSitemapXML(products);
+  
+  // Asegurar que existe la carpeta public
+  const publicDir = path.join(__dirname, '..', 'public');
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+    console.log('📁 Carpeta public/ creada');
+  }
+  
+  // Escribir el sitemap
+  const sitemapPath = path.join(publicDir, 'sitemap.xml');
+  fs.writeFileSync(sitemapPath, sitemapXML, 'utf8');
+  
+  // Escribir robots.txt
   const robotsPath = path.join(publicDir, 'robots.txt');
+  const robotsContent = generateRobotsTxt();
   fs.writeFileSync(robotsPath, robotsContent, 'utf8');
-  console.log('✅ robots.txt actualizado');
+  
+  console.log('\n🎉 ¡Sitemap y robots.txt generados exitosamente!');
+  console.log(`📊 Total de URLs: ${products.length + 6} (${products.length} productos + 6 estáticas)`);
+  console.log(`📁 Sitemap: ${sitemapPath}`);
+  console.log(`📁 Robots: ${robotsPath}`);
+  
+  // Mostrar resumen por categoría
+  const categoryCounts = products.reduce((acc, product) => {
+    acc[product.category] = (acc[product.category] || 0) + 1;
+    return acc;
+  }, {});
+  
+  console.log('\n📈 Productos por categoría:', categoryCounts);
+  
+  // Mostrar algunas URLs de ejemplo
+  console.log('\n🔗 Ejemplo de URLs generadas:');
+  products.slice(0, 5).forEach(product => {
+    console.log(`   - ${product.url}`);
+  });
+  
+  // Mostrar URLs de Mercedes como ejemplo
+  const mercedesProducts = products.filter(p => p.team && p.team.toLowerCase().includes('mercedes'));
+  if (mercedesProducts.length > 0) {
+    console.log('\n🏎️ Ejemplo URLs Mercedes (diferentes variantes):');
+    mercedesProducts.slice(0, 3).forEach(product => {
+      console.log(`   - ${product.url} (${product.name})`);
+    });
+  }
+  
+  console.log(`\n✅ Sitemap disponible en: ${BASE_URL}/sitemap.xml`);
+  console.log(`✅ Robots.txt disponible en: ${BASE_URL}/robots.txt`);
 }
 
 // Ejecutar
-generateOptimizedSitemap().catch(console.error);
+generateSitemap().catch(console.error);

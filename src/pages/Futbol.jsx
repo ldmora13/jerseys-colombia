@@ -229,12 +229,27 @@ const Futbol = ({cartVisible, setCartVisible}) => {
           setYearRange={setYearRange}
         />
         
-        <div ref={topRef} className='h-20'></div>
+        <div className='h-20'></div>
         <main className="flex flex-col items-center w-full p-4 text-black">
           
           <div className='flex flex-col items-center w-auto h-auto'>
-            <img src={futbolsuit} className='h-15 w-auto' />
-            <h1 className='font-bold text-2xl text-center'>Jerseys de Selecciones de Fútbol</h1>
+            <img src={futbolsuit} className='h-20 w-auto' />
+           <div className="py-16">
+            <div className="container mx-auto px-4 text-center">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4">
+                Jerseys de Fútbol Originales
+              </h1>
+              <p className="text-xl md:text-2xl mb-8">
+                +{camisetasFiltradas.length} jerseys de los mejores equipos del mundo
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 text-sm">
+                <span className="bg-white/20 px-4 py-2 rounded-full">✅ Calidad Premium</span>
+                <span className="bg-white/20 px-4 py-2 rounded-full">✅ Logos Bordados</span>
+                <span className="bg-white/20 px-4 py-2 rounded-full">✅ Personalización</span>
+                <span ref={topRef} className="bg-white/20 px-4 py-2 rounded-full">✅ Envío Gratis 5+</span>
+              </div>
+            </div>
+          </div>
           </div>
           <div className='flex flex-row items-center justify-center md:justify-between sm:w-[80%] w-5 h-auto sm:gap-4 p-4 mt-4'>
             <div onClick={() => setFilterVisible(true)} className='hover:bg-[#252525] hover:text-white hover:scale-110 transition p-2 px-5 rounded-[12px] border-2 border-[#252525] cursor-pointer' role='button'>
@@ -355,6 +370,93 @@ const Futbol = ({cartVisible, setCartVisible}) => {
             </button>
           </div>
         </main>
+        <div className="py-16">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-6 text-gray-800">
+                ¿Por qué elegir nuestros jerseys de fútbol?
+              </h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-green-100 p-3 rounded-full">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">Calidad Premium</h3>
+                    <p className="text-gray-600">Poliéster con tecnología Dri-FIT, logos bordados y materiales resistentes.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="bg-blue-100 p-3 rounded-full">
+                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">Personalización</h3>
+                    <p className="text-gray-600">Agrega tu nombre y número favorito por solo $5 USD adicionales.</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-yellow-100 p-3 rounded-full">
+                    <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">Envío Gratis</h3>
+                    <p className="text-gray-600">Envío gratuito en pedidos de 5 o más productos a toda Colombia.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start space-x-4">
+                  <div className="bg-purple-100 p-3 rounded-full">
+                    <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">Pago Seguro</h3>
+                    <p className="text-gray-600">Acepta tarjetas, PayPal y pago contraentrega en toda Colombia.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Texto SEO */}
+            <div className="prose max-w-none">
+              <h3 className="text-2xl font-bold mb-4 text-gray-800">
+                Jerseys de Fútbol de los Mejores Equipos del Mundo
+              </h3>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                En Jerseys Colombia encontrarás la colección más amplia de jerseys de fútbol originales de los equipos más importantes de Europa y Sudamérica. Nuestros jerseys incluyen equipos como Real Madrid, Barcelona, Manchester United, PSG, Juventus, Milan, Chelsea, Arsenal, Liverpool, Bayern Munich, y muchos más.
+              </p>
+              
+              <h4 className="text-xl font-semibold mb-3 text-gray-800">
+                Ligas y Torneos Disponibles
+              </h4>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                Tenemos jerseys de las ligas más prestigiosas: Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Liga Colombiana, Copa Libertadores, Champions League, y selecciones nacionales de la Copa del Mundo y Copa América.
+              </p>
+              
+              <h4 className="text-xl font-semibold mb-3 text-gray-800">
+                Temporadas Actuales y Retro
+              </h4>
+              <p className="text-gray-700 leading-relaxed">
+                Ofrecemos tanto jerseys de las temporadas actuales 2024-2025 como jerseys retro clásicos. Todos nuestros productos cuentan con la calidad Fan Premium, con logos bordados, materiales transpirables y diseños idénticos a los utilizados por los jugadores profesionales.
+              </p>
+            </div>
+          </div>
+        </div>
         <footer>
           <Footer />
         </footer>

@@ -18,6 +18,10 @@
         }
       ],
       "destination": "https://service.prerender.io/https://www.jerseyscol.com/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [

@@ -105,7 +105,7 @@ export const WishlistProvider = ({ children }) => {
   return (
     <WishlistContext.Provider value={{
       wishlistVisible, setWishlistVisible,
-      wishlistItems, setWishlistItems
+      wishlistItems, setWishlistItems, loading
     }}>
       {children}
     </WishlistContext.Provider>

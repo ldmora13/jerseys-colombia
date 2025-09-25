@@ -160,16 +160,17 @@ const Cart = ({ cartVisible, setCartVisible }) => {
                 {/* Lista de productos */}
                 {cartItems.map((producto, index) => { // CAMBIO: camiseta -> producto
                   const imagenPrincipal = producto.img?.length > 0 ? producto.img[producto.img.length - 1] : null;
+                  const categoria = producto.deporte ? producto.deporte.toLowerCase() : "otros";
                   return (
                     <div key={index} className="mt-3 flex flex-row items-center border-2 rounded-2xl shadow p-2 gap-2 w-full bg-blue-50 mx-auto cursor-pointer">
-                      <Link to={`/${producto.category.toLowerCase()}/${generarSlug(producto.name)}`} className="flex items-center">
+                      <Link to={`/${categoria}/${generarSlug(producto.name)}`} className="flex items-center">
                         {imagenPrincipal && (
                           <img src={imagenPrincipal} alt={producto.name} className="w-[80px] h-[80px] object-contain rounded-2xl" />
                         )}
                       </Link>
 
                       <div className="relative flex flex-row items-center justify-start w-full overflow-auto">
-                        <Link to={`/${producto.deporte.toLowerCase()}/${generarSlug(producto.name)}`} className="flex items-center">
+                        <Link to={`/${categoria}/${generarSlug(producto.name)}`} className="flex items-center">
                           <div className="flex flex-col items-start justify-start">
                             <h2 className="font-bold text-sm capitalize">
                               {renderProductTitle(producto)}

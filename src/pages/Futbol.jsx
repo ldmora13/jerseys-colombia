@@ -206,7 +206,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
 
 
  return (
-    <div className="flex overflow-auto h-screen w-screen">
+    <div className="min-h-screen w-full">
     <SEO {...seoData} />
       <div className='relative'>
         <AlertGlobal alert={alert} setAlert={setAlert} />
@@ -231,7 +231,7 @@ const Futbol = ({cartVisible, setCartVisible}) => {
           setYearRange={setYearRange}
         />
         
-        <div className='h-20'></div>
+        <div className='h-30'></div>
         <main className="flex flex-col items-center w-full p-4 text-black">
           
           <div className='flex flex-col items-center w-auto h-auto'>
@@ -305,9 +305,11 @@ const Futbol = ({cartVisible, setCartVisible}) => {
                             </path>
                           </svg>
                         </div>
-                        <p className='font-semibold cursor-pointer capitalize'>
-                         {camiseta.team} {camiseta.year} {camiseta.category === 'manga_larga' ? 'manga larga' : camiseta.category}
-                        </p> 
+                        <Link to={`/futbol/${slug}`} className="w-full">
+                          <p className='font-semibold cursor-pointer capitalize'>
+                            {camiseta.team} {camiseta.year} {camiseta.category === 'manga_larga' ? 'manga larga' : camiseta.category}
+                          </p> 
+                        </Link>
                       </div>
                       <div className='flex flex-row items-center w-full gap-x-1'>
                         <p className='text-blue-500'>${camiseta.price} USD</p>

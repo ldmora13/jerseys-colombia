@@ -168,7 +168,7 @@ const NBA = ({cartVisible, setCartVisible}) => {
       try {
         const NBARes = await supabase
           .from('nba')
-          .select('name, img, team, player, category, year, retro, stock, price')
+          .select('name, img, team, player, category, year, retro, stock, price, deporte')
           .order('year', { ascending: false });
         if (NBARes.error) {
           console.error('Error en NBA:', NBARes.error);
@@ -214,7 +214,7 @@ const NBA = ({cartVisible, setCartVisible}) => {
 
 
  return (
-    <div className="flex overflow-auto h-screen w-screen">
+    <div className="min-h-screen w-full">
       <div className='relative'>
         <AlertGlobal alert={alert} setAlert={setAlert} />
       </div>
@@ -240,7 +240,7 @@ const NBA = ({cartVisible, setCartVisible}) => {
           setYearRange={setYearRange}
         />
         
-        <div className='h-20'></div>
+        <div className='h-30'></div>
         <main className="flex flex-col items-center w-full p-4 text-black">
           <div className='flex flex-col items-center w-auto h-auto'>
             <img src={nbasuit} alt='nba-suit' className='h-20' />
@@ -314,7 +314,9 @@ const NBA = ({cartVisible, setCartVisible}) => {
                               </path>
                           </svg>
                         </div>
-                        <p className='font-semibold cursor-pointer capitalize'>{camiseta.category} {camiseta.player} {camiseta.team} {camiseta.year}</p>
+                        <Link to={`/nba/${slug}`} className="w-full">
+                          <p className='font-semibold cursor-pointer capitalize'>{camiseta.category} {camiseta.player} {camiseta.team} {camiseta.year}</p>
+                        </Link>
                       </div>
                       
                       

@@ -56,7 +56,7 @@ const Footer = () => {
             icon: Phone,
             title: "WhatsApp",
             info: "+57 3224156590",
-            action: () => window.open("https://wa.me/3224156590", "_blank")
+            action: () => window.open("https://wa.me/+573224156590", "_blank")
         },
         {
             icon: MapPin,

@@ -501,7 +501,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
     }
 
     return (    
-        <div className='flex justify-center w-full min-h-screen'>
+        <div className='w-full min-h-screen'>
             {seoData && <SEO {...seoData} />}
             <div className='relative'>
                 <AlertGlobal alert={alert} setAlert={setAlert} />
@@ -513,7 +513,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                     </div> 
                 )}
                 <SizeRules sizeRulesVisible={sizeRulesVisible} setSizeRulesVisible={setSizeRulesVisible} />
-                <div ref={topRef} className='h-20'></div>
+                <div ref={topRef} className='h-30'></div>
                 <Breadcrumbs category={category} producto={producto} />
                 <div className='w-full flex items-center'>
                     {producto && (

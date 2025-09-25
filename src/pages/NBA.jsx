@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link} from 'react-router-dom';
 import {supabase, getSupabaseClient } from '../lib/supabaseClient';
 
+import { BadgeCheck } from 'lucide-react';
+
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 
@@ -251,10 +253,10 @@ const NBA = ({cartVisible, setCartVisible}) => {
                   +{camisetasFiltradas.length} jerseys de los equipos de la NBA
                 </p>
                 <div className="flex flex-wrap justify-center gap-4 text-sm">
-                  <span className="bg-white/20 px-4 py-2 rounded-full">✅ Calidad Premium</span>
-                  <span className="bg-white/20 px-4 py-2 rounded-full">✅ Logos Bordados</span>
-                  <span className="bg-white/20 px-4 py-2 rounded-full">✅ Personalización</span>
-                  <span  ref={topRef} className="bg-white/20 px-4 py-2 rounded-full">✅ Envío Gratis 5+</span>
+                  <span className="bg-white/20 px-4 py-2 rounded-full flex flex-row gap-5"><BadgeCheck />Calidad Premium</span>
+                  <span className="bg-white/20 px-4 py-2 rounded-full flex flex-row gap-5"> <BadgeCheck />Logos Bordados</span>
+                  <span className="bg-white/20 px-4 py-2 rounded-full flex flex-row gap-5"> <BadgeCheck />Personalización</span>
+                  <span ref={topRef} className="bg-white/20 px-4 py-2 rounded-full flex flex-row gap-5"> <BadgeCheck />Envío Gratis 5+</span>
                 </div>
               </div>
             </div>

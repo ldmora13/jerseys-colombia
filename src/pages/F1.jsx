@@ -5,6 +5,7 @@ import {supabase, getSupabaseClient } from '../lib/supabaseClient';
 
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { BadgeCheck } from 'lucide-react';
 
 import SEO from '../components/SEO';
 import AlertGlobal from '../components/AlertGlobal';
@@ -260,10 +261,10 @@ const generarSlug = (str) => {
                 +{camisetasFiltradas.length} Jerseys de los mejores equipos del mundo
               </p>
               <div className="flex flex-wrap justify-center gap-4 text-sm">
-                <span className="bg-white/20 px-4 py-2 rounded-full">✅ Calidad Premium</span>
-                <span className="bg-white/20 px-4 py-2 rounded-full">✅ Logos Bordados</span>
-                <span className="bg-white/20 px-4 py-2 rounded-full">✅ Personalización</span>
-                <span ref={topRef} className="bg-white/20 px-4 py-2 rounded-full">✅ Envío Gratis 4+</span>
+                <span className="bg-white/20 px-4 py-2 rounded-full flex flex-row gap-5"><BadgeCheck /> Calidad Premium</span>
+                <span className="bg-white/20 px-4 py-2 rounded-full flex flex-row gap-5"><BadgeCheck /> Logos Bordados</span>
+                <span className="bg-white/20 px-4 py-2 rounded-full flex flex-row gap-5"><BadgeCheck /> Personalización</span>
+                <span ref={topRef} className="bg-white/20 px-4 py-2 rounded-full flex flex-row gap-5"><BadgeCheck /> Envío Gratis 5+</span>
               </div>
             </div>
           </div>

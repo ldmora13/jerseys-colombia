@@ -7,31 +7,37 @@ Sitemap: https://www.jerseyscol.com/sitemap.xml
 # Crawl-delay para evitar sobrecarga del servidor
 Crawl-delay: 1
 
-# Bloquear archivos y rutas innecesarias
+# Bloquear archivos y rutas innecesarias (PATRONES CORREGIDOS)
 Disallow: /api/
 Disallow: /_next/
 Disallow: /build/
 Disallow: /node_modules/
-Disallow: /*.json$
-Disallow: /*?*utm_*
-Disallow: /*?*fbclid*
-Disallow: /*?*gclid*
-Disallow: /*?*ref=*
+Disallow: /*.json
+Disallow: /*?utm_*=*
+Disallow: /*?fbclid=*
+Disallow: /*?gclid=*
+Disallow: /*&utm_*=*
+Disallow: /*&fbclid=*
+Disallow: /*&gclid=*
 Disallow: /admin/
 Disallow: /private/
 Disallow: /checkout/
 Disallow: /cart/
 
-# Permitir específicamente URLs importantes
+# Permitir explícitamente URLs importantes
 Allow: /futbol/
 Allow: /nba/
 Allow: /f1/
 Allow: /soporte/
 Allow: /politicas/
+Allow: /searchs/
 
 # Directrices específicas para diferentes bots
 User-agent: Googlebot
 Crawl-delay: 1
+Allow: /futbol/
+Allow: /nba/
+Allow: /f1/
 
 User-agent: Bingbot
 Crawl-delay: 2

@@ -69,7 +69,7 @@ async function getAllProducts() {
             team: product.team,
             year: product.year,
             price: product.price,
-            image: product.img?.[-1]
+            image: product.img?.[product.img.length - 1] // Última imagen del array
           });
         }
       });
@@ -89,7 +89,7 @@ async function getAllProducts() {
             team: product.team,
             year: product.year,
             price: product.price,
-            image: product.img?.[-1]
+            image: product.img?.[product.img.length - 1]
           });
         }
       });
@@ -109,7 +109,7 @@ async function getAllProducts() {
             team: product.team,
             year: product.year,
             price: product.price,
-            image: product.img?.[-1]
+            image: product.img?.[product.img.length - 1]
           });
         }
       });
@@ -165,7 +165,7 @@ function generateSitemapXML(products) {
     <image:image>
       <image:loc>${product.image}</image:loc>
       <image:title>${product.name}</image:title>
-      <image:caption>Jersey ${product.team} ${product.year} - $${product.price} USD</image:caption>
+      <image:caption>Jersey ${product.team || 'F1'} ${product.year} - $${product.price} USD</image:caption>
     </image:image>`;
     }
     
@@ -179,7 +179,7 @@ function generateSitemapXML(products) {
   return xml;
 }
 
-// Función para crear robots.txt optimizado
+// ROBOTS.TXT CORREGIDO - Patrones más seguros
 function generateRobotsTxt() {
   return `User-agent: *
 Allow: /
@@ -190,31 +190,37 @@ Sitemap: ${BASE_URL}/sitemap.xml
 # Crawl-delay para evitar sobrecarga del servidor
 Crawl-delay: 1
 
-# Bloquear archivos y rutas innecesarias
+# Bloquear archivos y rutas innecesarias (PATRONES CORREGIDOS)
 Disallow: /api/
 Disallow: /_next/
 Disallow: /build/
 Disallow: /node_modules/
-Disallow: /*.json$
-Disallow: /*?*utm_*
-Disallow: /*?*fbclid*
-Disallow: /*?*gclid*
-Disallow: /*?*ref=*
+Disallow: /*.json
+Disallow: /*?utm_*=*
+Disallow: /*?fbclid=*
+Disallow: /*?gclid=*
+Disallow: /*&utm_*=*
+Disallow: /*&fbclid=*
+Disallow: /*&gclid=*
 Disallow: /admin/
 Disallow: /private/
 Disallow: /checkout/
 Disallow: /cart/
 
-# Permitir específicamente URLs importantes
+# Permitir explícitamente URLs importantes
 Allow: /futbol/
 Allow: /nba/
 Allow: /f1/
 Allow: /soporte/
 Allow: /politicas/
+Allow: /searchs/
 
 # Directrices específicas para diferentes bots
 User-agent: Googlebot
 Crawl-delay: 1
+Allow: /futbol/
+Allow: /nba/
+Allow: /f1/
 
 User-agent: Bingbot
 Crawl-delay: 2
@@ -272,7 +278,7 @@ async function generateSitemap() {
   const sitemapPath = path.join(publicDir, 'sitemap.xml');
   fs.writeFileSync(sitemapPath, sitemapXML, 'utf8');
   
-  // Escribir robots.txt
+  // Escribir robots.txt CORREGIDO
   const robotsPath = path.join(publicDir, 'robots.txt');
   const robotsContent = generateRobotsTxt();
   fs.writeFileSync(robotsPath, robotsContent, 'utf8');
@@ -295,15 +301,6 @@ async function generateSitemap() {
   products.slice(0, 5).forEach(product => {
     console.log(`   - ${product.url}`);
   });
-  
-  // Mostrar URLs de Mercedes como ejemplo
-  const mercedesProducts = products.filter(p => p.team && p.team.toLowerCase().includes('mercedes'));
-  if (mercedesProducts.length > 0) {
-    console.log('\n🏎️ Ejemplo URLs Mercedes (diferentes variantes):');
-    mercedesProducts.slice(0, 3).forEach(product => {
-      console.log(`   - ${product.url} (${product.name})`);
-    });
-  }
   
   console.log(`\n✅ Sitemap disponible en: ${BASE_URL}/sitemap.xml`);
   console.log(`✅ Robots.txt disponible en: ${BASE_URL}/robots.txt`);

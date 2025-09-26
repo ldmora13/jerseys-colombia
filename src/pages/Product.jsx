@@ -59,7 +59,7 @@ const ProductFAQ = ({ producto }) => {
   ];
 
   return (
-    <div className="mt-8 w-2xl px-4 items-center">
+    <div className="mt-8 w-full md:w-2xl px-4 items-center">
       <div className="bg-white rounded-lg shadow-sm p-6 w-full mx-auto">
         <h3 className="text-xl font-bold mb-6 text-gray-800">
           Preguntas Frecuentes
@@ -249,7 +249,7 @@ const ProductInfoMejorado = ({ producto }) => {
       
       <div className='text-sm text-black p-3 bg-yellow-50 rounded-lg'>
         <p><span className='font-semibold'>🚚 Envío:</span> Gratis en pedidos de 4+ productos</p>
-        <p><span className='font-semibold'>📦 Entrega:</span> 5-15 días hábiles</p>
+        <p><span className='font-semibold'>📦 Entrega:</span> 25 a 30 días hábiles</p>
         <p><span className='font-semibold'>💳 Pago:</span> Tarjeta, PayPal, Contraentrega</p>
       </div>
       

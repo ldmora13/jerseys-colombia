@@ -204,7 +204,7 @@ const Login = () => {
             <div className="absolute top-1/2 left-10 w-24 h-24 bg-indigo-300 rounded-full animate-ping"></div>
           </div>
 
-          <div className="container mx-auto px-4 text-center relative z-10 pt-20">
+          <div className="container mx-auto px-4 text-center relative z-10 pt-20 mt-20 md:mt-0">
             <div className="max-w-4xl mx-auto">
               <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent animate-fade-in">
                 Jerseys Colombia
@@ -230,7 +230,7 @@ const Login = () => {
 
               <button
                 onClick={handleScroll}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full font-semibold text-lg shadow-2xl transform hover:scale-105 hover:shadow-3xl transition-all duration-300 group"
+                className="md:inline-flex hidden items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full font-semibold text-lg shadow-2xl transform hover:scale-105 hover:shadow-3xl transition-all duration-300 group"
               >
                 Explorar Colección
                 <ChevronDown className="w-5 h-5 group-hover:animate-bounce" />

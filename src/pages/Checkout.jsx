@@ -11,7 +11,22 @@ import AlertGlobal from '../components/AlertGlobal';
 import BoldButton from '../components/BoldButton';
 import PayPalButton from '../components/PayPalButton';
 
-import { Loader2, User, CreditCard } from 'lucide-react';
+import { 
+    Loader2, 
+    User, 
+    Mail, 
+    Phone, 
+    MapPin, 
+    CreditCard, 
+    ShoppingBag, 
+    Truck,
+    CheckCircle,
+    Package,
+    Gift,
+    Shield,
+    Lock,
+    ChevronRight
+} from 'lucide-react';
 
 
 const Checkout = () => {
@@ -180,15 +195,13 @@ const Checkout = () => {
 
     const getShippingMessage = () => {
         if (totalProductCount >= 5) {
-            return "¡Envío GRATIS!";
-        } else if (totalProductCount === 4) {
-            return "¡Solo 1 producto más para envío gratis!";
-        } else if (totalProductCount === 3) {
-            return "¡Solo 2 productos más para envío gratis!";
-        } else if (totalProductCount === 2) {
-            return "¡Solo 3 productos más para envío gratis!";
+            return { text: "¡Envío GRATIS!", color: "from-green-500 to-emerald-600" };
         } else {
-            return "¡Solo 4 productos más para envío gratis!";
+            const remaining = 5 - totalProductCount;
+            return { 
+                text: `¡Solo ${remaining} producto${remaining > 1 ? 's' : ''} más para envío gratis!`, 
+                color: "from-orange-500 to-red-600" 
+            };
         }
     };
 
@@ -206,92 +219,225 @@ const Checkout = () => {
     };
 
     if (isLoadingUser || itemsToCheckout.length === 0) {
-        return <div className="flex items-center justify-center h-screen">Cargando...</div>;
+        return (
+            <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+                <Loader2 className="w-16 h-16 text-blue-600 animate-spin mb-4" />
+                <p className="text-xl text-gray-700 font-semibold">Cargando tu carrito...</p>
+            </div>
+        );
     }
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
             <div className='relative'>
                 <AlertGlobal alert={alert} setAlert={setAlert}/>
             </div>
+            
             {user != null ? (
-                <div className="container mx-auto px-4 py-8 pt-24 max-w-6xl">
-                    <form className="flex flex-col lg:flex-row gap-12">
-                        {/* Columna Izquierda: Formulario de Datos */}
-                        <div className="w-full lg:w-2/3 bg-gradient-to-br from-blue-100 to-indigo-200 p-8 rounded-lg shadow-md text-black">
-                            <div className="pb-12">
+                <div className="container mx-auto px-4 py-8 pt-24 max-w-7xl mt-20">
+                    {/* Progress Steps */}
+                    <div className="mb-12">
+                        <div className="flex items-center justify-center gap-4 flex-wrap">
+                            {[
+                                { number: 1, text: "Información", icon: User, active: true },
+                                { number: 2, text: "Revisión", icon: ShoppingBag, active: true },
+                                { number: 3, text: "Pago", icon: CreditCard, active: false }
+                            ].map((step, index) => (
+                                <React.Fragment key={index}>
+                                    <div className={`flex items-center gap-3 px-6 py-3 rounded-2xl transition-all duration-300 ${
+                                        step.active 
+                                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl' 
+                                            : 'bg-white/70 text-gray-600 border border-gray-200'
+                                    }`}>
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                            step.active ? 'bg-white/20' : 'bg-gray-100'
+                                        }`}>
+                                            {step.active ? (
+                                                <step.icon className="w-5 h-5" />
+                                            ) : (
+                                                <span className="font-bold">{step.number}</span>
+                                            )}
+                                        </div>
+                                        <span className="font-semibold hidden sm:block">{step.text}</span>
+                                    </div>
+                                    {index < 2 && (
+                                        <ChevronRight className="w-6 h-6 text-gray-400 hidden md:block" />
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </div>
+                    </div>
 
-                                <h2 className="text-lg font-semibold text-black">Información personal</h2>
-                                <p className="mt-1 text-sm/6 text-gray-500">Use datos verídicos donde pueda recibir sus compras</p>
-                                
-                                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                                    <div className="sm:col-span-4">
-                                        <label htmlFor="first-name" className="block text-sm/6 font-medium ">Nombre completo</label>
-                                        <div className="mt-2">
-                                            <input id='first-name' type='text' name='fullName' value={formData.fullName} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
+                    <div className="flex flex-col lg:flex-row gap-8">
+                        {/* Columna Izquierda: Formulario */}
+                        <div className="w-full lg:w-2/3 space-y-6">
+                            {/* User Info Card */}
+                            <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+                                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                                            <User className="w-8 h-8 text-white" />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-white">Información Personal</h2>
+                                            <p className="text-blue-100">Usa datos verídicos para recibir tus compras</p>
                                         </div>
                                     </div>
-                                    <div className="sm:col-span-2">
-                                        <label htmlFor="phone" className="block text-sm/6 font-medium">Número de teléfono</label>
-                                        <div className="mt-2">
-                                            <input type="tel" name="phone" id="phone" value={formData.phone} onChange={handleInputChange}  className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
-                                        </div>
-                                    </div>
+                                </div>
 
-                                    <div className="sm:col-span-4">
-                                        <label htmlFor="email" className="block text-sm/6 font-medium">Email</label>
-                                        <div className="mt-2">
-                                            <input id="email" type="email" name="email" value={formData.email} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
+                                <div className="p-8">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {/* Full Name */}
+                                        <div className="md:col-span-2">
+                                            <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                                <User className="w-4 h-4 text-blue-600" />
+                                                Nombre completo
+                                            </label>
+                                            <input 
+                                                type='text' 
+                                                name='fullName' 
+                                                value={formData.fullName} 
+                                                onChange={handleInputChange}
+                                                placeholder="Ej: Juan Pérez"
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            />
                                         </div>
-                                    </div>
 
-                                    <div className="sm:col-span-2 sm:col-start-1">
-                                        <label htmlFor="city" className="block text-sm/6 font-medium">Ciudad / Municipio</label>
-                                        <div className="mt-2">
-                                            <input id="city" type="text" name="city" value={formData.city} onChange={handleInputChange}  className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                        {/* Email */}
+                                        <div>
+                                            <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                                <Mail className="w-4 h-4 text-blue-600" />
+                                                Correo electrónico
+                                            </label>
+                                            <input 
+                                                type="email" 
+                                                name="email" 
+                                                value={formData.email} 
+                                                onChange={handleInputChange}
+                                                placeholder="correo@ejemplo.com"
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            />
                                         </div>
-                                    </div>
 
-                                    <div className="sm:col-span-2">
-                                        <label htmlFor="region" className="block text-sm/6 font-medium">Departamento</label>
-                                        <div className="mt-2">
-                                            <input id="region" type="text" name="state" value={formData.state} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                        {/* Phone */}
+                                        <div>
+                                            <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                                <Phone className="w-4 h-4 text-blue-600" />
+                                                Teléfono
+                                            </label>
+                                            <input 
+                                                type="tel" 
+                                                name="phone" 
+                                                value={formData.phone} 
+                                                onChange={handleInputChange}
+                                                placeholder="+57 300 123 4567"
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            />
                                         </div>
-                                    </div>
 
-                                    <div className="sm:col-span-2">
-                                        <label htmlFor="postal-code" className="block text-sm/6 font-medium">Código postal</label>
-                                        <div className="mt-2">
-                                            <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                        {/* Address */}
+                                        <div className="md:col-span-2">
+                                            <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                                <MapPin className="w-4 h-4 text-blue-600" />
+                                                Dirección completa
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                name="address" 
+                                                value={formData.address} 
+                                                onChange={handleInputChange}
+                                                placeholder="Calle 123 #45-67, Apto 101"
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            />
                                         </div>
-                                    </div>
 
-                                    <div className="sm:col-span-3">
-                                        <label htmlFor="country" className="block text-sm/6 font-medium">País</label>
-                                        <div className="mt-2 grid grid-cols-1">
-                                            <select id="country" name="country" className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/50 py-1.5 pr-8 pl-3 text-base outline-1 -outline-offset-1 outline-white/10 *:bg-gray-800 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
+                                        {/* City */}
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                Ciudad / Municipio
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                name="city" 
+                                                value={formData.city} 
+                                                onChange={handleInputChange}
+                                                placeholder="Medellín"
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            />
+                                        </div>
+
+                                        {/* State */}
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                Departamento
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                name="state" 
+                                                value={formData.state} 
+                                                onChange={handleInputChange}
+                                                placeholder="Antioquia"
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            />
+                                        </div>
+
+                                        {/* Postal Code */}
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                Código postal
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                name="postalCode" 
+                                                value={formData.postalCode} 
+                                                onChange={handleInputChange}
+                                                placeholder="050001"
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            />
+                                        </div>
+
+                                        {/* Country */}
+                                        <div>
+                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                                País
+                                            </label>
+                                            <select 
+                                                name="country" 
+                                                value={formData.country}
+                                                onChange={handleInputChange}
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            >
                                                 <option>Colombia</option>
                                             </select>
-                                            <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4">
-                                            <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" fillRule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </div>
-
-                                    <div className="col-span-full">
-                                        <label htmlFor="street-address" className="block text-sm/6 font-medium">Dirección</label>
-                                        <div className="mt-2">
-                                            <input id="street-address" type="text" name="address" autoComplete="street-address" value={formData.address} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Sección de selección de método de pago */}
-                            <div className="border-t pt-8">
-                                <h3 className="text-lg font-semibold text-black mb-4">Método de pago</h3>
-                                <div className="space-y-3">
-                                    <div className="flex items-center">
+                            {/* Payment Method Selection */}
+                            <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+                                <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                                            <CreditCard className="w-8 h-8 text-white" />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-white">Método de Pago</h2>
+                                            <p className="text-purple-100">Elige tu método preferido</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-8 space-y-4">
+                                    {/* Bold Payment Option */}
+                                    <label 
+                                        htmlFor="bold-payment"
+                                        className={`group flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
+                                            selectedPaymentMethod === 'bold'
+                                                ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg'
+                                                : 'border-gray-200 bg-gray-50 hover:border-blue-300 hover:bg-blue-50/50'
+                                        }`}
+                                    >
                                         <input
                                             id="bold-payment"
                                             name="payment-method"
@@ -299,14 +445,42 @@ const Checkout = () => {
                                             value="bold"
                                             checked={selectedPaymentMethod === 'bold'}
                                             onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                                            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                                            className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
                                         />
-                                        <label htmlFor="bold-payment" className="ml-3 flex items-center">
-                                            <CreditCard className="h-5 w-5 mr-2" />
-                                            <span className="text-sm font-medium text-gray-900">Tarjeta de Crédito/Débito (Bold)</span>
-                                        </label>
-                                    </div>
-                                    <div className="flex items-center">
+                                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                                            selectedPaymentMethod === 'bold'
+                                                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg'
+                                                : 'bg-gray-200 group-hover:bg-blue-500'
+                                        }`}>
+                                            <CreditCard className={`w-7 h-7 ${
+                                                selectedPaymentMethod === 'bold' ? 'text-white' : 'text-gray-600 group-hover:text-white'
+                                            }`} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="font-bold text-gray-800 text-lg">Tarjeta de Crédito/Débito</h3>
+                                            <p className="text-sm text-gray-600">Visa, Mastercard, American Express</p>
+                                            <div className="flex gap-2 mt-2">
+                                                {['Visa', 'MC', 'AmEx'].map((card, index) => (
+                                                    <span key={index} className="px-2 py-1 bg-white rounded-lg text-xs font-semibold text-gray-700 border border-gray-200">
+                                                        {card}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        {selectedPaymentMethod === 'bold' && (
+                                            <CheckCircle className="w-6 h-6 text-blue-600" />
+                                        )}
+                                    </label>
+
+                                    {/* PayPal Option */}
+                                    <label 
+                                        htmlFor="paypal-payment"
+                                        className={`group flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
+                                            selectedPaymentMethod === 'paypal'
+                                                ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg'
+                                                : 'border-gray-200 bg-gray-50 hover:border-blue-300 hover:bg-blue-50/50'
+                                        }`}
+                                    >
                                         <input
                                             id="paypal-payment"
                                             name="payment-method"
@@ -314,134 +488,292 @@ const Checkout = () => {
                                             value="paypal"
                                             checked={selectedPaymentMethod === 'paypal'}
                                             onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                                            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                                            className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
                                         />
-                                        <label htmlFor="paypal-payment" className="ml-3 flex items-center">
-                                            <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="#003087">
+                                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                                            selectedPaymentMethod === 'paypal'
+                                                ? 'bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg'
+                                                : 'bg-gray-200 group-hover:bg-blue-600'
+                                        }`}>
+                                            <svg className="w-8 h-8" viewBox="0 0 24 24" fill={selectedPaymentMethod === 'paypal' ? 'white' : '#003087'}>
                                                 <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a.5.5 0 0 1-.5-.5v-.5c0-.276.224-.5.5-.5s.5.224.5.5v.5a.5.5 0 0 1-.5.5z"/>
                                             </svg>
-                                            <span className="text-sm font-medium text-gray-900">PayPal</span>
-                                        </label>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="font-bold text-gray-800 text-lg">PayPal</h3>
+                                            <p className="text-sm text-gray-600">Pago seguro internacional</p>
+                                            <span className="inline-block mt-2 px-2 py-1 bg-green-100 rounded-lg text-xs font-semibold text-green-700 border border-green-200">
+                                                Protección del comprador
+                                            </span>
+                                        </div>
+                                        {selectedPaymentMethod === 'paypal' && (
+                                            <CheckCircle className="w-6 h-6 text-blue-600" />
+                                        )}
+                                    </label>
+                                </div>
+                            </div>
+
+                            {/* Security Info */}
+                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+                                <div className="flex items-start gap-4">
+                                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <Shield className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-green-800 mb-2 flex items-center gap-2">
+                                            Pago 100% Seguro
+                                            <Lock className="w-4 h-4" />
+                                        </h3>
+                                        <p className="text-green-700 text-sm">
+                                            Tus datos están protegidos con encriptación SSL de 256 bits. Nunca almacenamos información de tarjetas de crédito.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Columna Derecha: Resumen de la Orden */}
-                        <div className="w-full lg:w-1/3">  
-                            <div className="bg-gradient-to-br from-blue-100 to-indigo-200 p-6 rounded-lg shadow-md">
-                                <h2 className="text-2xl font-semibold mb-6">Resumen de tu Orden</h2>
-                                <div className="space-y-4">
-                                    {itemsToCheckout.map(item => (
-                                        <div key={`${item.name}-${item.size}-${item.customName}-${item.customNumber}`} className="flex items-center gap-4 border-b pb-4">
-                                            <img src={item.img && item.img.length > 0 ? item.img[item.img.length - 1] : 'https://via.placeholder.com/50'} className="w-20 h-20 object-contain rounded-md bg-blue-50" />
-                                            <div className="flex-grow text-sm">
-                                                <p className="font-semibold">
-                                                    {item.name.replace(/[_-]/g, " ")}
-                                                </p>
-                                                <p className="text-gray-600">Talla: {item.size}</p>
-                                                {item.customName && <p className="text-gray-600">Nombre: {item.customName}</p>}
-                                                {item.customNumber && <p className="text-gray-600">Número: {item.customNumber}</p>}
-                                                <p className="text-gray-600">Cantidad: {item.quantity}</p>
+                        {/* Columna Derecha: Resumen */}
+                        <div className="w-full lg:w-1/3">
+                            <div className="sticky top-24">
+                                <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+                                    {/* Header */}
+                                    <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                                <ShoppingBag className="w-6 h-6 text-white" />
                                             </div>
-                                            <p className="font-semibold text-sm">${calculateItemPrice(item).toFixed(2)}</p>
+                                            <div>
+                                                <h2 className="text-2xl font-bold text-white">Tu Orden</h2>
+                                                <p className="text-purple-100">{itemsToCheckout.length} producto{itemsToCheckout.length > 1 ? 's' : ''}</p>
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
-                                <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                                    <p className="text-sm text-blue-700 font-medium">
-                                        Total de productos: {totalProductCount}
-                                    </p>
-                                    <p className="text-xs text-blue-600 mt-1">
-                                        {getShippingMessage()}
-                                    </p>
-                                </div>
-                                <div className="mt-6 pt-6 border-t space-y-2">
-                                    <div className="flex justify-between"><span>Subtotal</span><span>${subtotal.toFixed(2)} USD</span></div>
-                                    <div className="flex justify-between">
-                                        <span>Envío</span>
-                                        <span className={shippingCost === 0 ? 'text-green-600 font-semibold' : ''}>
-                                            {shippingCost === 0 ? 'GRATIS' : `${shippingCost.toFixed(2)} USD`}
-                                        </span>
                                     </div>
-                                    <div className="flex justify-between items-center font-bold text-lg mt-5">
-                                    <span>Total</span>
-                                    <span className='flex flex-col items-center justify-center'>${(subtotal + shippingCost).toFixed(2)} USD 
-                                        <span className='text-sm font-medium text-gray-500'>{tasaCOP ? ` ${((subtotal + shippingCost) * tasaCOP).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}` : ' (Cargando tasa...)'} COP </span>
-                                    </span>
+
+                                    {/* Products List */}
+                                    <div className="p-6 max-h-96 overflow-y-auto">
+                                        <div className="space-y-4">
+                                            {itemsToCheckout.map((item, index) => (
+                                                <div key={`${item.name}-${item.size}-${index}`} className="group bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4 border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300">
+                                                    <div className="flex gap-4">
+                                                        <div className="relative">
+                                                            <img 
+                                                                src={item.img && item.img.length > 0 ? item.img[item.img.length - 1] : 'https://via.placeholder.com/50'} 
+                                                                className="w-20 h-20 object-contain rounded-xl bg-white shadow-md" 
+                                                                alt={item.name}
+                                                            />
+                                                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+                                                                <span className="text-white font-bold text-xs">{item.quantity}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <h3 className="font-semibold text-gray-800 text-sm truncate">
+                                                                {item.name.replace(/[_-]/g, " ")}
+                                                            </h3>
+                                                            <div className="space-y-1 mt-1">
+                                                                <p className="text-xs text-gray-600 flex items-center gap-1">
+                                                                    <Package className="w-3 h-3" />
+                                                                    Talla: {item.size}
+                                                                </p>
+                                                                {item.customName && (
+                                                                    <p className="text-xs text-gray-600 flex items-center gap-1">
+                                                                        <Gift className="w-3 h-3" />
+                                                                        {item.customName}
+                                                                    </p>
+                                                                )}
+                                                                {item.customNumber && (
+                                                                    <p className="text-xs text-gray-600">
+                                                                        #{item.customNumber}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="font-bold text-gray-800">${calculateItemPrice(item).toFixed(2)}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className='flex items-center justify-center mt-5'>
-                                    {!paymentData ? (
-                                        <div className="w-full">
-                                            <button type='button'
+
+                                    {/* Shipping Banner */}
+                                    <div className="px-6 pb-4">
+                                        <div className={`bg-gradient-to-r ${getShippingMessage().color} rounded-2xl p-4 text-white shadow-lg`}>
+                                            <div className="flex items-center gap-3">
+                                                <Truck className="w-6 h-6 flex-shrink-0" />
+                                                <div>
+                                                    <p className="font-semibold text-sm">Total: {totalProductCount} producto{totalProductCount > 1 ? 's' : ''}</p>
+                                                    <p className="text-xs text-white/90">{getShippingMessage().text}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Totals */}
+                                    <div className="px-6 pb-6 space-y-4">
+                                        <div className="space-y-3 py-4 border-t border-gray-200">
+                                            <div className="flex justify-between text-gray-700">
+                                                <span>Subtotal</span>
+                                                <span className="font-semibold">${subtotal.toFixed(2)} USD</span>
+                                            </div>
+                                            <div className="flex justify-between text-gray-700">
+                                                <span className="flex items-center gap-2">
+                                                    <Truck className="w-4 h-4" />
+                                                    Envío
+                                                </span>
+                                                <span className={`font-semibold ${shippingCost === 0 ? 'text-green-600' : ''}`}>
+                                                    {shippingCost === 0 ? 'GRATIS' : `${shippingCost.toFixed(2)} USD`}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-200">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-gray-700 font-bold text-lg">Total</span>
+                                                <div className="text-right">
+                                                    <p className="text-2xl font-bold text-gray-800">${(subtotal + shippingCost).toFixed(2)}</p>
+                                                    <p className="text-xs text-gray-600">USD</p>
+                                                </div>
+                                            </div>
+                                            {tasaCOP && (
+                                                <div className="flex justify-between items-center pt-2 border-t border-blue-200">
+                                                    <span className="text-gray-600 text-sm">Equivalente en COP</span>
+                                                    <span className="font-semibold text-gray-700 text-sm">
+                                                        {((subtotal + shippingCost) * tasaCOP).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Payment Button */}
+                                        {!paymentData ? (
+                                            <button 
+                                                type='button'
                                                 onClick={handlePreparePayment} 
-                                                disabled={isPreparing} 
-                                                className='group relative w-full h-10 flex items-center justify-center bg-black hover:text-black text-white font-bold gap-2 cursor-pointer shadow-md overflow-hidden transition-all duration-300 active:translate-x-1 active:translate-y-1 before:content-[""] before:absolute before:w-full before:h-[130px] before:top-0 before:left-[-100%] before:bg-white before:transition-all before:duration-300 before:mix-blend-difference hover:before:transform hover:before:translate-x-full hover:before:-translate-y-1/2 hover:before:rounded-none'>
-                                                    <span className='relative z-10'>{isPreparing ? <Loader2 className="animate-spin" /> : 'Continuar al pago'}</span>
-                                                <svg className='relative z-10 h-3 ' viewBox="0 0 576 512"><path className='fill-white group-hover:fill-black transition-colors duration-200' d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"/></svg>
+                                                disabled={isPreparing}
+                                                className='w-full h-14 flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none'
+                                            >
+                                                {isPreparing ? (
+                                                    <>
+                                                        <Loader2 className="animate-spin w-5 h-5" />
+                                                        Procesando...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Lock className="w-5 h-5" />
+                                                        Continuar al Pago Seguro
+                                                        <ChevronRight className="w-5 h-5" />
+                                                    </>
+                                                )}
                                             </button>
-                                        </div>
-                                    ) : (
-                                        <div className="w-full space-y-4">
-                                            {selectedPaymentMethod === 'bold' ? (
-                                                <BoldButton
-                                                    orderId={paymentData.orderId}
-                                                    amount={paymentData.amount}
-                                                    description="Compra en Jerseys Colombia"
-                                                    integritySignature={paymentData.integritySignature}
-                                                    customerData={
-                                                        { 
+                                        ) : (
+                                            <div className="space-y-4">
+                                                {selectedPaymentMethod === 'bold' ? (
+                                                    <BoldButton
+                                                        orderId={paymentData.orderId}
+                                                        amount={paymentData.amount}
+                                                        description="Compra en Jerseys Colombia"
+                                                        integritySignature={paymentData.integritySignature}
+                                                        customerData={{ 
                                                             email: formData.email, 
                                                             fullName: formData.fullName 
                                                         }}
-                                                    billingAddress={{ 
-                                                        address: formData.address, 
-                                                        city: formData.city, 
-                                                        state: formData.state, 
-                                                        country: "CO" 
-                                                    }}
-                                                />
-                                            ) : (
-                                                <PayPalButton
-                                                    orderId={paymentData.orderId}
-                                                    amount={subtotal + shippingCost}
-                                                    description="Compra en Jerseys Colombia"
-                                                    customerData={{
-                                                        email: formData.email,
-                                                        fullName: formData.fullName
-                                                    }}
-                                                    billingAddress={{
-                                                        address: formData.address,
-                                                        city: formData.city,
-                                                        state: formData.state,
-                                                        postalCode: formData.postalCode,
-                                                        country: "CO"
-                                                    }}
-                                                    onSuccess={handlePayPalSuccess}
-                                                    onError={handlePayPalError}
-                                                />
-                                            )}
+                                                        billingAddress={{ 
+                                                            address: formData.address, 
+                                                            city: formData.city, 
+                                                            state: formData.state, 
+                                                            country: "CO" 
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <PayPalButton
+                                                        orderId={paymentData.orderId}
+                                                        amount={subtotal + shippingCost}
+                                                        description="Compra en Jerseys Colombia"
+                                                        customerData={{
+                                                            email: formData.email,
+                                                            fullName: formData.fullName
+                                                        }}
+                                                        billingAddress={{
+                                                            address: formData.address,
+                                                            city: formData.city,
+                                                            state: formData.state,
+                                                            postalCode: formData.postalCode,
+                                                            country: "CO"
+                                                        }}
+                                                        onSuccess={handlePayPalSuccess}
+                                                        onError={handlePayPalError}
+                                                    />
+                                                )}
+                                            </div>
+                                        )}
+
+                                        {/* Trust Badges */}
+                                        <div className="grid grid-cols-3 gap-2 pt-4">
+                                            {[
+                                                { icon: Shield, text: "Pago Seguro" },
+                                                { icon: Lock, text: "SSL 256-bit" },
+                                                { icon: CheckCircle, text: "Verificado" }
+                                            ].map((badge, index) => (
+                                                <div key={index} className="flex flex-col items-center gap-1 p-2 bg-gray-50 rounded-xl">
+                                                    <badge.icon className="w-4 h-4 text-green-600" />
+                                                    <span className="text-[10px] text-gray-600 text-center">{badge.text}</span>
+                                                </div>
+                                            ))}
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             ) : (
-                <div className="text-center py-16 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg shadow-md min-h-screen">
-                    <User className="w-16 h-16 mt-20 mx-auto text-black" />
-                    <h2 className="mt-4 text-2xl font-semibold">Debes iniciar sesión</h2>
-                    <p className="text-gray-600 mt-2">Para que tus pagos sean seguros, lo mejor es inciar sesión</p>
-                    <div className="mt-6 flex justify-center w-1/2 mx-auto">
-                        <button onClick={() => navigate('/')} className='group relative w-full h-10 flex items-center justify-center bg-black hover:text-black text-white font-bold gap-2 cursor-pointer shadow-md overflow-hidden transition-all duration-300 active:translate-x-1 active:translate-y-1 before:content-[""] before:absolute before:w-full before:h-[130px] before:top-0 before:left-[-100%] before:bg-white before:transition-all before:duration-300 before:mix-blend-difference hover:before:transform hover:before:translate-x-full hover:before:-translate-y-1/2 hover:before:rounded-none'>
-                            <span className='relative z-10'>Regresar</span>
-                        </button>
+                <div className="min-h-screen flex items-center justify-center px-4">
+                    <div className="text-center max-w-md">
+                        <div className="w-32 h-32 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl animate-bounce">
+                            <User className="w-16 h-16 text-white" />
+                        </div>
+                        <h2 className="text-3xl font-bold text-gray-800 mb-4">Debes iniciar sesión</h2>
+                        <p className="text-gray-600 mb-8 text-lg">
+                            Para garantizar la seguridad de tus pagos y un mejor servicio, necesitas iniciar sesión
+                        </p>
+                        <div className="space-y-4">
+                            <button 
+                                onClick={() => navigate('/')} 
+                                className='w-full h-14 flex items-center justify-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300'
+                            >
+                                <User className="w-5 h-5" />
+                                Ir a Iniciar Sesión
+                            </button>
+                            <button 
+                                onClick={() => navigate('/register')} 
+                                className='w-full h-14 flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-2xl border-2 border-gray-200 hover:border-blue-300 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300'
+                            >
+                                Crear Cuenta Nueva
+                            </button>
+                        </div>
+                        
+                        {/* Benefits */}
+                        <div className="mt-12 grid grid-cols-1 gap-4">
+                            {[
+                                { icon: Shield, title: "Pagos Seguros", desc: "Protección total en transacciones" },
+                                { icon: Truck, title: "Seguimiento", desc: "Rastrea tu pedido en tiempo real" },
+                                { icon: Gift, title: "Ofertas Exclusivas", desc: "Descuentos para usuarios registrados" }
+                            ].map((benefit, index) => (
+                                <div key={index} className="flex items-center gap-4 p-4 bg-white/70 backdrop-blur-sm rounded-2xl shadow-md border border-gray-200">
+                                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <benefit.icon className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div className="text-left">
+                                        <h3 className="font-semibold text-gray-800">{benefit.title}</h3>
+                                        <p className="text-sm text-gray-600">{benefit.desc}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
-           
         </div>
     );
 };

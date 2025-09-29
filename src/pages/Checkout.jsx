@@ -9,8 +9,9 @@ import { supabase } from '../lib/supabaseClient';
 
 import AlertGlobal from '../components/AlertGlobal';
 import BoldButton from '../components/BoldButton';
+import PayPalButton from '../components/PayPalButton';
 
-import { Loader2, User } from 'lucide-react';
+import { Loader2, User, CreditCard } from 'lucide-react';
 
 
 const Checkout = () => {
@@ -39,6 +40,7 @@ const Checkout = () => {
     });
     const [paymentData, setPaymentData] = useState(null);
     const [isPreparing, setIsPreparing] = useState(false);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('bold');
 
     const [user, setUser] = useState(null);
     const [isLoadingUser, setIsLoadingUser] = useState(true);
@@ -156,7 +158,8 @@ const Checkout = () => {
                     itemsToCheckout,
                     subtotal,
                     shippingCost,
-                    tasaCOP
+                    tasaCOP,
+                    paymentMethod: selectedPaymentMethod
                 },
             });
 
@@ -189,6 +192,19 @@ const Checkout = () => {
         }
     };
 
+    const handlePayPalSuccess = (order, data) => {
+        console.log('PayPal payment successful:', order);
+    };
+
+    const handlePayPalError = (error) => {
+        console.error('PayPal payment error:', error);
+        setAlert({
+            show: true,
+            message: "Error al procesar el pago con PayPal. Por favor intenta nuevamente.",
+            severity: "error",
+        });
+    };
+
     if (isLoadingUser || itemsToCheckout.length === 0) {
         return <div className="flex items-center justify-center h-screen">Cargando...</div>;
     }
@@ -203,70 +219,109 @@ const Checkout = () => {
                     <form className="flex flex-col lg:flex-row gap-12">
                         {/* Columna Izquierda: Formulario de Datos */}
                         <div className="w-full lg:w-2/3 bg-gradient-to-br from-blue-100 to-indigo-200 p-8 rounded-lg shadow-md text-black">
-                            <div class="pb-12">
+                            <div className="pb-12">
 
-                                <h2 class="text-lg font-semibold text-black">Información personal</h2>
-                                <p class="mt-1 text-sm/6 text-gray-500">Use datos verídicos donde pueda recibir sus compras</p>
+                                <h2 className="text-lg font-semibold text-black">Información personal</h2>
+                                <p className="mt-1 text-sm/6 text-gray-500">Use datos verídicos donde pueda recibir sus compras</p>
                                 
-                                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                                    <div class="sm:col-span-4">
-                                        <label for="first-name" class="block text-sm/6 font-medium ">Nombre completo</label>
-                                        <div class="mt-2">
-                                            <input id='first-name' type='text' name='first-name' value={formData.fullName} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
+                                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                                    <div className="sm:col-span-4">
+                                        <label htmlFor="first-name" className="block text-sm/6 font-medium ">Nombre completo</label>
+                                        <div className="mt-2">
+                                            <input id='first-name' type='text' name='fullName' value={formData.fullName} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
                                         </div>
                                     </div>
-                                    <div class="sm:col-span-2">
-                                        <label for="phone" class="block text-sm/6 font-medium">Número de teléfono</label>
-                                        <div class="mt-2">
-                                            <input type="tel" name="phone" id="phone" value={formData.phone} onChange={handleInputChange}  class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="sm:col-span-4">
-                                        <label for="email" class="block text-sm/6 font-medium">Email</label>
-                                        <div class="mt-2">
-                                            <input id="email" type="email" name="email" value={formData.email} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
+                                    <div className="sm:col-span-2">
+                                        <label htmlFor="phone" className="block text-sm/6 font-medium">Número de teléfono</label>
+                                        <div className="mt-2">
+                                            <input type="tel" name="phone" id="phone" value={formData.phone} onChange={handleInputChange}  className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
                                         </div>
                                     </div>
 
-                                    <div class="sm:col-span-2 sm:col-start-1">
-                                        <label for="city" class="block text-sm/6 font-medium">Ciudad / Municipio</label>
-                                        <div class="mt-2">
-                                            <input id="city" type="text" name="city" value={formData.city} onChange={handleInputChange}  class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                    <div className="sm:col-span-4">
+                                        <label htmlFor="email" className="block text-sm/6 font-medium">Email</label>
+                                        <div className="mt-2">
+                                            <input id="email" type="email" name="email" value={formData.email} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"/>
                                         </div>
                                     </div>
 
-                                    <div class="sm:col-span-2">
-                                        <label for="region" class="block text-sm/6 font-medium">Departamento</label>
-                                        <div class="mt-2">
-                                            <input id="region" type="text" name="state" value={formData.state} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                    <div className="sm:col-span-2 sm:col-start-1">
+                                        <label htmlFor="city" className="block text-sm/6 font-medium">Ciudad / Municipio</label>
+                                        <div className="mt-2">
+                                            <input id="city" type="text" name="city" value={formData.city} onChange={handleInputChange}  className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                                         </div>
                                     </div>
 
-                                    <div class="sm:col-span-2">
-                                        <label for="postal-code" class="block text-sm/6 font-medium">Código postal</label>
-                                        <div class="mt-2">
-                                            <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                    <div className="sm:col-span-2">
+                                        <label htmlFor="region" className="block text-sm/6 font-medium">Departamento</label>
+                                        <div className="mt-2">
+                                            <input id="region" type="text" name="state" value={formData.state} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                                         </div>
                                     </div>
 
-                                    <div class="sm:col-span-3">
-                                        <label for="country" class="block text-sm/6 font-medium">País</label>
-                                        <div class="mt-2 grid grid-cols-1">
-                                            <select id="country" name="country" class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/50 py-1.5 pr-8 pl-3 text-base outline-1 -outline-offset-1 outline-white/10 *:bg-gray-800 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
+                                    <div className="sm:col-span-2">
+                                        <label htmlFor="postal-code" className="block text-sm/6 font-medium">Código postal</label>
+                                        <div className="mt-2">
+                                            <input type="text" name="postalCode" id="postalCode" value={formData.postalCode} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                        </div>
+                                    </div>
+
+                                    <div className="sm:col-span-3">
+                                        <label htmlFor="country" className="block text-sm/6 font-medium">País</label>
+                                        <div className="mt-2 grid grid-cols-1">
+                                            <select id="country" name="country" className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/50 py-1.5 pr-8 pl-3 text-base outline-1 -outline-offset-1 outline-white/10 *:bg-gray-800 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
                                                 <option>Colombia</option>
                                             </select>
-                                            <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4">
-                                            <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+                                            <svg viewBox="0 0 16 16" fill="currentColor" data-slot="icon" aria-hidden="true" className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-400 sm:size-4">
+                                            <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" fillRule="evenodd" />
                                             </svg>
                                         </div>
                                     </div>
 
-                                    <div class="col-span-full">
-                                        <label for="street-address" class="block text-sm/6 font-medium">Dirección</label>
-                                        <div class="mt-2">
-                                            <input id="street-address" type="text" name="address" autocomplete="street-address" value={formData.address} onChange={handleInputChange} class="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                                    <div className="col-span-full">
+                                        <label htmlFor="street-address" className="block text-sm/6 font-medium">Dirección</label>
+                                        <div className="mt-2">
+                                            <input id="street-address" type="text" name="address" autoComplete="street-address" value={formData.address} onChange={handleInputChange} className="block w-full rounded-md bg-white/50 px-3 py-1.5 text-base outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Sección de selección de método de pago */}
+                            <div className="border-t pt-8">
+                                <h3 className="text-lg font-semibold text-black mb-4">Método de pago</h3>
+                                <div className="space-y-3">
+                                    <div className="flex items-center">
+                                        <input
+                                            id="bold-payment"
+                                            name="payment-method"
+                                            type="radio"
+                                            value="bold"
+                                            checked={selectedPaymentMethod === 'bold'}
+                                            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                                        />
+                                        <label htmlFor="bold-payment" className="ml-3 flex items-center">
+                                            <CreditCard className="h-5 w-5 mr-2" />
+                                            <span className="text-sm font-medium text-gray-900">Tarjeta de Crédito/Débito (Bold)</span>
+                                        </label>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <input
+                                            id="paypal-payment"
+                                            name="payment-method"
+                                            type="radio"
+                                            value="paypal"
+                                            checked={selectedPaymentMethod === 'paypal'}
+                                            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                                        />
+                                        <label htmlFor="paypal-payment" className="ml-3 flex items-center">
+                                            <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="#003087">
+                                                <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a.5.5 0 0 1-.5-.5v-.5c0-.276.224-.5.5-.5s.5.224.5.5v.5a.5.5 0 0 1-.5.5z"/>
+                                            </svg>
+                                            <span className="text-sm font-medium text-gray-900">PayPal</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -306,7 +361,7 @@ const Checkout = () => {
                                     <div className="flex justify-between">
                                         <span>Envío</span>
                                         <span className={shippingCost === 0 ? 'text-green-600 font-semibold' : ''}>
-                                            {shippingCost === 0 ? 'GRATIS' : `$${shippingCost.toFixed(2)} USD`}
+                                            {shippingCost === 0 ? 'GRATIS' : `${shippingCost.toFixed(2)} USD`}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center font-bold text-lg mt-5">
@@ -328,17 +383,46 @@ const Checkout = () => {
                                             </button>
                                         </div>
                                     ) : (
-                                        <BoldButton
-                                            orderId={paymentData.orderId}
-                                            amount={paymentData.amount}
-                                            description="Compra en Jerseys Colombia"
-                                            integritySignature={paymentData.integritySignature}
-                                            customerData={
-                                                { 
-                                                    email: formData.email, fullName: formData.fullName 
+                                        <div className="w-full space-y-4">
+                                            {selectedPaymentMethod === 'bold' ? (
+                                                <BoldButton
+                                                    orderId={paymentData.orderId}
+                                                    amount={paymentData.amount}
+                                                    description="Compra en Jerseys Colombia"
+                                                    integritySignature={paymentData.integritySignature}
+                                                    customerData={
+                                                        { 
+                                                            email: formData.email, 
+                                                            fullName: formData.fullName 
+                                                        }}
+                                                    billingAddress={{ 
+                                                        address: formData.address, 
+                                                        city: formData.city, 
+                                                        state: formData.state, 
+                                                        country: "CO" 
                                                     }}
-                                            billingAddress={{ address: formData.address, city: formData.city, state: formData.state, country: "CO" }}
-                                        />
+                                                />
+                                            ) : (
+                                                <PayPalButton
+                                                    orderId={paymentData.orderId}
+                                                    amount={subtotal + shippingCost}
+                                                    description="Compra en Jerseys Colombia"
+                                                    customerData={{
+                                                        email: formData.email,
+                                                        fullName: formData.fullName
+                                                    }}
+                                                    billingAddress={{
+                                                        address: formData.address,
+                                                        city: formData.city,
+                                                        state: formData.state,
+                                                        postalCode: formData.postalCode,
+                                                        country: "CO"
+                                                    }}
+                                                    onSuccess={handlePayPalSuccess}
+                                                    onError={handlePayPalError}
+                                                />
+                                            )}
+                                        </div>
                                     )}
                                 </div>
                             </div>

@@ -521,7 +521,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             <div className="w-full md:w-1/2 flex flex-col gap-4 items-center">
                                 <div className="overflow-hidden rounded-2xl shadow-2xl mb-2">
                                     <img 
-                                        src={imagenPrincipal} 
+                                        src={imagenPrincipal || 'nn'} 
                                         alt={producto.name} 
                                         className="w-full max-w-[500px] max-h-[500px] h-auto object-contain mx-auto transition-opacity duration-300" 
                                     />

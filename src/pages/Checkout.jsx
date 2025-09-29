@@ -9,7 +9,7 @@ import { supabase } from '../lib/supabaseClient';
 
 import AlertGlobal from '../components/AlertGlobal';
 import BoldButton from '../components/BoldButton';
-import PayPalButton from '../components/PayPalButton';
+import PayPalButton from '../components/PaypalButton';
 
 import { 
     Loader2, 

@@ -234,7 +234,7 @@ const Checkout = () => {
             </div>
             
             {user != null ? (
-                <div className="container mx-auto px-4 py-8 pt-24 max-w-7xl mt-20">
+                <div className="container mx-auto px-4 py-8 pt-24 max-w-7xl mt-5">
                     {/* Progress Steps */}
                     <div className="mb-12">
                         <div className="flex items-center justify-center gap-4 flex-wrap">

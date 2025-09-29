@@ -440,7 +440,13 @@ const Header = ({setCartVisible}) => {
 
                             {isAuthenticated ? (
                                 /* Authenticated User Card */
-                                <div className="bg-white rounded-3xl shadow-2xl border mt-2 md:mt-20 border-white/20 p-8">
+                                <div className="bg-white rounded-3xl shadow-2xl border mt-2 md:mt-20 border-white/20 p-8 md:hidden">
+                                    <button 
+                                        onClick={() => setDropdownVisible(false)}
+                                        className="absolute top-4 right-4 p-3 bg-white/80 rounded-xl shadow-lg hover:bg-white transition-colors duration-300"
+                                    >
+                                        <X className="w-6 h-6 text-gray-600" />
+                                    </button>
                                     <div className="text-center mb-8">
                                         <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                                             <User className="w-10 h-10 text-white" />
@@ -483,6 +489,12 @@ const Header = ({setCartVisible}) => {
                                 /* Login Form */
                                 <div className="bg-white rounded-3xl mt-1 md:mt-20 shadow-2xl border border-white/20 p-8">
                                     <div className="text-center mb-8">
+                                        <button 
+                                            onClick={() => setDropdownVisible(false)}
+                                            className="absolute top-4 right-4 p-3 bg-white/80 rounded-xl shadow-lg hover:bg-white transition-colors duration-300"
+                                        >
+                                            <X className="w-6 h-6 text-gray-600" />
+                                        </button>
                                         <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                                             <User className="w-10 h-10 text-white" />
                                         </div>

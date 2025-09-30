@@ -188,7 +188,7 @@ const Wishlist = () => {
                                             >
                                                 <div className="flex gap-4">
                                                     {/* Product Image */}
-                                                    <Link 
+                                                    <Link onClick={() => setWishlistVisible(false)}
                                                         to={`/${link}/${generarSlug(product.name)}`}
                                                         className="flex-shrink-0 relative"
                                                     >
@@ -206,7 +206,7 @@ const Wishlist = () => {
 
                                                     {/* Product Info */}
                                                     <div className="flex-1 min-w-0">
-                                                        <Link 
+                                                        <Link onClick={() => setWishlistVisible(false)}
                                                             to={`/${link}/${generarSlug(product.name)}`}
                                                             className="block group-hover:text-pink-600 transition-colors duration-300"
                                                         >

@@ -440,10 +440,10 @@ const Header = ({setCartVisible}) => {
 
                             {isAuthenticated ? (
                                 /* Authenticated User Card */
-                                <div className="bg-white rounded-3xl shadow-2xl border mt-2 md:mt-20 border-white/20 p-8 md:hidden">
+                                <div className="bg-white rounded-3xl shadow-2xl border mt-2 md:mt-20 border-white/20 p-8">
                                     <button 
                                         onClick={() => setDropdownVisible(false)}
-                                        className="absolute top-4 right-4 p-3 bg-white/80 rounded-xl shadow-lg hover:bg-white transition-colors duration-300"
+                                        className="absolute top-4 right-4 p-3 bg-white/80 rounded-xl shadow-lg hover:bg-white transition-colors duration-300 md:hidden"
                                     >
                                         <X className="w-6 h-6 text-gray-600" />
                                     </button>

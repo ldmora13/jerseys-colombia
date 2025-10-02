@@ -78,7 +78,31 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
       });
+    } else if (paymentMethod === 'wompi') {
+      // Para Wompi - generar firma de integridad
+      const amountInCents = Math.round(totalCOP * 100);
+      const integritySecret = Deno.env.get('WOMPI_INTEGRITY_SECRET')!;
+      
+      if (!integritySecret) {
+        throw new Error('WOMPI_INTEGRITY_SECRET not configured');
+      }
+      
+      // Generar firma: referencia + monto + moneda + secreto
+      const signatureString = `${orderId}${amountInCents}COP${integritySecret}`;
+      const integritySignature = crypto.SHA256(signatureString).toString();
+      
+      return new Response(JSON.stringify({
+        orderId,
+        amount: amountInCents,
+        currency: 'COP',
+        reference: orderId,
+        integritySignature
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
+      });
     }
+
 
   } catch (error) {
     console.error('Error en create-pending-order:', error);

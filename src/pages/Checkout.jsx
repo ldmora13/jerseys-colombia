@@ -8,10 +8,12 @@ import { useCart } from '../context/CartContext';
 import { supabase } from '../lib/supabaseClient';
 
 import AlertGlobal from '../components/AlertGlobal';
+
 import BoldButton from '../components/BoldButton';
 import PayPalButton from '../components/PaypalButton';
+import WompiButton from '../components/WompiButton';
 
-import { 
+import {
     Loader2, 
     User, 
     Mail, 
@@ -25,8 +27,11 @@ import {
     Gift,
     Shield,
     Lock,
-    ChevronRight
+    ChevronRight,
+    IdCard,
 } from 'lucide-react';
+
+import LogoBancolombia from '../assets/LogoBancolombia.png';
 
 
 const Checkout = () => {
@@ -46,6 +51,8 @@ const Checkout = () => {
     const [formData, setFormData] = useState({
         email: '',
         fullName: '',
+        typeLegalId: '',
+        legalId: '',
         address: '',
         city: '',
         state: '',
@@ -71,7 +78,7 @@ const Checkout = () => {
     }, [itemsToCheckout]);
 
     const isFormValid = () => {
-        return (
+        const basicValidation = (
             formData.email.trim() &&
             formData.fullName.trim() &&
             formData.address.trim() &&
@@ -81,7 +88,15 @@ const Checkout = () => {
             formData.postalCode.trim() &&
             formData.phone.trim()
         );
-    };
+        
+        if (selectedPaymentMethod === 'wompi') {
+            return basicValidation && 
+                formData.typeLegalId.trim() && 
+                formData.legalId.trim();
+        }
+    
+    return basicValidation;
+};
 
     const isEmailValid = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -148,12 +163,18 @@ const Checkout = () => {
 
     const handlePreparePayment = async () => {
         if (!isFormValid()) {
+            let message = "Por favor completa todos los campos antes de continuar.";
+            
+            if (selectedPaymentMethod === 'wompi' && (!formData.typeLegalId || !formData.legalId)) {
+                message = "Para pagar con Wompi debes ingresar tu documento de identidad.";
+            }
+            
             setAlert({
                 show: true,
-                message: "Por favor completa todos los campos antes de continuar.",
+                message: message,
                 severity: "error",
             });
-        return;
+            return;
         }
         
         if (!isEmailValid(formData.email)) {
@@ -163,7 +184,29 @@ const Checkout = () => {
                 severity: "error",
             });
             return;
-        }   
+        }
+        
+        const cleanPhone = formData.phone.replace(/\D/g, '');
+        if (cleanPhone.length < 10) {
+            setAlert({
+                show: true,
+                message: "Por favor ingresa un número de teléfono válido (mínimo 10 dígitos).",
+                severity: "error",
+            });
+            return;
+        }
+        
+        // Validar documento de identidad para Wompi
+        if (selectedPaymentMethod === 'wompi') {
+            if (!formData.legalId || formData.legalId.length < 6) {
+                setAlert({
+                    show: true,
+                    message: "Por favor ingresa un número de documento válido.",
+                    severity: "error",
+                });
+                return;
+            }
+        }
 
         setIsPreparing(true);
         try {
@@ -298,9 +341,46 @@ const Checkout = () => {
                                                 name='fullName' 
                                                 value={formData.fullName} 
                                                 onChange={handleInputChange}
-                                                placeholder="Ej: Juan Pérez"
+                                                placeholder="Ej: Juan Pérez Quintero"
                                                 className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
                                             />
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                                <IdCard className="w-4 h-4 text-blue-600" />
+                                                Tipo de documento
+                                            </label>
+                                            <select 
+                                                name="typeLegalId" 
+                                                value={formData.typeLegalId}
+                                                onChange={handleInputChange}
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            >
+                                                <option value="">Selecciona...</option>
+                                                <option value="CC">Cédula de Ciudadanía (CC)</option>
+                                                <option value="CE">Cédula de Extranjería (CE)</option>
+                                                <option value="TI">Tarjeta de Identidad (TI)</option>
+                                                <option value="NIT">NIT</option>
+                                                <option value="PP">Pasaporte (PP)</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                                <IdCard className="w-4 h-4 text-blue-600" />
+                                                Número de documento
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                name="legalId" 
+                                                value={formData.legalId} 
+                                                onChange={handleInputChange}
+                                                placeholder="123456789"
+                                                maxLength="15"
+                                                className="w-full h-14 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                            />
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                {selectedPaymentMethod === 'wompi' && '* Requerido para pago con Wompi'}
+                                            </p>
                                         </div>
 
                                         {/* Email */}
@@ -510,6 +590,47 @@ const Checkout = () => {
                                             <CheckCircle className="w-6 h-6 text-blue-600" />
                                         )}
                                     </label>
+                                    <label 
+                                        htmlFor="wompi-payment"
+                                        className={`group flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
+                                            selectedPaymentMethod === 'wompi'
+                                                ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg'
+                                                : 'border-gray-200 bg-gray-50 hover:border-blue-300 hover:bg-blue-50/50'
+                                        }`}
+                                    >
+                                        <input
+                                            id="wompi-payment"
+                                            name="payment-method"
+                                            type="radio"
+                                            value="wompi"
+                                            checked={selectedPaymentMethod === 'wompi'}
+                                            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                                            className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                                        />
+                                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                                            selectedPaymentMethod === 'wompi'
+                                                ? 'bg-gradient-to-r from-gray-200 to-gray-300 shadow-lg'
+                                                : 'bg-gray-200 group-hover:bg-gray-300'
+                                        }`}>
+                                            <img src={LogoBancolombia} className={`w-7 h-7 ${
+                                                selectedPaymentMethod === 'wompi' ? 'text-white' : 'text-gray-600 group-hover:text-white'
+                                            }`} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="font-bold text-gray-800 text-lg">Wompi</h3>
+                                            <p className="text-sm text-gray-600">Pagos a través de productos Bancolombia</p>
+                                            <div className="flex gap-2 mt-2">
+                                                {['Nequi', 'Bancolombia', 'QR'].map((method, index) => (
+                                                    <span key={index} className="px-2 py-1 bg-white rounded-lg text-xs font-semibold text-gray-700 border border-gray-200">
+                                                        {method}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        {selectedPaymentMethod === 'wompi' && (
+                                            <CheckCircle className="w-6 h-6 text-blue-600" />
+                                        )}
+                                    </label>
                                 </div>
                             </div>
 
@@ -685,7 +806,7 @@ const Checkout = () => {
                                                             country: "CO" 
                                                         }}
                                                     />
-                                                ) : (
+                                                ) : selectedPaymentMethod === 'paypal' ? (
                                                     <PayPalButton
                                                         orderId={paymentData.orderId}
                                                         amount={subtotal + shippingCost}
@@ -703,6 +824,27 @@ const Checkout = () => {
                                                         }}
                                                         onSuccess={handlePayPalSuccess}
                                                         onError={handlePayPalError}
+                                                    />
+                                                ) : (
+                                                    <WompiButton
+                                                        orderId={paymentData.orderId}
+                                                        amount={paymentData.amount}
+                                                        description="Compra en Jerseys Colombia"
+                                                        reference={paymentData.reference}
+                                                        customerData={{
+                                                            email: formData.email,
+                                                            fullName: formData.fullName,
+                                                            legalId: formData.legalId,
+                                                            typeLegalId: formData.typeLegalId
+                                                        }}
+                                                        billingAddress={{
+                                                            address: formData.address,
+                                                            city: formData.city,
+                                                            state: formData.state,
+                                                            postalCode: formData.postalCode,
+                                                            country: "CO",
+                                                            phone: formData.phone
+                                                        }}
                                                     />
                                                 )}
                                             </div>

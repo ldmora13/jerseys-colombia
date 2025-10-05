@@ -179,6 +179,7 @@ serve(async (req) => {
       
       const orderData = webhookPayload.resource;
       let orderId = null;
+      let customerId = null;
       
       // Extraer orderId según el tipo de evento
       if (webhookPayload.event_type === 'CHECKOUT.ORDER.APPROVED') {
@@ -246,24 +247,56 @@ serve(async (req) => {
       const { user_id: userId, order_details } = pendingOrder;
       const { items, customer } = order_details;
       
-      // Crear/actualizar el perfil del cliente
-      const { error: customerError } = await supabaseAdmin
-        .from('customers')
-        .upsert({ 
-          id: userId, 
-          name: customer.fullName,
-          phone: customer.phone,
-          address: {
-            address: customer.address,
-            city: customer.city,
-            postalCode: customer.postalCode,
-            country: customer.country
+      if (userId) {
+        const { data: existingCustomer } = await supabaseAdmin
+          .from('customers')
+          .select('id')
+          .eq('id', userId)
+          .single();
+        
+        if (existingCustomer) {
+          customerId = existingCustomer.id;
+          console.log('Customer found:', customerId);
+          
+          // Actualizar información del cliente
+          await supabaseAdmin
+            .from('customers')
+            .update({
+              name: customer.fullName || existingCustomer.name,
+              phone: customer.phone || existingCustomer.phone,
+              address: customer.address ? {
+                street: customer.address,
+                city: customer.city,
+                state: customer.state,
+                country: customer.country,
+                postalCode: customer.postalCode
+              } : existingCustomer.address
+            })
+            .eq('id', userId);
+        } else {
+          // Crear nuevo cliente
+          const { data: newCustomer, error: customerError } = await supabaseAdmin
+            .from('customers')
+            .insert({
+              id: userId,
+              name: customer.fullName || 'Cliente',
+              phone: customer.phone || '',
+              address: customer.address ? {
+                street: customer.address,
+                city: customer.city,
+                state: customer.state,
+                country: customer.country,
+                postalCode: customer.postalCode
+              } : null
+            })
+            .select()
+            .single();
+          
+          if (!customerError && newCustomer) {
+            customerId = newCustomer.id;
+            console.log('New customer created:', customerId);
           }
-        }, { onConflict: 'id' });
-
-      if(customerError) {
-        console.error('Error al actualizar/crear perfil:', customerError);
-        throw new Error(`Error al actualizar/crear perfil: ${customerError.message}`);
+        }
       }
 
       // Obtener el monto total del webhook de PayPal
@@ -280,40 +313,46 @@ serve(async (req) => {
       const { data: finalOrder, error: orderError } = await supabaseAdmin
         .from('orders')
         .insert({
-          customer_id: userId,
+          user_id: userId,
+          customer_id: customerId,
           paypal_transaction_id: transactionId,
           total: totalAmount,
-          status: 'COMPLETED',
-          payment_method: 'paypal'
+          currency: 'USD',
+          shipping_status: 'pending',
+          status: 'completed',
+          payment_status: 'completed',
+          payment_method: 'paypal',
+          order_details: order_details
         })
         .select()
         .single();
-      
+
       if (orderError) {
         console.error('Error creando orden final:', orderError);
         throw orderError;
       }
 
       console.log('Orden final creada:', finalOrder.id);
+
       
       // Crear los items de la orden
       const itemsToInsert = items.map(item => ({
         order_id: finalOrder.id,
         product_name: item.name,
-        quantity: item.quantity,
+        quantity: item.quantity || 1,
         price_at_purchase: item.price + ((item.customName || item.customNumber) ? 5 : 0),
-        size: item.size,
+        size: item.size || null,
         custom_name: item.customName || null,
         custom_number: item.customNumber || null,
         product_details: {
-            sport: item.sport,
-            category: item.category,
-            team: item.team,
-            year: item.year,
-            driver: item.driver,
-            country: item.country,
-            imageUrl: (item.img && item.img.length > 0) ? item.img[item.img.length - 1] : null,
-            slug: generarSlug(item.name)
+          team: item.team,
+          year: item.year,
+          category: item.category,
+          sport: item.sport,
+          driver: item.driver,
+          country: item.country,
+          img: item.img,
+          slug: generarSlug(item.name)
         }
       }));
 
@@ -328,7 +367,18 @@ serve(async (req) => {
       }
 
       // Borrar la orden pendiente
-      await supabaseAdmin.from('pending_orders').delete().eq('order_id', orderId);
+      await supabaseAdmin
+        .from('pending_orders')
+        .delete()
+        .eq('order_id', orderId);
+      console.log('Orden pendiente eliminada');
+
+      console.log(`✅ Orden ${finalOrder.id} confirmada y guardada exitosamente (PayPal).`);
+      
+      await supabaseAdmin
+        .from('pending_orders')
+        .delete()
+        .eq('order_id', orderId);
       console.log('Orden pendiente eliminada');
 
       console.log(`✅ Orden ${finalOrder.id} confirmada y guardada exitosamente (PayPal).`);

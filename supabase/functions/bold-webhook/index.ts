@@ -87,66 +87,121 @@ serve(async (req) => {
       const { user_id: userId, order_details } = pendingOrder;
       const { items, customer } = order_details;
       
-      // 2. Crear/actualizar el perfil del cliente
-      const { error: customerError } = await supabaseAdmin
-        .from('customers')
-        .upsert({ 
-          id: userId, 
-          name: customer.fullName,
-          phone: customer.phone,
-          address: {
-            address: customer.address,
-            city: customer.city,
-            postalCode: customer.postalCode,
-            country: customer.country
+      let customerId = null;
+
+      if (userId) {
+        const { data: existingCustomer } = await supabaseAdmin
+          .from('customers')
+          .select('id')
+          .eq('id', userId)
+          .single();
+        
+        if (existingCustomer) {
+          customerId = existingCustomer.id;
+          console.log('Customer found:', customerId);
+          
+          await supabaseAdmin
+            .from('customers')
+            .update({
+              name: customer.fullName || existingCustomer.name,
+              phone: customer.phone || existingCustomer.phone,
+              address: customer.address ? {
+                street: customer.address,
+                city: customer.city,
+                state: customer.state,
+                country: customer.country,
+                postalCode: customer.postalCode
+              } : existingCustomer.address
+            })
+            .eq('id', userId);
+        } else {
+          // Crear nuevo cliente
+          const { data: newCustomer, error: customerError } = await supabaseAdmin
+            .from('customers')
+            .insert({
+              id: userId,
+              name: customer.fullName || 'Cliente',
+              phone: customer.phone || '',
+              address: customer.address ? {
+                street: customer.address,
+                city: customer.city,
+                state: customer.state,
+                country: customer.country,
+                postalCode: customer.postalCode
+              } : null
+            })
+            .select()
+            .single();
+
+          if (!customerError && newCustomer) {
+            customerId = newCustomer.id;
+            console.log('New customer created:', customerId);
+          } else if (customerError) {
+            console.error('Error creating customer:', customerError);
           }
-        }, { onConflict: 'id' });
+        }
+      }
 
-      if(customerError) throw new Error(`Error al actualizar/crear perfil: ${customerError.message}`);
-
-      // 3. Crear la orden final
       const { data: finalOrder, error: orderError } = await supabaseAdmin
         .from('orders')
         .insert({
-          customer_id: userId,
+          user_id: userId,
+          customer_id: customerId,
           bold_transaction_id: transactionData.payment_id,
           total: transactionData.amount.total / 100,
-          status: 'COMPLETED'
+          currency: 'COP',
+          shipping_status: 'pending',
+          status: 'completed',
+          payment_status: 'completed',
+          payment_method: 'bold',
+          order_details: order_details
         })
         .select()
         .single();
+
+      if (orderError) {
+        console.error('Error creating order:', orderError);
+        throw orderError;
+      }
+
+      console.log('Order created:', finalOrder.id);
       
-      if (orderError) throw orderError;
-      
-      // 4. Crear los items de la orden (sin cambios)
       const itemsToInsert = items.map(item => ({
         order_id: finalOrder.id,
         product_name: item.name,
-        quantity: item.quantity,
+        quantity: item.quantity || 1,
         price_at_purchase: item.price + ((item.customName || item.customNumber) ? 5 : 0),
-        size: item.size,
+        size: item.size || null,
         custom_name: item.customName || null,
         custom_number: item.customNumber || null,
         product_details: {
-            sport: item.sport,
-            category: item.category,
-            team: item.team,
-            year: item.year,
-            driver: item.driver,
-            country: item.country,
-            imageUrl: (item.img && item.img.length > 0) ? item.img[item.img.length - 1] : null,
-            slug: generarSlug(item.name)
+          team: item.team,
+          year: item.year,
+          category: item.category,
+          sport: item.sport,
+          driver: item.driver,
+          country: item.country,
+          img: item.img,
+          slug: generarSlug(item.name)
         }
       }));
+
 
       const { error: itemsError } = await supabaseAdmin
         .from('order_items')
         .insert(itemsToInsert);
 
-      if (itemsError) throw new Error(`Error al guardar los items de la orden: ${itemsError.message}`);
+      if (itemsError) {
+        console.error('Error saving items:', itemsError);
+        throw new Error(`Error al guardar los items de la orden: ${itemsError.message}`);
+      }
 
-      // 5. Borrar la orden pendiente
-      await supabaseAdmin.from('pending_orders').delete().eq('order_id', orderId);
+      console.log(`Created ${itemsToInsert.length} order items`);
+
+      await supabaseAdmin
+        .from('pending_orders')
+        .delete()
+        .eq('order_id', orderId);
 
       console.log(`Orden ${finalOrder.id} confirmada y guardada exitosamente.`);
     }

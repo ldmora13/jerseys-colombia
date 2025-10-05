@@ -23,15 +23,23 @@ const Compras = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedOrder, setSelectedOrder] = useState(null);
     const navigate = useNavigate();
 
     const statusConfig = {
-        'PENDING': { label: 'Pendiente', color: 'from-yellow-500 to-orange-500', icon: Clock },
-        'PROCESSING': { label: 'Procesando', color: 'from-blue-500 to-indigo-500', icon: Package },
-        'SHIPPED': { label: 'Enviado', color: 'from-purple-500 to-violet-500', icon: Truck },
-        'COMPLETED': { label: 'Completado', color: 'from-green-500 to-emerald-500', icon: CheckCircle },
-        'CANCELLED': { label: 'Cancelado', color: 'from-red-500 to-pink-500', icon: X }
+        'pending': { label: 'Pendiente', color: 'from-yellow-500 to-orange-500', icon: Clock },
+        'processing': { label: 'Procesando', color: 'from-blue-500 to-indigo-500', icon: Package },
+        'shipped': { label: 'Enviado', color: 'from-purple-500 to-violet-500', icon: Truck },
+        'completed': { label: 'Completado', color: 'from-green-500 to-emerald-500', icon: CheckCircle },
+        'cancelled': { label: 'Cancelado', color: 'from-red-500 to-pink-500', icon: X }
+    };
+
+    const getProductPath = (productDetails) => {
+        const sport = productDetails?.sport?.toLowerCase();
+        const category = productDetails?.category?.toLowerCase();
+        
+        if (sport === 'f1') return 'f1';
+        if (sport === 'nba') return 'nba';
+        return 'futbol';
     };
 
     useEffect(() => {
@@ -48,9 +56,11 @@ const Compras = () => {
                     .select(`
                         id,
                         created_at,
-                        status,
+                        shipping_status,
                         total,
+                        currency,
                         tracker_id,
+                        payment_method,
                         order_items (
                             product_name,
                             quantity,
@@ -64,7 +74,6 @@ const Compras = () => {
                     .eq('customer_id', user.id)
                     .order('created_at', { ascending: false });
                     
-                console.log("Respuesta de Supabase:", data, error);
                 if (error) throw error;
                 setOrders(data || []);
             } catch (err) {
@@ -157,7 +166,7 @@ const Compras = () => {
                         {/* Order List */}
                         <div className="lg:col-span-2 space-y-6">
                             {orders.map(order => {
-                                const status = statusConfig[order.status] || statusConfig['PENDING'];
+                                const status = statusConfig[order.shipping_status?.toLowerCase()] || statusConfig['pending'];
                                 const StatusIcon = status.icon;
                                 
                                 return (
@@ -204,11 +213,19 @@ const Compras = () => {
                                                         <div>
                                                             <p className="text-xs text-green-700 font-medium">Total Pagado</p>
                                                             <p className="text-lg font-bold text-green-800">
-                                                                {order.total.toLocaleString('es-CO', { 
-                                                                    style: 'currency', 
-                                                                    currency: 'COP' 
-                                                                })}
+                                                                {order.currency === 'USD' 
+                                                                    ? `$${parseFloat(order.total).toFixed(2)} USD`
+                                                                    : parseFloat(order.total).toLocaleString('es-CO', { 
+                                                                        style: 'currency', 
+                                                                        currency: 'COP' 
+                                                                    })
+                                                                }
                                                             </p>
+                                                            {order.payment_method && (
+                                                                <p className="text-xs text-green-600 capitalize mt-1">
+                                                                    Vía {order.payment_method}
+                                                                </p>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -239,10 +256,11 @@ const Compras = () => {
                                                 <div className="space-y-3">
                                                     {order.order_items && order.order_items.length > 0 ? (
                                                         order.order_items.map((item, index) => {
-                                                            const categoryForLink = item.product_details?.sport || 'futbol';
+                                                            const basePath = getProductPath(item.product_details);
                                                             const productSlug = item.product_details?.slug || '';
-                                                            const productLink = productSlug ? `/${categoryForLink}/${productSlug}` : null;
-                                                            const imageUrl = item.product_details?.imageUrl || 'https://via.placeholder.com/80';
+                                                            const productLink = productSlug ? `/${basePath}/${productSlug}` : null;
+                                                            const imagenes = item.product_details.img
+                                                            const imagen = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null;
 
                                                             return (
                                                                 <div 
@@ -253,13 +271,13 @@ const Compras = () => {
                                                                         {/* Product Image */}
                                                                         <div className="relative flex-shrink-0">
                                                                             <img 
-                                                                                src={imageUrl}
+                                                                                src={imagen}
                                                                                 alt={item.product_name}
                                                                                 className="w-20 h-20 object-contain rounded-xl bg-white shadow-md"
                                                                             />
                                                                             <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
                                                                                 <span className="text-white font-bold text-xs">{item.quantity}</span>
-                                                                                </div>
+                                                                            </div>
                                                                         </div>
 
                                                                         {/* Product Info */}
@@ -276,17 +294,20 @@ const Compras = () => {
                                                                                         </p>
                                                                                         {item.custom_name && (
                                                                                             <p className="text-sm text-purple-600 font-medium">
-                                                                                                Personalización: {item.custom_name} #{item.custom_number}
+                                                                                                ⭐ {item.custom_name} #{item.custom_number}
                                                                                             </p>
                                                                                         )}
                                                                                     </div>
                                                                                 </div>
                                                                                 <div className="text-right">
                                                                                     <p className="font-bold text-gray-800">
-                                                                                        {item.price_at_purchase.toLocaleString('es-CO', { 
-                                                                                            style: 'currency', 
-                                                                                            currency: 'COP' 
-                                                                                        })}
+                                                                                        {order.currency === 'USD'
+                                                                                            ? `$${parseFloat(item.price_at_purchase).toFixed(2)}`
+                                                                                            : parseFloat(item.price_at_purchase).toLocaleString('es-CO', { 
+                                                                                                style: 'currency', 
+                                                                                                currency: 'COP' 
+                                                                                            })
+                                                                                        }
                                                                                     </p>
                                                                                     <p className="text-xs text-gray-500">c/u</p>
                                                                                 </div>

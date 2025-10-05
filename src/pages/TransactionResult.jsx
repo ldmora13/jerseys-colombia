@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import Bancolombia from '../assets/LogoBancolombia.png'
 
 const SuccessIcon = () => (
     <div className="mx-auto bg-green-50 rounded-full h-20 w-20 flex items-center justify-center">
@@ -51,6 +52,11 @@ const TransactionResult = () => {
             const paypalOrderId = searchParams.get('paypal-order-id');
             const paypalTransactionId = searchParams.get('paypal-transaction-id');
 
+            // Verificar si es una transacción de Wompi
+            const wompiOrderId = searchParams.get('orderId');
+            const wompiProvider = searchParams.get('provider');
+            const wompiTransactionId = searchParams.get('id');
+
             let details = {};
             let success = false;
             let cancelled = false;
@@ -80,9 +86,20 @@ const TransactionResult = () => {
                 };
                 success = paypalStatus && paypalStatus.toLowerCase() === 'approved';
                 cancelled = paypalStatus && paypalStatus.toLowerCase() === 'cancelled';
+                
+            } else if (wompiProvider === 'wompi' && wompiOrderId) {
+                method = 'wompi';
+                details = {
+                    reference: wompiOrderId,
+                    transactionId: wompiTransactionId,
+                    status: 'approved',
+                    paymentMethod: 'Wompi',
+                    description: 'Pago procesado con Wompi',
+                    icon: 'card'
+                };
+                success = true; 
             }
 
-            // Si no hay parámetros válidos, programar redirección
             if (!method) {
                 setTimeout(() => {
                     navigate('/');
@@ -96,7 +113,6 @@ const TransactionResult = () => {
             setIsLoading(false);
         };
 
-        // Pequeño delay para mostrar loading
         const timer = setTimeout(processTransactionResult, 1000);
         return () => clearTimeout(timer);
     }, [searchParams, navigate]);
@@ -105,7 +121,7 @@ const TransactionResult = () => {
         if (isSuccess) {
             return {
                 title: '¡Pago Aprobado!',
-                message: 'Gracias por tu compra. Recibirás una confirmación por correo una vez que procesemos tu orden.',
+                message: 'Gracias por tu compra',
                 statusColor: 'text-green-600',
                 bgColor: 'bg-green-50',
                 borderColor: 'border-green-200'
@@ -113,7 +129,7 @@ const TransactionResult = () => {
         } else if (isCancelled) {
             return {
                 title: 'Pago Cancelado',
-                message: 'Has cancelado el proceso de pago. Puedes intentar nuevamente cuando desees.',
+                message: 'Has cancelado el proceso de pago',
                 statusColor: 'text-yellow-600',
                 bgColor: 'bg-yellow-50',
                 borderColor: 'border-yellow-200'
@@ -121,7 +137,7 @@ const TransactionResult = () => {
         } else {
             return {
                 title: 'El pago fue rechazado',
-                message: 'Tu pago no pudo ser procesado. Por favor, intenta de nuevo o usa otro método de pago.',
+                message: 'Tu pago no pudo ser procesado',
                 statusColor: 'text-red-600',
                 bgColor: 'bg-red-50',
                 borderColor: 'border-red-200'
@@ -163,7 +179,7 @@ const TransactionResult = () => {
     if (!transactionDetails || !transactionDetails.reference) {
         return (
             <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
-                <div className="bg-gradient-to-br from-blue-100 to-indigo-200 p-8 rounded-xl shadow-2xl text-center max-w-lg w-full">
+                <div className="bg-gradient-to-br from-blue-100 to-indigo-200 p-8 rounded-xl shadow-2xl text-center max-w-lg w-full mt-20">
                     <div className="mx-auto bg-yellow-50 rounded-full h-20 w-20 flex items-center justify-center">
                         <svg className="h-12 w-12 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -185,7 +201,7 @@ const TransactionResult = () => {
 
     return (
         <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
-            <div className="bg-gradient-to-br from-blue-100 to-indigo-200 p-8 md:p-12 rounded-xl shadow-2xl max-w-lg w-full text-center">
+            <div className="bg-gradient-to-br from-blue-100 to-indigo-200 p-8 md:p-12 rounded-xl shadow-2xl max-w-lg w-full text-center mt-20">
                 
                 {getIcon()}
 
@@ -203,7 +219,7 @@ const TransactionResult = () => {
                 {isSuccess && (
                     <div className={`mt-4 p-3 ${statusInfo.bgColor} rounded-lg border ${statusInfo.borderColor}`}>
                         <p className="text-sm text-green-700 font-medium">
-                            ✓ Tu orden será procesada en las próximas 24 horas
+                            Tu orden será procesada en las próximas 24 horas
                         </p>
                         <p className="text-xs text-green-600 mt-1">
                             Recibirás confirmación por email con los detalles de envío
@@ -235,7 +251,12 @@ const TransactionResult = () => {
                     <div className="flex justify-between items-center">
                         <span className="font-semibold text-gray-500">Método de Pago:</span>
                         <span className="flex items-center">
-                            {transactionDetails.paymentMethod === 'PayPal' ? <PayPalIcon /> : <CardIcon />}
+                            {transactionDetails.paymentMethod === 'PayPal' ? (<PayPalIcon />) : 
+                                transactionDetails.paymentMethod === 'Wompi' ? (
+                                    <img className='h-6' src={Bancolombia} alt="Bancolombia" /> ) : 
+                                transactionDetails.paymentMethod === 'Bold' ? (
+                                    <CardIcon />
+                                ) : null}
                             {transactionDetails.paymentMethod}
                         </span>
                     </div>

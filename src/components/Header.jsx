@@ -457,9 +457,9 @@ const Header = ({setCartVisible}) => {
 
                                     <div className="space-y-3">
                                         {[
-                                            { label: "Perfil", action: () => navigate("/profile") || setDropdownVisible(false), icon: User },
-                                            { label: "Mis Compras", action: () => navigate("/compras") || setDropdownVisible(false), icon: ShoppingCart },
-                                            { label: "Soporte", action: () => navigate("/soporte") || setDropdownVisible(false), icon: Mail }
+                                            { label: "Perfil", action: () => {navigate("/profile"); setDropdownVisible(false); setMenuOpen(false)}, icon: User },
+                                            { label: "Mis Compras", action: () => {navigate("/compras"); setDropdownVisible(false); setMenuOpen(false)}, icon: ShoppingCart },
+                                            { label: "Soporte", action: () => {navigate("/soporte"); setDropdownVisible(false); setMenuOpen(false)}, icon: Mail }
                                         ].map((item, index) => (
                                             <button
                                                 key={index}
@@ -554,14 +554,14 @@ const Header = ({setCartVisible}) => {
 
                                             <div className="grid grid-cols-2 gap-3 pt-2">
                                                 <button
-                                                    onClick={() => navigate("/register") || setDropdownVisible(false)}
+                                                    onClick={() => {navigate("/register"); setDropdownVisible(false); setMenuOpen(false)}}
                                                     type="button"
                                                     className="h-12 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-all duration-300"
                                                 >
                                                     Registrarse
                                                 </button>
                                                 <button
-                                                    onClick={() => navigate("/forgot-password") || setDropdownVisible(false)}
+                                                    onClick={() => {navigate("/forgot-password"); setDropdownVisible(false); setMenuOpen(false)}}
                                                     type="button"
                                                     className="h-12 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-all duration-300"
                                                 >

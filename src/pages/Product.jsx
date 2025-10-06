@@ -54,6 +54,8 @@ const Product = ({ cartVisible, setCartVisible }) => {
     const [producto, setProducto] = useState(null);
     const [loading, setLoading] = useState(true);
     const [tasaCOP, setTasaCOP] = useState(null);
+    const url = window.location.href;
+
     const topRef = useRef(null);
 
     const [sizeRulesVisible, setSizeRulesVisible] = useState(false);
@@ -164,7 +166,22 @@ const Product = ({ cartVisible, setCartVisible }) => {
             }
         });
     };
-    
+
+    const copyToClipboard = async () => {
+        try {
+            await navigator.clipboard.writeText(url);
+            setAlert({
+            show: true,
+            message: "URL copiada con éxito",
+            severity: "success",
+            title: "¡Copiado en el portapapeles!",
+            });
+            setTimeout(() => setAlert({ show: false, message: "", severity: "", title: "" }), 5000);
+        } catch (err) {
+            console.error("Failed to copy: ", err);
+        }
+    };
+
     const goToCheckout = (product) => {
         if (!selectedSize) {
             setAlert({ show: true, message: "Selecciona una talla antes de ir al pago", severity: "error", title: "Talla no seleccionada" });
@@ -332,8 +349,9 @@ const Product = ({ cartVisible, setCartVisible }) => {
                                     >
                                         <Heart className={`w-5 h-5 ${wishlistItems.includes(producto.name) ? 'fill-current' : ''}`} />
                                     </button>
-                                    <button className="w-12 h-12 bg-gray-100 hover:bg-blue-50 rounded-full flex items-center justify-center transition-all duration-300">
-                                        <Share2 className="w-5 h-5 text-gray-600" />
+                                    <button onClick={copyToClipboard}
+                                        className="w-12 h-12 bg-gray-100 hover:bg-blue-50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                        <Share2 className="w-5 h-5 text-gray-600 hover:text-blue-600" />
                                     </button>
                                 </div>
                             </div>

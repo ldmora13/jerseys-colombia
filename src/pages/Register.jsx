@@ -170,7 +170,7 @@ const Register = () => {
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="hidden lg:flex flex-col justify-center p-8 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20"
+                    className="flex flex-col justify-center p-8 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20"
                 >
                     <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 w-20 h-20 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                         <ShoppingBag className="w-10 h-10 text-white" />

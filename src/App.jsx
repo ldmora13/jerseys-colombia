@@ -8,7 +8,7 @@ import { WishlistProvider } from './context/WishlistContext';
 import Cart from './components/Cart';
 import Header from './components/Header';
 import Wishlist from './components/Wishlist';
-import ScrollToTop from './components/ScrollToTop'
+import ScrollToTop from './components/ScrollToTop';
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -25,6 +25,7 @@ import TransactionResult from './pages/TransactionResult';
 import Soporte from './pages/Soporte';
 import Compras from './pages/Compras';
 import Profile from './pages/Profile';
+import About from './pages/About';
 
 function App() {
 
@@ -63,6 +64,7 @@ function App() {
           <Route path="/soporte" element={<Soporte />} />
           <Route path="/compras" element={<Compras />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </WishlistProvider>
     </CartProvider>

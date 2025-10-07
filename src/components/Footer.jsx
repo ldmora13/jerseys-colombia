@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Mail, Phone, MapPin, Instagram, Twitter, Facebook, Heart, Shield, Truck, Award, ChevronRight } from 'lucide-react'
+import { Mail, Phone, MapPin,  Heart, Shield, Truck, Award, ChevronRight } from 'lucide-react'
 
 const Footer = () => {
     const navigate = useNavigate()
@@ -14,7 +14,6 @@ const Footer = () => {
         empresa: [
             { name: 'Sobre Nosotros', path: '/about' },
             { name: 'Contacto', path: '/soporte' },
-            { name: 'Trabaja con Nosotros', path: '/careers' },
         ],
         soporte: [
             { name: 'Guía de Tallas', path: '/tallas' },
@@ -67,27 +66,6 @@ const Footer = () => {
       
     ]
 
-    const socialLinks = [
-        {
-            icon: Instagram,
-            name: "Instagram",
-            url: "https://instagram.com/jerseyscolombia",
-            color: "from-pink-500 to-purple-600"
-        },
-        {
-            icon: Facebook,
-            name: "Facebook", 
-            url: "https://facebook.com/jerseyscolombia",
-            color: "from-blue-500 to-blue-700"
-        },
-        {
-            icon: Twitter,
-            name: "Twitter",
-            url: "https://twitter.com/jerseyscolombia", 
-            color: "from-sky-400 to-blue-500"
-        }
-    ]
-
   return (
     <footer className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white overflow-hidden">
         {/* Background Pattern */}
@@ -138,21 +116,6 @@ const Footer = () => {
                     <p className="text-gray-300 leading-relaxed">
                         La experiencia definitiva en jerseys deportivos oficiales. Calidad premium, diseños exclusivos y envío a toda Colombia.
                     </p>
-
-                    {/* Social Links */}
-                    <div className="flex gap-4">
-                        {socialLinks.map((social, index) => (
-                            <a
-                                key={index}
-                                href={social.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`w-12 h-12 bg-gradient-to-r ${social.color} rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 group`}
-                            >
-                                <social.icon className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-300" />
-                            </a>
-                        ))}
-                    </div>
                 </div>
 
                 {/* Products Links */}

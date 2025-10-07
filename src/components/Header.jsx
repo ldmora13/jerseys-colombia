@@ -187,7 +187,7 @@ const Header = ({setCartVisible}) => {
     }
     
 
-  return (
+ return (
     <div>
         <header className={`backdrop-blur-xl bg-white/95 shadow-xl border-b border-white/20 w-full z-[999] top-0 left-0 h-25 fixed transition-transform duration-300 ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}>
             <div className="max-w-[1400px] mx-auto px-5 pt-5 flex items-center justify-between">
@@ -214,7 +214,7 @@ const Header = ({setCartVisible}) => {
                             <a 
                                 onClick={() => navigate("/futbol")} 
                                 className="cursor-pointer relative group font-semibold text-gray-700 hover:text-blue-600 transition-all duration-300"
-                                >
+                            >
                                 <span className="relative z-10 flex items-center gap-2 px-4 py-2">
                                     ⚽ Fútbol
                                 </span>
@@ -409,7 +409,7 @@ const Header = ({setCartVisible}) => {
                                 <div className="pt-4">
                                     <button 
                                         ref={buttonRef} 
-                                        onClick={() => setDropdownVisible(!dropdownVisible)}
+                                        onClick={() => {setDropdownVisible(!dropdownVisible), setMenuOpen(false)}}
                                         className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-gray-900 to-gray-700 text-white font-semibold shadow-xl transform hover:scale-105 transition-all duration-300"
                                     >
                                         <User className="w-5 h-5" />
@@ -421,14 +421,21 @@ const Header = ({setCartVisible}) => {
                         </div>
                     </div>
                 )}
+            </div>
+        </header>
 
-                {/* Login/User Dropdown */}
-                {dropdownVisible && (
-                    <>
-                        <div className="fixed inset-0 bg-black/30 z-[998] h-screen" onClick={() => setDropdownVisible(false)}></div>
+        {/* Login/User Dropdown - FUERA DEL HEADER */}
+        {dropdownVisible && (
+            <>
+                <div 
+                    className="fixed inset-0 bg-black/30 z-[998] overflow-y-auto" 
+                    onClick={() => setDropdownVisible(false)}
+                >
+                    <div className="min-h-screen flex items-center justify-center p-4">
                         <div 
                             ref={dropdownRef} 
-                            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-[420px] h-full z-[999] transition-all duration-300"
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full max-w-[420px] z-[999] transition-all duration-300"
                         >
                             {/* Alert */}
                             {alert.show && (
@@ -440,22 +447,22 @@ const Header = ({setCartVisible}) => {
 
                             {isAuthenticated ? (
                                 /* Authenticated User Card */
-                                <div className="bg-white rounded-3xl shadow-2xl border mt-2 md:mt-20 border-white/20 p-8">
+                                <div className="bg-white rounded-2xl shadow-2xl border border-white/20 p-6 relative">
                                     <button 
                                         onClick={() => setDropdownVisible(false)}
-                                        className="absolute top-4 right-4 p-3 bg-white/80 rounded-xl shadow-lg hover:bg-white transition-colors duration-300 md:hidden"
+                                        className="absolute top-3 right-3 p-2 bg-white/80 rounded-lg shadow-lg hover:bg-white transition-colors duration-300 md:hidden"
                                     >
-                                        <X className="w-6 h-6 text-gray-600" />
+                                        <X className="w-5 h-5 text-gray-600" />
                                     </button>
-                                    <div className="text-center mb-8">
-                                        <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                                            <User className="w-10 h-10 text-white" />
+                                    <div className="text-center mb-5">
+                                        <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                            <User className="w-8 h-8 text-white" />
                                         </div>
-                                        <h3 className="text-2xl font-bold text-gray-800 mb-2">{userNameFull}</h3>
-                                        <p className="text-gray-600">Bienvenido de vuelta</p>
+                                        <h3 className="text-xl font-bold text-gray-800 mb-1">{userNameFull}</h3>
+                                        <p className="text-sm text-gray-600">Bienvenido de vuelta</p>
                                     </div>
 
-                                    <div className="space-y-3">
+                                    <div className="space-y-2">
                                         {[
                                             { label: "Perfil", action: () => {navigate("/profile"); setDropdownVisible(false); setMenuOpen(false)}, icon: User },
                                             { label: "Mis Compras", action: () => {navigate("/compras"); setDropdownVisible(false); setMenuOpen(false)}, icon: ShoppingCart },
@@ -464,14 +471,14 @@ const Header = ({setCartVisible}) => {
                                             <button
                                                 key={index}
                                                 onClick={item.action}
-                                                className="w-full flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-white border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group"
+                                                className="w-full flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-white border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group"
                                             >
-                                                <item.icon className="w-5 h-5 text-gray-600 group-hover:text-blue-600" />
-                                                <span className="font-medium text-gray-700 group-hover:text-blue-600">{item.label}</span>
+                                                <item.icon className="w-4 h-4 text-gray-600 group-hover:text-blue-600" />
+                                                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600">{item.label}</span>
                                             </button>
                                         ))}
                                         
-                                        <div className="my-6 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+                                        <div className="my-4 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
                                         
                                         <button
                                             onClick={async () => { 
@@ -479,7 +486,7 @@ const Header = ({setCartVisible}) => {
                                                 setIsAuthenticated(false); 
                                                 setDropdownVisible(false); 
                                             }}
-                                            className="w-full p-4 rounded-2xl bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-red-600 font-semibold hover:from-red-100 hover:to-pink-100 hover:border-red-300 transition-all duration-300"
+                                            className="w-full p-3 rounded-xl bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-red-600 text-sm font-semibold hover:from-red-100 hover:to-pink-100 hover:border-red-300 transition-all duration-300"
                                         >
                                             Cerrar Sesión
                                         </button>
@@ -487,83 +494,83 @@ const Header = ({setCartVisible}) => {
                                 </div>
                             ) : (
                                 /* Login Form */
-                                <div className="bg-white rounded-3xl mt-1 md:mt-20 shadow-2xl border border-white/20 p-8">
-                                    <div className="text-center mb-8">
+                                <div className="bg-white rounded-2xl shadow-2xl border border-white/20 p-6 relative">
+                                    <div className="text-center mb-5">
                                         <button 
                                             onClick={() => setDropdownVisible(false)}
-                                            className="absolute md:hidden top-4 right-4 p-3 bg-white/80 rounded-xl shadow-lg hover:bg-white transition-colors duration-300"
+                                            className="absolute md:hidden top-3 right-3 p-2 bg-white/80 rounded-lg shadow-lg hover:bg-white transition-colors duration-300"
                                         >
-                                            <X className="w-6 h-6 text-gray-600" />
+                                            <X className="w-5 h-5 text-gray-600" />
                                         </button>
-                                        <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                                            <User className="w-10 h-10 text-white" />
+                                        <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                            <User className="w-8 h-8 text-white" />
                                         </div>
-                                        <h3 className="text-2xl font-bold text-gray-800 mb-2">Iniciar Sesión</h3>
-                                        <p className="text-gray-600">Accede a tu cuenta</p>
+                                        <h3 className="text-xl font-bold text-gray-800 mb-1">Iniciar Sesión</h3>
+                                        <p className="text-sm text-gray-600">Accede a tu cuenta</p>
                                     </div>
 
-                                    <form className="space-y-6">
+                                    <form className="space-y-4">
                                         {/* Email Input */}
                                         <div className="relative group">
-                                            <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 w-5 h-5 transition-colors duration-300" />
+                                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 w-4 h-4 transition-colors duration-300" />
                                             <input
                                                 type="email"
                                                 placeholder="Correo electrónico"
                                                 value={email}
                                                 onChange={(e) => setEmail(e.target.value)}
-                                                className="w-full h-14 pl-12 pr-4 rounded-2xl bg-gray-50 border border-gray-200 font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-300"
+                                                className="w-full h-12 pl-10 pr-4 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-300"
                                             />
                                         </div>
 
                                         {/* Password Input */}
                                         <div className="relative group">
-                                            <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 w-5 h-5 transition-colors duration-300" />
+                                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 w-4 h-4 transition-colors duration-300" />
                                             <input
                                                 type="password"
                                                 placeholder="Contraseña"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
-                                                className="w-full h-14 pl-12 pr-4 rounded-2xl bg-gray-50 border border-gray-200 font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-300"
+                                                className="w-full h-12 pl-10 pr-4 rounded-xl bg-gray-50 border border-gray-200 text-sm font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-300"
                                             />
                                         </div>
 
                                         {/* Buttons */}
-                                        <div className="space-y-4">
+                                        <div className="space-y-3">
                                             <button
                                                 onClick={handleLogin}
                                                 type="button"
-                                                className="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-semibold hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300 shadow-xl"
+                                                className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300 shadow-xl"
                                             >
                                                 Iniciar Sesión
                                             </button>
 
-                                            <div className="flex items-center gap-4">
+                                            <div className="flex items-center gap-3">
                                                 <div className="flex-1 h-px bg-gradient-to-r from-transparent to-gray-300"></div>
-                                                <span className="text-gray-500 text-sm">o</span>
+                                                <span className="text-gray-500 text-xs">o</span>
                                                 <div className="flex-1 h-px bg-gradient-to-l from-transparent to-gray-300"></div>
                                             </div>
 
                                             <button
                                                 onClick={handleGoogleLogin}
                                                 type="button"
-                                                className="w-full h-14 bg-white border-2 border-gray-200 rounded-2xl font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 shadow-lg"
+                                                className="w-full h-12 bg-white border-2 border-gray-200 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:border-gray-300 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
                                             >
-                                                <img src={googlelogo} className="w-6 h-6" alt="Google" />
+                                                <img src={googlelogo} className="w-5 h-5" alt="Google" />
                                                 Continuar con Google
                                             </button>
 
-                                            <div className="grid grid-cols-2 gap-3 pt-2">
+                                            <div className="grid grid-cols-2 gap-2 pt-1">
                                                 <button
                                                     onClick={() => {navigate("/register"); setDropdownVisible(false); setMenuOpen(false)}}
                                                     type="button"
-                                                    className="h-12 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-all duration-300"
+                                                    className="h-10 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all duration-300"
                                                 >
                                                     Registrarse
                                                 </button>
                                                 <button
                                                     onClick={() => {navigate("/forgot-password"); setDropdownVisible(false); setMenuOpen(false)}}
                                                     type="button"
-                                                    className="h-12 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-all duration-300"
+                                                    className="h-10 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all duration-300"
                                                 >
                                                     ¿Olvidaste?
                                                 </button>
@@ -573,12 +580,12 @@ const Header = ({setCartVisible}) => {
                                 </div>
                             )}
                         </div>
-                    </>
-                )}
-            </div>
-        </header>
+                    </div>
+                </div>
+            </>
+        )}
     </div>
-  )
+)
 }
 
 export default Header

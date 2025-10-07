@@ -178,11 +178,11 @@ const Soporte = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-x-hidden w-full">
             
             {/* Hero Section */}
-            <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 pt-24 pb-16 mt-5">
-                <div className="container mx-auto px-4 max-w-7xl">
+            <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 pt-24 pb-16 mt-20 w-full">
+                <div className="container mx-auto px-4 max-w-7xl w-full">
                     <motion.div 
                         className="text-center"
                         initial={{ opacity: 0, y: 20 }}
@@ -192,57 +192,57 @@ const Soporte = () => {
                         <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
                             <Headphones className="w-10 h-10 text-white" />
                         </div>
-                        <h1 className="text-5xl font-bold text-white mb-4">Centro de Soporte</h1>
-                        <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+                        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Centro de Soporte</h1>
+                        <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto px-4">
                             ¿Necesitas ayuda? Estamos aquí para ti. Encuentra respuestas rápidas o contáctanos directamente.
                         </p>
                     </motion.div>
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 py-12 max-w-7xl">
+            <div className="container mx-auto px-4 py-6 md:py-12 max-w-7xl w-full">
                 
                 {/* Contact Methods */}
-                <div className="grid md:grid-cols-3 gap-6 mb-12 -mt-24">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-12 -mt-12 md:-mt-24 w-full">
                     {contactMethods.map((method, index) => (
                         <motion.div
                             key={index}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 + 0.3 }}
-                            className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-6 hover:shadow-3xl transition-all duration-300 group"
+                            className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-6 hover:shadow-3xl transition-all duration-300 group w-full"
                         >
                             <div className={`w-14 h-14 bg-gradient-to-r ${method.color} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                                 <method.icon className="w-7 h-7 text-white" />
                             </div>
                             <h3 className="text-lg font-bold text-gray-800 mb-2">{method.title}</h3>
-                            <p className="text-gray-600 font-medium mb-1">{method.value}</p>
+                            <p className="text-gray-600 font-medium mb-1 break-words">{method.value}</p>
                             <p className="text-sm text-gray-500">{method.description}</p>
                         </motion.div>
                     ))}
                 </div>
 
-                <div className="grid lg:grid-cols-5 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 md:gap-8 w-full">
                     
                     {/* FAQ Section */}
-                    <div className="lg:col-span-3">
-                        <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+                    <div className="lg:col-span-3 w-full">
+                        <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden w-full">
                             <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6">
-                                <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-                                    <HelpCircle className="w-7 h-7" />
+                                <h2 className="text-xl md:text-2xl font-bold text-white flex items-center gap-3">
+                                    <HelpCircle className="w-6 h-6 md:w-7 md:h-7" />
                                     Preguntas Frecuentes
                                 </h2>
-                                <p className="text-green-100 mt-1">Encuentra respuestas rápidas aquí</p>
+                                <p className="text-green-100 mt-1 text-sm md:text-base">Encuentra respuestas rápidas aquí</p>
                             </div>
 
                             {/* Category Tabs */}
-                            <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                                <div className="flex gap-2 overflow-x-auto pb-2">
+                            <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 w-full overflow-x-auto">
+                                <div className="flex gap-2 pb-2 min-w-max">
                                     {categories.map((cat) => (
                                         <button
                                             key={cat.id}
                                             onClick={() => setActiveCategory(cat.id)}
-                                            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold whitespace-nowrap transition-all duration-300 ${
+                                            className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl font-semibold whitespace-nowrap transition-all duration-300 text-sm md:text-base ${
                                                 activeCategory === cat.id
                                                     ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
                                                     : 'bg-white text-gray-700 hover:bg-gray-100'
@@ -256,17 +256,17 @@ const Soporte = () => {
                             </div>
 
                             {/* FAQ List */}
-                            <div className="p-6 space-y-3">
+                            <div className="p-4 md:p-6 space-y-3 w-full">
                                 {faqs[activeCategory]?.map((faq, index) => (
                                     <div 
                                         key={index}
-                                        className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl overflow-hidden border border-gray-200 hover:border-green-300 transition-all duration-300"
+                                        className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl overflow-hidden border border-gray-200 hover:border-green-300 transition-all duration-300 w-full"
                                     >
                                         <button
                                             onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
                                             className="w-full flex justify-between items-center p-4 text-left font-semibold text-gray-800 hover:bg-white/50 transition-colors duration-200"
                                         >
-                                            <span className="pr-4">{faq.question}</span>
+                                            <span className="pr-4 text-sm md:text-base">{faq.question}</span>
                                             <ChevronDown className={`w-5 h-5 text-gray-600 flex-shrink-0 transition-transform duration-300 ${
                                                 expandedFaq === index ? 'rotate-180' : ''
                                             }`} />
@@ -275,7 +275,7 @@ const Soporte = () => {
                                             expandedFaq === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                                         }`}>
                                             <div className="px-4 pb-4 text-gray-700 leading-relaxed bg-white border-t border-gray-200">
-                                                <p className="pt-4">{faq.answer}</p>
+                                                <p className="pt-4 text-sm md:text-base">{faq.answer}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -285,19 +285,19 @@ const Soporte = () => {
                     </div>
 
                     {/* Contact Form */}
-                    <div className="lg:col-span-2">
-                        <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden sticky top-24">
+                    <div className="lg:col-span-2 w-full">
+                        <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden lg:sticky lg:top-24 w-full">
                             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6">
-                                <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-                                    <MessageSquare className="w-7 h-7" />
+                                <h2 className="text-xl md:text-2xl font-bold text-white flex items-center gap-3">
+                                    <MessageSquare className="w-6 h-6 md:w-7 md:h-7" />
                                     Contáctanos
                                 </h2>
-                                <p className="text-blue-100 mt-1">Te responderemos pronto</p>
+                                <p className="text-blue-100 mt-1 text-sm md:text-base">Te responderemos pronto</p>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="p-6 space-y-5">
+                            <form onSubmit={handleSubmit} className="p-4 md:p-6 space-y-5 w-full">
                                 {/* Name Input */}
-                                <div>
+                                <div className="w-full">
                                     <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                                         <User className="w-4 h-4 text-blue-600" />
                                         Nombre completo *
@@ -309,12 +309,12 @@ const Soporte = () => {
                                         onChange={handleInputChange}
                                         placeholder="Tu nombre"
                                         required
-                                        className="w-full h-12 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                        className="w-full h-12 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm md:text-base"
                                     />
                                 </div>
 
                                 {/* Email Input */}
-                                <div>
+                                <div className="w-full">
                                     <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                                         <Mail className="w-4 h-4 text-blue-600" />
                                         Correo electrónico *
@@ -326,12 +326,12 @@ const Soporte = () => {
                                         onChange={handleInputChange}
                                         placeholder="tu@email.com"
                                         required
-                                        className="w-full h-12 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                        className="w-full h-12 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm md:text-base"
                                     />
                                 </div>
 
                                 {/* Subject Input */}
-                                <div>
+                                <div className="w-full">
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                                         Asunto (opcional)
                                     </label>
@@ -341,12 +341,12 @@ const Soporte = () => {
                                         value={formData.subject}
                                         onChange={handleInputChange}
                                         placeholder="¿Sobre qué quieres consultar?"
-                                        className="w-full h-12 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                                        className="w-full h-12 px-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 text-sm md:text-base"
                                     />
                                 </div>
 
                                 {/* Message Textarea */}
-                                <div>
+                                <div className="w-full">
                                     <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                                         <MessageSquare className="w-4 h-4 text-blue-600" />
                                         Mensaje *
@@ -358,7 +358,7 @@ const Soporte = () => {
                                         placeholder="Cuéntanos cómo podemos ayudarte..."
                                         required
                                         rows={5}
-                                        className="w-full px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-none"
+                                        className="w-full px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-none text-sm md:text-base"
                                     />
                                 </div>
 
@@ -366,7 +366,7 @@ const Soporte = () => {
                                 <button
                                     type="submit"
                                     disabled={pending}
-                                    className="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                    className="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm md:text-base"
                                 >
                                     {pending ? (
                                         <>
@@ -386,7 +386,7 @@ const Soporte = () => {
                                     <motion.div
                                         initial={{ opacity: 0, y: -10 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        className={`p-4 rounded-2xl flex items-center gap-3 ${
+                                        className={`p-4 rounded-2xl flex items-center gap-3 w-full ${
                                             feedback.type === 'success'
                                                 ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200'
                                                 : 'bg-gradient-to-r from-red-50 to-pink-50 border border-red-200'
@@ -406,7 +406,7 @@ const Soporte = () => {
                                 )}
 
                                 {/* Info Box */}
-                                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-2xl border border-blue-200">
+                                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-2xl border border-blue-200 w-full">
                                     <div className="flex gap-3">
                                         <Clock className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                                         <div>

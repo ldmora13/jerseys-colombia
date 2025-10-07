@@ -650,7 +650,7 @@ const Policies= () => {
         </section>
 
         {/* Navigation Tabs */}
-        <section className="sticky top-20 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-sm">
+        <section className="flex top-20 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-200 shadow-sm">
           <div className="container mx-auto px-6">
             <div className="flex overflow-x-auto scrollbar-hide py-4 gap-2">
               {sections.map((section) => (

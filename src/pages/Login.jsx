@@ -204,7 +204,7 @@ const Login = () => {
             <div className="absolute top-1/2 left-10 w-24 h-24 bg-indigo-300 rounded-full animate-ping"></div>
           </div>
 
-          <div className="container mx-auto px-4 text-center relative z-10 pt-20 mt-20 md:mt-0">
+          <div className="container mx-auto px-4 text-center relative z-10 pt-20 mt-20">
             <div className="max-w-4xl mx-auto">
               <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent animate-fade-in">
                 Jerseys Colombia

@@ -8,6 +8,7 @@ import { WishlistProvider } from './context/WishlistContext';
 import Cart from './components/Cart';
 import Header from './components/Header';
 import Wishlist from './components/Wishlist';
+import ScrollToTop from './components/ScrollToTop'
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -42,6 +43,7 @@ function App() {
   return (
     <CartProvider user={user}>
       <WishlistProvider>
+        <ScrollToTop />
         <Header setCartVisible={setCartVisible} />
         <Cart cartVisible={cartVisible} setCartVisible={setCartVisible} />
         <Wishlist />

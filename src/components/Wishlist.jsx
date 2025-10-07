@@ -230,7 +230,7 @@ const Wishlist = () => {
                                                             className='w-10 h-10 rounded-xl bg-red-50 hover:bg-red-100 flex items-center justify-center transition-all duration-300 group/btn border border-red-200'>
                                                             <Trash2 className="w-4 h-4 text-red-600 group-hover/btn:scale-110 transition-transform duration-300" />
                                                         </button>
-                                                        <Link
+                                                        <Link onClick={() => setWishlistVisible(false)}
                                                             to={`/${link}/${generarSlug(product.name)}`}
                                                             className='w-10 h-10 rounded-xl bg-blue-50 hover:bg-blue-100 flex items-center justify-center transition-all duration-300 group/btn border border-blue-200'
                                                         >

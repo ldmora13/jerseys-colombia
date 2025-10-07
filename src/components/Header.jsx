@@ -491,7 +491,7 @@ const Header = ({setCartVisible}) => {
                                     <div className="text-center mb-8">
                                         <button 
                                             onClick={() => setDropdownVisible(false)}
-                                            className="absolute top-4 right-4 p-3 bg-white/80 rounded-xl shadow-lg hover:bg-white transition-colors duration-300"
+                                            className="absolute md:hidden top-4 right-4 p-3 bg-white/80 rounded-xl shadow-lg hover:bg-white transition-colors duration-300"
                                         >
                                             <X className="w-6 h-6 text-gray-600" />
                                         </button>

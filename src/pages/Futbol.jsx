@@ -64,6 +64,13 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
     const [categorySelected, setCategorySelected] = useState('Todo');
     const [yearRange, setYearRange] = useState([1950, 2025]);
 
+    const categoryMap = {
+        'Fan': 'fan',
+        'Player': 'player',
+        'Women': 'women',
+        'Windbreaker': 'windbreaker'
+    };
+
     const [tasaCOP, setTasaCOP] = useState(null);
 
     const camisetasFiltradas = camisetasFutbol.filter((camiseta) => {
@@ -85,7 +92,13 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
             matchYear = camiseta.year >= yearRange[0] && camiseta.year <= yearRange[1];
         }
 
-        return matchSearch && matchStock && matchPromo && matchYear;
+        let matchCat = true;
+        if (categorySelected !== 'Todo') {
+            const singular = categoryMap[categorySelected] || categorySelected;
+            matchCat = camiseta.type === singular || camiseta.category === singular;
+        }
+
+        return matchSearch && matchStock && matchPromo && matchYear && matchCat;
     });
 
     const addToCart = (product) => {
@@ -173,7 +186,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
             try {
                 const futbolRes = await supabase
                     .from('futbol')
-                    .select('name, img, team, category, year, index, price, stock, provider, deporte')
+                    .select('name, img, team, category, year, index, price, stock, provider, deporte, type')
                     .order('year', { ascending: false });
                 if (futbolRes.error) {
                     console.error('Error en Futbol:', futbolRes.error);
@@ -248,10 +261,13 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                 setPromoSelected={setPromoSelected}
                 yearRange={yearRange}
                 setYearRange={setYearRange}
+                categorySelected={categorySelected}
+                setCategorySelected={setCategorySelected}
+
             />
 
             {/* Hero Section */}
-            <div ref={topRef} className="bg-gradient-to-r from-green-600 via-blue-600 to-indigo-600 pt-24 pb-16 mt-5">
+            <div ref={topRef} className="bg-gradient-to-r from-green-600 via-blue-600 to-indigo-600 pt-24 pb-16 mt-20">
                 <div className="container mx-auto px-4">
                     <div className="text-center max-w-4xl mx-auto">
                         <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
@@ -375,7 +391,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                                 <div className="p-4">
                                     <Link to={`/futbol/${slug}`}>
                                         <h3 className="font-bold text-gray-800 mb-2 line-clamp-2 hover:text-blue-600 transition-colors capitalize">
-                                            {camiseta.team} {camiseta.year} {camiseta.category === 'manga_larga' ? 'Manga Larga' : camiseta.category}
+                                            {camiseta.team} {camiseta.year} {camiseta.category === 'manga_larga' ? 'Manga Larga' : camiseta.category} {camiseta.type} edition
                                         </h3>
                                     </Link>
 

@@ -136,7 +136,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
       case 'F1':
         return <>{producto.team} {producto.driver ? producto.driver : producto.year}</>;
       case 'futbol':
-        return <> {producto.team} {producto.year}</>;
+        return <> {producto.team} {producto.category} {producto.type} {producto.year}</>;
       default:
         return <> {producto.name}</>;
     }

@@ -25,12 +25,7 @@ import {
     ChevronRight,
     Check,
     Gift,
-    Sparkles,
-    Tag,
-    TrendingUp,
-    Users,
-    Calendar,
-    MessageCircle
+    MessageCircle,
 } from 'lucide-react';
 
 const generarSlugDesdeNombre = (name) => {
@@ -55,9 +50,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
     const [loading, setLoading] = useState(true);
     const [tasaCOP, setTasaCOP] = useState(null);
     const url = window.location.href;
-
     const topRef = useRef(null);
-
     const [sizeRulesVisible, setSizeRulesVisible] = useState(false);
 
     const [selectedSize, setSelectedSize] = useState(null);
@@ -166,7 +159,6 @@ const Product = ({ cartVisible, setCartVisible }) => {
             }
         });
     };
-
     const copyToClipboard = async () => {
         try {
             await navigator.clipboard.writeText(url);
@@ -181,7 +173,6 @@ const Product = ({ cartVisible, setCartVisible }) => {
             console.error("Failed to copy: ", err);
         }
     };
-
     const goToCheckout = (product) => {
         if (!selectedSize) {
             setAlert({ show: true, message: "Selecciona una talla antes de ir al pago", severity: "error", title: "Talla no seleccionada" });
@@ -235,7 +226,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                 <AlertGlobal alert={alert} setAlert={setAlert} />
             </div>
             <SizeRules sizeRulesVisible={sizeRulesVisible} setSizeRulesVisible={setSizeRulesVisible} />
-            
+
             <div className="container mx-auto px-4 py-8 pt-24 max-w-7xl mt-5">
                 
                 {/* Breadcrumbs */}
@@ -335,9 +326,20 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             
                             {/* Sport Badge & Wishlist */}
                             <div className="flex items-center justify-between mb-4">
-                                <span className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full">
-                                    {producto.sport?.toUpperCase()}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    <span className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-full">
+                                        {producto.sport?.toUpperCase()}
+                                    </span>
+                                    {producto.sport === 'futbol' && producto.type && (
+                                        <span className={`px-4 py-2 text-white text-sm font-bold rounded-full ${
+                                            producto.type.toLowerCase() === 'player' 
+                                                ? 'bg-gradient-to-r from-yellow-500 to-orange-600' 
+                                                : 'bg-gradient-to-r from-green-500 to-emerald-600'
+                                        }`}>
+                                            {producto.type.toUpperCase()}
+                                        </span>
+                                    )}
+                                </div>
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => toggleWishlist(producto)}
@@ -349,7 +351,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                                     >
                                         <Heart className={`w-5 h-5 ${wishlistItems.includes(producto.name) ? 'fill-current' : ''}`} />
                                     </button>
-                                    <button onClick={copyToClipboard}
+                                     <button onClick={copyToClipboard}
                                         className="w-12 h-12 bg-gray-100 hover:bg-blue-50 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
                                         <Share2 className="w-5 h-5 text-gray-600 hover:text-blue-600" />
                                     </button>
@@ -360,7 +362,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                                 {producto.sport === 'f1' && `${producto.team} ${producto.driver || producto.year}`}
                                 {producto.sport === 'nba' && `${producto.team} ${producto.player || producto.year}`}
-                                {producto.sport === 'futbol' && `${producto.team} ${producto.year}`}
+                                {producto.sport === 'futbol' && `${producto.team} ${producto.category} ${producto.type} ${producto.year}`}
                             </h1>
 
                             {/* Rating */}
@@ -390,7 +392,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             <div className="mb-6">
                                 <div className="flex items-center justify-between mb-3">
                                     <label className="text-lg font-bold text-gray-800">Talla</label>
-                                    <button onClick={() => setSizeRulesVisible(true)} className="text-sm text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1">
+                                    <button className="text-sm text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1">
                                         <Ruler className="w-4 h-4" />
                                         Guía de tallas
                                     </button>
@@ -477,29 +479,48 @@ const Product = ({ cartVisible, setCartVisible }) => {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Product Details Card */}
-                        <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                                <Package className="w-6 h-6 text-blue-600" />
-                                Detalles del Producto
-                            </h2>
-                            <div className="space-y-4">
-                                {[
-                                    { label: "Material", value: "100% Poliéster premium" },
-                                    { label: "Tecnología", value: "Dri-FIT transpirable" },
-                                    { label: "Logos", value: "Bordados de alta calidad" },
-                                    { label: "Año", value: producto.year },
-                                    { label: "Categoría", value: producto.category }
-                                ].map((detail, index) => (
-                                    <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
-                                        <span className="text-gray-600 font-medium">{detail.label}</span>
-                                        <span className="text-gray-900 font-semibold">{detail.value}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
                     </div>
+                </div>
+
+                {/* Product Details Card */}
+                <div className=" mt-10 bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                        <Package className="w-6 h-6 text-blue-600" />
+                        Detalles del Producto
+                    </h2>
+                    {producto.type === 'player' ? (
+                        <div className="space-y-4">
+                            {[
+                                { label: "Material", value: "Poliéster, a menudo en combinación con elastano (spandex)"},
+                                { label: "Tecnología", value: "Tecnología antihumedad avanzada (como Dri-FIT, HEAT.RDY, AEROREADY, etc.)"},
+                                { label: "Logos", value: "Logos y escudos termosellados (3D)"},
+                                { label: "Año", value: producto.year },
+                                { label: "Categoría", value: producto.type},
+                                { label: "Descripción", value: producto.name.replaceAll('_', ' ')}
+                            ].map((detail, index) => (
+                                <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                                    <span className="text-gray-600 font-medium">{detail.label}</span>
+                                    <span className="text-gray-900 font-semibold">{detail.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {[
+                                { label: "Material", value: "100% Poliéster premium" },
+                                { label: "Tecnología", value: "Dri-FIT transpirable" },
+                                { label: "Logos", value: "Bordados de alta calidad" },
+                                { label: "Año", value: producto.year },
+                                { label: "Categoría", value: producto.category },
+                                { label: "Descripción", value: producto.name.replaceAll('_', ' ')}
+                            ].map((detail, index) => (
+                                <div key={index} className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                                    <span className="text-gray-600 font-medium">{detail.label}</span>
+                                    <span className="text-gray-900 font-semibold">{detail.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Reviews Section */}

@@ -3,6 +3,52 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders } from '../_shared/cors.ts'
 import crypto from "https://esm.sh/crypto-js@4.2.0";
 
+
+async function registerDiscountUsage(
+  supabaseClient: any,
+  discountCodeId: string,
+  userId: string,
+  orderId: string,
+  discountAmount: number
+): Promise<boolean> {
+  if (!discountCodeId || !discountAmount || discountAmount <= 0) {
+    console.log('No hay código de descuento para registrar');
+    return true; // No es un error
+  }
+
+  try {
+    console.log(`Registrando descuento: código=${discountCodeId}, monto=${discountAmount}`);
+    
+    const { data, error } = await supabaseClient
+      .rpc('register_discount_code_usage', {
+        p_discount_code_id: discountCodeId,
+        p_user_id: userId,
+        p_order_id: orderId,
+        p_discount_amount: discountAmount
+      });
+
+    if (error) {
+      console.error('❌ Error RPC registrando descuento:', error);
+      return false;
+    }
+
+    if (data && data.success) {
+      console.log(`✅ Descuento registrado exitosamente:`, {
+        code: data.code,
+        newCount: data.new_usage_count,
+        message: data.message
+      });
+      return true;
+    } else {
+      console.warn('⚠️ RPC retornó sin éxito:', data?.message);
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ Excepción registrando descuento:', error);
+    return false;
+  }
+}
+
 serve(async (req) => {
   // Permitir CORS y métodos OPTIONS
   if (req.method === 'OPTIONS') {
@@ -173,6 +219,15 @@ serve(async (req) => {
 
         console.log('Order created successfully:', newOrder.id);
 
+        if (pendingOrder.discount_code_id && pendingOrder.discount_amount > 0) {
+          await registerDiscountUsage(
+            supabaseAdmin,
+            pendingOrder.discount_code_id,
+            pendingOrder.user_id,
+            reference,
+            pendingOrder.discount_amount
+          );
+        }
         // Crear items de la orden
         if (pendingOrder.order_details?.items && Array.isArray(pendingOrder.order_details.items)) {
           const orderItems = pendingOrder.order_details.items.map(item => ({

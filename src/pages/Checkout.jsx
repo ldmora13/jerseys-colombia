@@ -29,6 +29,9 @@ import {
     Lock,
     ChevronRight,
     IdCard,
+    Tag,
+    Check,
+    X
 } from 'lucide-react';
 
 import LogoBancolombia from '../assets/LogoBancolombia.png';
@@ -69,6 +72,10 @@ const Checkout = () => {
 
     const [subtotal, setSubtotal] = useState(0)
 
+    const [discountCode, setDiscountCode] = useState('');
+    const [isValidatingCode, setIsValidatingCode] = useState(false);
+    const [appliedDiscount, setAppliedDiscount] = useState(null);
+
     const shippingCost = useMemo(() => {
         return calculateShippingCost(itemsToCheckout);
     }, [itemsToCheckout]);
@@ -76,6 +83,9 @@ const Checkout = () => {
     const totalProductCount = useMemo(() => {
         return itemsToCheckout.reduce((total, item) => total + (item.quantity || 1), 0);
     }, [itemsToCheckout]);
+
+    const discountAmount = appliedDiscount?.discountAmount || 0;
+    const finalTotal = Math.max(0, subtotal + shippingCost - discountAmount);
 
     const isFormValid = () => {
         const basicValidation = (
@@ -100,6 +110,64 @@ const Checkout = () => {
 
     const isEmailValid = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    const validateDiscountCode = async () => {
+        if (!discountCode.trim()) {
+            setAlert({
+                show: true,
+                message: "Por favor ingresa un código de descuento",
+                severity: "warning",
+            });
+            return;
+        }
+
+        setIsValidatingCode(true);
+        try {
+            const { data, error } = await supabase.functions.invoke('validate-discount-code', {
+                body: {
+                    code: discountCode.toUpperCase(),
+                    subtotal: subtotal,
+                    userId: user?.id
+                }
+            });
+
+            if (error) throw error;
+
+            if (data.valid) {
+                setAppliedDiscount(data);
+                setAlert({
+                    show: true,
+                    message: data.message || "¡Código aplicado correctamente!",
+                    severity: "success",
+                });
+            } else {
+                setAlert({
+                    show: true,
+                    message: data.message || "Código no válido",
+                    severity: "error",
+                });
+            }
+        } catch (error) {
+            console.error("Error validating discount code:", error);
+            setAlert({
+                show: true,
+                message: "Error al validar el código. Intenta nuevamente.",
+                severity: "error",
+            });
+        } finally {
+            setIsValidatingCode(false);
+        }
+    };
+
+    const removeDiscountCode = () => {
+        setAppliedDiscount(null);
+        setDiscountCode('');
+        setAlert({
+            show: true,
+            message: "Código de descuento removido",
+            severity: "info",
+        });
     };
 
     useEffect(() => {
@@ -655,7 +723,7 @@ const Checkout = () => {
 
                         {/* Columna Derecha: Resumen */}
                         <div className="w-full lg:w-1/3">
-                            <div className="sticky top-24">
+                            <div className="flex top-24">
                                 <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
                                     {/* Header */}
                                     <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6">
@@ -716,7 +784,6 @@ const Checkout = () => {
                                             ))}
                                         </div>
                                     </div>
-
                                     {/* Shipping Banner */}
                                     <div className="px-6 pb-4">
                                         <div className={`bg-gradient-to-r ${getShippingMessage().color} rounded-2xl p-4 text-white shadow-lg`}>
@@ -730,6 +797,58 @@ const Checkout = () => {
                                         </div>
                                     </div>
 
+                                    {/* Código de Descuento */}
+                                    <div className="px-6 pb-4">
+                                        <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-4 border border-amber-200">
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <Tag className="w-5 h-5 text-amber-600" />
+                                                <h3 className="font-bold text-gray-800">Código de Descuento</h3>
+                                            </div>
+                                            
+                                            {!appliedDiscount ? (
+                                                <div className="flex gap-2">
+                                                    <input
+                                                        type="text"
+                                                        value={discountCode}
+                                                        onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                                                        placeholder="INGRESA TU CÓDIGO"
+                                                        className="flex-1 h-12 px-4 rounded-xl bg-white border-2 border-amber-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 uppercase"
+                                                        disabled={isValidatingCode}
+                                                    />
+                                                    <button
+                                                        onClick={validateDiscountCode}
+                                                        disabled={isValidatingCode || !discountCode.trim()}
+                                                        className="px-2 md:px-6 h-12 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                                                    >
+                                                        {isValidatingCode ? (
+                                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                                        ) : (
+                                                            <Check className="w-5 h-5" />
+                                                        )}
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-2">
+                                                    <div className="flex items-center justify-between bg-white rounded-xl p-3 border-2 border-green-300">
+                                                        <div className="flex items-center gap-2">
+                                                            <CheckCircle className="w-5 h-5 text-green-600" />
+                                                            <div>
+                                                                <p className="font-bold text-gray-800 text-sm">{discountCode}</p>
+                                                                <p className="text-xs text-gray-600">{appliedDiscount.description}</p>
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            onClick={removeDiscountCode}
+                                                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                                                        >
+                                                            <X className="w-5 h-5 text-red-600" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
                                     {/* Totals */}
                                     <div className="px-6 pb-6 space-y-4">
                                         <div className="space-y-3 py-4 border-t border-gray-200">
@@ -737,6 +856,17 @@ const Checkout = () => {
                                                 <span>Subtotal</span>
                                                 <span className="font-semibold">${subtotal.toFixed(2)} USD</span>
                                             </div>
+                                            
+                                            {appliedDiscount && (
+                                                <div className="flex justify-between text-green-600">
+                                                    <span className="flex items-center gap-2">
+                                                        <Tag className="w-4 h-4" />
+                                                        Descuento
+                                                    </span>
+                                                    <span className="font-semibold">-${discountAmount.toFixed(2)} USD</span>
+                                                </div>
+                                            )}
+                                            
                                             <div className="flex justify-between text-gray-700">
                                                 <span className="flex items-center gap-2">
                                                     <Truck className="w-4 h-4" />
@@ -752,7 +882,7 @@ const Checkout = () => {
                                             <div className="flex justify-between items-center mb-2">
                                                 <span className="text-gray-700 font-bold text-lg">Total</span>
                                                 <div className="text-right">
-                                                    <p className="text-2xl font-bold text-gray-800">${(subtotal + shippingCost).toFixed(2)}</p>
+                                                    <p className="text-2xl font-bold text-gray-800">${finalTotal.toFixed(2)}</p>
                                                     <p className="text-xs text-gray-600">USD</p>
                                                 </div>
                                             </div>
@@ -760,7 +890,7 @@ const Checkout = () => {
                                                 <div className="flex justify-between items-center pt-2 border-t border-blue-200">
                                                     <span className="text-gray-600 text-sm">Equivalente en COP</span>
                                                     <span className="font-semibold text-gray-700 text-sm">
-                                                        {((subtotal + shippingCost) * tasaCOP).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                                                        {(finalTotal * tasaCOP).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
                                                     </span>
                                                 </div>
                                             )}

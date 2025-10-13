@@ -270,6 +270,22 @@ serve(async (req) => {
         .eq('order_id', orderId);
 
       console.log(`Orden ${finalOrder.id} confirmada y guardada exitosamente.`);
+
+      try {
+        console.log('📧 Enviando email de confirmación a:', customer.email);
+        
+        await supabaseAdmin.functions.invoke('send-order-confirmation-email', {
+          body: {
+            orderId: orderId,
+            customerEmail: customer.email,
+            orderDetails: order_details
+          }
+        });
+        
+        console.log('✅ Email de confirmación enviado exitosamente (Bold)');
+      } catch (emailError) {
+        console.error('❌ Error enviando email (no crítico):', emailError);
+      }
     }
 
     return new Response(JSON.stringify({ received: true }), { status: 200 });

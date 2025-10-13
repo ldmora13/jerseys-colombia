@@ -428,14 +428,29 @@ serve(async (req) => {
       console.log('Orden pendiente eliminada');
 
       console.log(`✅ Orden ${finalOrder.id} confirmada y guardada exitosamente (PayPal).`);
-      
-      await supabaseAdmin
-        .from('pending_orders')
-        .delete()
-        .eq('order_id', orderId);
-      console.log('Orden pendiente eliminada');
 
-      console.log(`✅ Orden ${finalOrder.id} confirmada y guardada exitosamente (PayPal).`);
+      try {
+        console.log('📧 Enviando email de confirmación a:', pendingOrder.order_details.customer.email);
+        
+        const emailResponse = await supabaseAdmin.functions.invoke(
+          'send-order-confirmation-email',
+          {
+            body: {
+              orderId: orderId,
+              customerEmail: pendingOrder.order_details.customer.email,
+              orderDetails: pendingOrder.order_details
+            }
+          }
+        );
+
+        if (emailResponse.error) {
+          console.error('❌ Error al invocar función de email:', emailResponse.error);
+        } else {
+          console.log('✅ Email de confirmación enviado exitosamente');
+        }
+      } catch (emailError) {
+        console.error('❌ Excepción al enviar email (no crítico):', emailError);
+      }
       
       return new Response(JSON.stringify({ 
         received: true, 

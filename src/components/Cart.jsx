@@ -160,7 +160,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
 
   return (
     cartVisible && (
-      <div className="fixed inset-0 z-[1000] flex items-start justify-end p-4 pt-20">
+      <div className="fixed inset-0 z-[1000] flex items-start justify-end p-4 pt-5">
         <AlertGlobal alert={alert} setAlert={setAlert} />
         <AnimatePresence>
             <>
@@ -176,7 +176,7 @@ const Cart = ({ cartVisible, setCartVisible }) => {
               {/* Cart Panel */}
               <motion.div
                 ref={cartRef}
-                className="relative w-full sm:w-[440px] max-h-[85vh] flex flex-col bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl z-[1000] border border-white/20 overflow-hidden"
+                className="relative w-full sm:w-[440px] max-h-[90dvh] flex flex-col bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl z-[1000] border border-white/20 overflow-hidden"
                 initial={{ x: 400, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 400, opacity: 0 }}

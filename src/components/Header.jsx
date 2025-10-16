@@ -424,7 +424,7 @@ const Header = ({setCartVisible}) => {
             </div>
         </header>
 
-        {/* Login/User Dropdown - FUERA DEL HEADER */}
+        {/* Login/User Dropdown  */}
         {dropdownVisible && (
             <>
                 <div 
@@ -447,7 +447,7 @@ const Header = ({setCartVisible}) => {
 
                             {isAuthenticated ? (
                                 /* Authenticated User Card */
-                                <div className="bg-white rounded-2xl shadow-2xl border border-white/20 p-6 relative">
+                                <div className="bg-white rounded-2xl shadow-2xl border border-white/20 p-6 relative mt-5 md:mt-20">
                                     <button 
                                         onClick={() => setDropdownVisible(false)}
                                         className="absolute top-3 right-3 p-2 bg-white/80 rounded-lg shadow-lg hover:bg-white transition-colors duration-300 md:hidden"
@@ -494,7 +494,7 @@ const Header = ({setCartVisible}) => {
                                 </div>
                             ) : (
                                 /* Login Form */
-                                <div className="bg-white rounded-2xl shadow-2xl border border-white/20 p-6 relative">
+                                <div className="bg-white rounded-2xl shadow-2xl border border-white/20 p-6 relative mt-5 md:mt-20">
                                     <div className="text-center mb-5">
                                         <button 
                                             onClick={() => setDropdownVisible(false)}

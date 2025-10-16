@@ -135,7 +135,7 @@ const ForgotPassword = () => {
                 <div className="absolute top-1/2 left-10 w-24 h-24 bg-indigo-300 rounded-full animate-ping"></div>
             </div>
 
-            <div className="relative w-full max-w-md mt-5">
+            <div className="relative w-full max-w-md mt-25">
                 {/* Back Button */}
                 <button
                     onClick={() => navigate("/")}

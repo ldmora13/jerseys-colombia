@@ -112,7 +112,7 @@ const Soporte = () => {
         {
             icon: Phone,
             title: 'WhatsApp',
-            value: '+57 3224156590',
+            value: '+57 3207707997',
             description: 'Lun a Vie, 9am - 6pm',
             color: 'from-green-500 to-emerald-600'
         },

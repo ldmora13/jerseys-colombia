@@ -72,6 +72,43 @@ function verifySignature(secret: string, rawBody: string, boldSignature: string)
   }
 }
 
+async function sendWhatsAppNotification(orderData: any) {
+  try {
+    console.log('📱 Enviando notificación de WhatsApp...');
+    
+    const n8nWebhookUrl = 'https://panelN8N.jerseyscol.com/webhook/order-confirmed';
+    
+    const response = await fetch(n8nWebhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        order_id: orderData.id,
+        payment_method: 'bold',
+        order_details: orderData.order_details,
+        customer_id: orderData.customer_id,
+        total: orderData.total,
+        currency: orderData.currency,
+        created_at: new Date().toISOString()
+      })
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log('✅ WhatsApp notification sent:', result);
+      return true;
+    } else {
+      const error = await response.text();
+      console.error('❌ Error sending WhatsApp:', error);
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ Exception sending WhatsApp:', error);
+    return false;
+  }
+}
+
 serve(async (req) => {
   // La lógica de verificación de firma no cambia.
   if (req.method === 'OPTIONS') {
@@ -270,6 +307,13 @@ serve(async (req) => {
         .eq('order_id', orderId);
 
       console.log(`Orden ${finalOrder.id} confirmada y guardada exitosamente.`);
+
+      try {
+        console.log('📱 Enviando notificación de WhatsApp para la orden:', finalOrder.id);
+        await sendWhatsAppNotification(finalOrder);
+      } catch (whatsAppError) {
+        console.error('❌ Error enviando notificación de WhatsApp (no crítico):', whatsAppError);
+      }
 
       try {
         console.log('📧 Enviando email de confirmación a:', customer.email);

@@ -430,6 +430,30 @@ serve(async (req) => {
       console.log(`✅ Orden ${finalOrder.id} confirmada y guardada exitosamente (PayPal).`);
 
       try {
+        console.log('📱 Enviando notificación WhatsApp (PayPal)...');
+        
+        const whatsappResponse = await fetch('https://panelN8N.jerseyscol.com/webhook/order-confirmed', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            order_id: finalOrder.id,
+            payment_method: 'paypal',
+            order_details: pendingOrder.order_details,
+            customer_id: finalOrder.customer_id,
+            total: finalOrder.total,
+            currency: finalOrder.currency
+          })
+        });
+
+        if (whatsappResponse.ok) {
+          const result = await whatsappResponse.json();
+          console.log('✅ WhatsApp notification sent (PayPal):', result);
+        }
+      } catch (whatsappError) {
+        console.error('❌ Error WhatsApp notification (non-critical):', whatsappError);
+      }
+
+      try {
         console.log('📧 Enviando email de confirmación a:', pendingOrder.order_details.customer.email);
         
         const emailResponse = await supabaseAdmin.functions.invoke(

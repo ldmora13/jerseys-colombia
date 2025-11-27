@@ -78,6 +78,8 @@ const Product = ({ cartVisible, setCartVisible }) => {
         }
     }, [producto]);
 
+    useEffect
+
     useEffect(() => {
       const fetchProducto = async () => {
         setLoading(true);
@@ -392,7 +394,8 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             <div className="mb-6 w-full">
                                 <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                                     <label className="text-base md:text-lg font-bold text-gray-800">Talla</label>
-                                    <button className="text-xs md:text-sm text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1">
+                                    <button onClick={() => setSizeRulesVisible(true)}
+                                        className="text-xs md:text-sm text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1 cursor-pointer">
                                         <Ruler className="w-4 h-4" />
                                         Guía de tallas
                                     </button>

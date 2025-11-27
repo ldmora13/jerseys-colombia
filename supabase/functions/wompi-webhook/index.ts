@@ -219,6 +219,31 @@ serve(async (req) => {
 
         console.log('Order created successfully:', newOrder.id);
 
+        try {
+          console.log('📱 Enviando notificación WhatsApp (Wompi)...');
+          
+          const n8nResponse = await fetch('https://panelN8N.jerseyscol.com/webhook/order-confirmed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              order_id: newOrder.id,
+              payment_method: 'wompi',
+              order_details: pendingOrder.order_details,
+              customer_id: newOrder.customer_id,
+              total: newOrder.total,
+              currency: newOrder.currency
+            })
+          });
+
+          if (n8nResponse.ok) {
+            console.log('✅ WhatsApp notification sent (Wompi)');
+          } else {
+            console.warn('⚠️ WhatsApp notification failed (non-critical)');
+          }
+        } catch (whatsappError) {
+          console.error('❌ Error sending WhatsApp (non-critical):', whatsappError);
+        }
+
         if (pendingOrder.discount_code_id && pendingOrder.discount_amount > 0) {
           await registerDiscountUsage(
             supabaseAdmin,

@@ -577,49 +577,6 @@ const Checkout = () => {
                                 </div>
 
                                 <div className="p-8 space-y-4">
-                                    {/* Bold Payment Option */}
-                                    <label 
-                                        htmlFor="bold-payment"
-                                        className={`group flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${
-                                            selectedPaymentMethod === 'bold'
-                                                ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-lg'
-                                                : 'border-gray-200 bg-gray-50 hover:border-blue-300 hover:bg-blue-50/50'
-                                        }`}
-                                    >
-                                        <input
-                                            id="bold-payment"
-                                            name="payment-method"
-                                            type="radio"
-                                            value="bold"
-                                            checked={selectedPaymentMethod === 'bold'}
-                                            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                                            className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                                        />
-                                        <div className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                                            selectedPaymentMethod === 'bold'
-                                                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 shadow-lg'
-                                                : 'bg-gray-200 group-hover:bg-blue-500'
-                                        }`}>
-                                            <CreditCard className={`w-7 h-7 ${
-                                                selectedPaymentMethod === 'bold' ? 'text-white' : 'text-gray-600 group-hover:text-white'
-                                            }`} />
-                                        </div>
-                                        <div className="flex-1">
-                                            <h3 className="font-bold text-gray-800 text-lg">Tarjeta de Crédito/Débito</h3>
-                                            <p className="text-sm text-gray-600">Visa, Mastercard, American Express</p>
-                                            <div className="flex gap-2 mt-2">
-                                                {['Visa', 'MC', 'AmEx'].map((card, index) => (
-                                                    <span key={index} className="px-2 py-1 bg-white rounded-lg text-xs font-semibold text-gray-700 border border-gray-200">
-                                                        {card}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        {selectedPaymentMethod === 'bold' && (
-                                            <CheckCircle className="w-6 h-6 text-blue-600" />
-                                        )}
-                                    </label>
-
                                     {/* PayPal Option */}
                                     <label 
                                         htmlFor="paypal-payment"

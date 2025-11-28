@@ -9,7 +9,6 @@ import { supabase } from '../lib/supabaseClient';
 
 import AlertGlobal from '../components/AlertGlobal';
 
-import BoldButton from '../components/BoldButton';
 import PayPalButton from '../components/PaypalButton';
 import WompiButton from '../components/WompiButton';
 
@@ -876,24 +875,7 @@ const Checkout = () => {
                                             </button>
                                         ) : (
                                             <div className="space-y-4">
-                                                {selectedPaymentMethod === 'bold' ? (
-                                                    <BoldButton
-                                                        orderId={paymentData.orderId}
-                                                        amount={paymentData.amount}
-                                                        description="Compra en Jerseys Colombia"
-                                                        integritySignature={paymentData.integritySignature}
-                                                        customerData={{ 
-                                                            email: formData.email, 
-                                                            fullName: formData.fullName 
-                                                        }}
-                                                        billingAddress={{ 
-                                                            address: formData.address, 
-                                                            city: formData.city, 
-                                                            state: formData.state, 
-                                                            country: "CO" 
-                                                        }}
-                                                    />
-                                                ) : selectedPaymentMethod === 'paypal' ? (
+                                                {selectedPaymentMethod === 'paypal' ? (
                                                     <PayPalButton
                                                         orderId={paymentData.orderId}
                                                         amount={subtotal + shippingCost}

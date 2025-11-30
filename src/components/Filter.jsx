@@ -223,10 +223,10 @@ const Filter = ({
                                 { value: 1950, label: '1950' },
                                 { value: 1980, label: '80' },
                                 { value: 2000, label: '2000' },
-                                { value: 2025, label: '2025' }
+                                { value: 2025, label: '2026' }
                             ]}
                             min={1950}
-                            max={2025}
+                            max={2026}
                             sx={{
                                 color: '#9333ea',
                                 '& .MuiSlider-thumb': {

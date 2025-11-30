@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
-
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
-
 import SEO from '../components/SEO';
 import AlertGlobal from '../components/AlertGlobal';
 import Loader from '../components/Loader';
 import Filter from '../components/Filter';
 import Footer from '../components/Footer';
-
 import { 
     BadgeCheck, 
     ChevronLeft, 
@@ -21,16 +18,17 @@ import {
     ShoppingCart,
     Tag,
     TrendingUp,
-    Sparkles
+    Sparkles,
+    Trophy,
+    Globe
 } from 'lucide-react';
 
-const Futbol = ({ cartVisible, setCartVisible }) => {
-
+const WorldCup2026 = ({ cartVisible, setCartVisible }) => {
     const seoData = {
-        title: 'Jerseys de Fútbol - Equipos Internacionales',
-        description: 'Compra jerseys de fútbol de los mejores equipos del mundo. Real Madrid, Barcelona, PSG, Manchester United y más. Calidad Fan con envío gratis en Colombia. Personalización disponible.',
-        keywords: 'jerseys futbol, camisetas retro, jerseys retro, camisetas de futbol colombia, camisetas futbol, real madrid, barcelona, psg, manchester united, jerseys colombia, futbol, camisetas personalizadas de futbol, envio gratis, camisetas retro futbol, camisetas de futbol baratas',
-        url: `${window.location.origin}/futbol`,
+        title: 'Camisetas Mundial 2026 - Edición Especial',
+        description: 'Compra las camisetas oficiales del Mundial 2026. Italia, Portugal, Argentina, Brasil y más selecciones. Ediciones Player y Fan con envío gratis en Colombia.',
+        keywords: 'camisetas mundial 2026, world cup 2026, camisetas selecciones, italia 2026, portugal 2026, argentina 2026, brasil 2026, jerseys mundial, camisetas futbol mundial',
+        url: `${window.location.origin}/mundial-2026`,
         type: 'website'
     };
 
@@ -48,7 +46,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const topRef = useRef(null);
     
-    const [camisetasFutbol, setCamisetasFutbol] = useState([]);
+    const [camisetas, setCamisetas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState('new');
 
@@ -64,6 +62,8 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
     const [categorySelected, setCategorySelected] = useState('Todo');
     const [yearRange, setYearRange] = useState([1950, 2026]);
 
+    const [tasaCOP, setTasaCOP] = useState(null);
+
     const categoryMap = {
         'Fan': 'fan',
         'Player': 'player',
@@ -71,9 +71,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
         'Windbreaker': 'windbreaker'
     };
 
-    const [tasaCOP, setTasaCOP] = useState(null);
-
-    const camisetasFiltradas = camisetasFutbol.filter((camiseta) => {
+    const camisetasFiltradas = camisetas.filter((camiseta) => {
         const searchLower = search.toLowerCase();
         const matchSearch =
             (camiseta.name || '').toLowerCase().includes(searchLower) ||
@@ -85,7 +83,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
         else if (stockSelected === 'Agotado') matchStock = camiseta.stock !== 'Disponible';
 
         let matchPromo = true;
-        if (promoSelected === 'En oferta') matchPromo = camiseta.year >= 2025;
+        if (promoSelected === 'En oferta') matchPromo = camiseta.year >= 2026;
 
         let matchYear = true;
         if (yearRange && yearRange.length === 2) {
@@ -168,7 +166,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
         const value = event.target.value;
         setOrder(value);
 
-        let sorted = [...camisetasFutbol];
+        let sorted = [...camisetas];
 
         if (value === 'new') {
             sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
@@ -178,31 +176,35 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
             sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
         }
 
-        setCamisetasFutbol(sorted);
+        setCamisetas(sorted);
     };
 
     useEffect(() => {
-        const fetchCamisetasFutbol = async () => {
+        const fetchCamisetas = async () => {
             try {
-                const futbolRes = await supabase
+                const { data, error } = await supabase
                     .from('futbol')
                     .select('name, img, team, category, year, index, price, stock, provider, deporte, type')
-                    .order('year', { ascending: false });
-                if (futbolRes.error) {
-                    console.error('Error en Futbol:', futbolRes.error);
+                    .ilike('name', '%World_Cup%')
+                    .gte('year', 2025)
+                    .range(0, 200)
+                    .order('team', { ascending: true });
+                if (error) {
+                    console.error('Error al cargar camisetas del Mundial 2026:', error);
                 } else {
-                    setCamisetasFutbol(futbolRes.data);
+                    console.log(data.length)
+                    setCamisetas(data);
                 }
             } catch (err) {
-                console.error('Error al cargar camisetas Futbol:', err);
+                console.error('Error al cargar camisetas del Mundial 2026:', err);
             } finally {
-                setTimeout(() => {
-                    setLoading(false);
-                }, 500);
+                setTimeout(() => setLoading(false), 500);
             }
         };
-        fetchCamisetasFutbol();
+
+        fetchCamisetas();
     }, []);
+
 
     useEffect(() => {
         const fetchTasa = async () => {
@@ -220,7 +222,6 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
     }, []);
 
     useEffect(() => {
-        // Reset to page 1 when filters change
         if (currentPage !== 1) {
             setSearchParams({ page: '1' });
         }
@@ -238,7 +239,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50">
             <SEO {...seoData} />
             <div className='relative'>
                 <AlertGlobal alert={alert} setAlert={setAlert} />
@@ -263,27 +264,29 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                 setYearRange={setYearRange}
                 categorySelected={categorySelected}
                 setCategorySelected={setCategorySelected}
-
             />
 
             {/* Hero Section */}
-            <div ref={topRef} className="bg-gradient-to-r from-green-600 via-blue-600 to-indigo-600 pt-24 pb-16 mt-20">
+            <div ref={topRef} className="bg-gradient-to-r from-yellow-600 via-orange-600 to-red-600 pt-24 pb-16 mt-20">
                 <div className="container mx-auto px-4">
                     <div className="text-center max-w-4xl mx-auto">
-                        <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
-                            <span className="text-5xl">⚽</span>
+                        <div className="w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm animate-bounce">
+                            <Trophy className="w-12 h-12 text-white" />
                         </div>
                         <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-                            Jerseys de Fútbol Originales
+                            🏆 Mundial 2026 🏆
                         </h1>
-                        <p className="text-xl md:text-2xl mb-8 text-blue-100">
-                            +{camisetasFiltradas.length} jerseys de los mejores equipos del mundo
+                        <p className="text-xl md:text-2xl mb-6 text-yellow-100">
+                            Edición Especial - Colección Exclusiva
+                        </p>
+                        <p className="text-lg md:text-xl mb-8 text-white/90">
+                            +{camisetasFiltradas.length} camisetas de las mejores selecciones del mundo
                         </p>
                         <div className="flex flex-wrap justify-center gap-4 text-sm">
                             {[
-                                "Calidad Premium",
-                                "Logos Bordados", 
-                                "Personalización",
+                                "Edición Mundial 2026",
+                                "Versiones Player & Fan",
+                                "Logos Oficiales", 
                                 "Envío Gratis 5+"
                             ].map((feature, index) => (
                                 <span key={index} className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2">
@@ -291,6 +294,16 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                                     {feature}
                                 </span>
                             ))}
+                        </div>
+                        
+                        {/* World Cup Info */}
+                        <div className="mt-8 bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+                            <div className="flex items-center justify-center gap-3 mb-4">
+                                <Globe className="w-6 h-6 text-white" />
+                                <h3 className="text-xl font-bold text-white">Mundial FIFA 2026</h3>
+                            </div>
+                            <p className="text-white/90 mb-2">🇺🇸 Estados Unidos • 🇨🇦 Canadá • 🇲🇽 México</p>
+                            <p className="text-sm text-white/80">11 de junio - 19 de julio, 2026</p>
                         </div>
                     </div>
                 </div>
@@ -302,7 +315,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 bg-white/95 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-white/20">
                     <button
                         onClick={() => setFilterVisible(true)}
-                        className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg"
+                        className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-600 to-orange-600 text-white rounded-xl font-semibold hover:from-yellow-700 hover:to-orange-700 transition-all duration-300 shadow-lg"
                     >
                         <FilterIcon className="w-5 h-5" />
                         Filtrar
@@ -313,7 +326,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                         <select
                             value={order}
                             onChange={handleOrderChange}
-                            className="flex-1 md:flex-initial px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                            className="flex-1 md:flex-initial px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all duration-300"
                         >
                             <option value="new">Más Nuevos</option>
                             <option value="lowCost">Precio: Menor</option>
@@ -323,7 +336,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
 
                     <div className="flex items-center gap-2 bg-gray-100 rounded-xl p-1">
                         <span className="px-3 py-2 bg-white rounded-lg shadow-sm">
-                            <Grid3x3 className="w-5 h-5 text-blue-600" />
+                            <Grid3x3 className="w-5 h-5 text-yellow-600" />
                         </span>
                     </div>
                 </div>
@@ -339,8 +352,16 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                         return (
                             <div
                                 key={index}
-                                className="group bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                                className="group bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 relative"
                             >
+                                {/* World Cup Badge */}
+                                <div className="absolute top-2 left-2 z-10">
+                                    <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-lg">
+                                        <Trophy className="w-3 h-3" />
+                                        MUNDIAL 2026
+                                    </div>
+                                </div>
+
                                 <Link to={`/futbol/${slug}`} className="block">
                                     <div className="relative h-[280px] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
                                         {imagenPrincipal && (
@@ -358,8 +379,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                                             />
                                         )}
                                         
-                                        {/* Stock Badge */}
-                                        <div className="absolute top-3 left-3">
+                                        <div className="absolute top-12 left-3">
                                             <div className={`px-3 py-1 rounded-full text-xs font-bold ${
                                                 camiseta.stock === 'Disponible' 
                                                     ? 'bg-green-500 text-white' 
@@ -369,7 +389,6 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                                             </div>
                                         </div>
 
-                                        {/* Wishlist Button */}
                                         <button
                                             onClick={(e) => {
                                                 e.preventDefault();
@@ -390,13 +409,13 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
 
                                 <div className="p-4">
                                     <Link to={`/futbol/${slug}`}>
-                                        <h3 className="font-bold text-gray-800 mb-2 line-clamp-2 hover:text-blue-600 transition-colors capitalize">
+                                        <h3 className="font-bold text-gray-800 mb-2 line-clamp-2 hover:text-yellow-600 transition-colors capitalize">
                                             {camiseta.team} {camiseta.year} {camiseta.category === 'manga_larga' ? 'Manga Larga' : camiseta.category} {camiseta.type} edition
                                         </h3>
                                     </Link>
 
                                     <div className="flex items-baseline gap-2 mb-3">
-                                        <p className="text-2xl font-bold text-blue-600">${camiseta.price}</p>
+                                        <p className="text-2xl font-bold text-yellow-600">${camiseta.price}</p>
                                         <span className="text-sm text-gray-500">USD</span>
                                     </div>
 
@@ -409,7 +428,6 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                                         </p>
                                     )}
 
-                                    {/* Size Selector */}
                                     <select
                                         value={selectedSizes[camiseta.name] || ''}
                                         onChange={(e) => {
@@ -419,7 +437,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                                             }));
                                         }}
                                         onClick={(e) => e.stopPropagation()}
-                                        className="w-full mb-2 px-3 py-2 rounded-xl border-2 border-gray-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                                        className="w-full mb-2 px-3 py-2 rounded-xl border-2 border-gray-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all duration-300"
                                     >
                                         <option value="">Seleccionar talla</option>
                                         <option value="S">S</option>
@@ -429,13 +447,12 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                                         <option value="XXL">XXL</option>
                                     </select>
 
-                                    {/* Add to Cart Button */}
                                     <button
                                         onClick={(e) => {
                                             e.preventDefault();
                                             addToCart(camiseta);
                                         }}
-                                        className="w-full h-10 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl"
+                                        className="w-full h-10 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl"
                                     >
                                         <ShoppingCart className="w-4 h-4" />
                                         Añadir
@@ -453,7 +470,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                             <button
                                 onClick={() => goToPage(currentPage - 1)}
                                 disabled={currentPage === 1}
-                                className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-blue-500 hover:text-blue-600 transition-all duration-300 shadow-lg"
+                                className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-yellow-500 hover:text-yellow-600 transition-all duration-300 shadow-lg"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
@@ -463,7 +480,6 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                                     const pageNumber = index + 1;
                                     const isCurrentPage = pageNumber === currentPage;
                                     
-                                    // Show first page, last page, current page, and pages around current
                                     if (
                                         pageNumber === 1 ||
                                         pageNumber === totalPages ||
@@ -475,8 +491,8 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                                                 onClick={() => goToPage(pageNumber)}
                                                 className={`w-10 h-10 rounded-xl font-semibold transition-all duration-300 ${
                                                     isCurrentPage
-                                                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-xl scale-110'
-                                                        : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-blue-500 hover:text-blue-600 shadow-lg'
+                                                        ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white shadow-xl scale-110'
+                                                        : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-yellow-500 hover:text-yellow-600 shadow-lg'
                                                 }`}
                                             >
                                                 {pageNumber}
@@ -495,7 +511,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                             <button
                                 onClick={() => goToPage(currentPage + 1)}
                                 disabled={currentPage === totalPages}
-                                className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-blue-500 hover:text-blue-600 transition-all duration-300 shadow-lg"
+                                className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:border-yellow-500 hover:text-yellow-600 transition-all duration-300 shadow-lg"
                             >
                                 <ChevronRight className="w-5 h-5" />
                             </button>
@@ -508,22 +524,22 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                 )}
 
                 {/* Info Section */}
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-3xl p-8 border border-green-200">
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-3xl p-8 border border-yellow-200">
                     <div className="grid md:grid-cols-2 gap-8">
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3">
-                                <TrendingUp className="w-6 h-6 text-green-600" />
-                                ¿Por qué elegir nuestros jerseys?
+                                <Trophy className="w-6 h-6 text-yellow-600" />
+                                Edición Especial Mundial 2026
                             </h2>
                             <ul className="space-y-3">
                                 {[
-                                    "Calidad Fan Premium certificada",
-                                    "Logos bordados de alta durabilidad",
-                                    "Personalización con nombre y número",
+                                    "Diseños oficiales del Mundial 2026",
+                                    "Versiones Player y Fan disponibles",
+                                    "Logos y escudos de alta calidad",
                                     "Envío gratis en pedidos de 5+ productos"
                                 ].map((item, index) => (
                                     <li key={index} className="flex items-start gap-3">
-                                        <BadgeCheck className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                        <BadgeCheck className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                                         <span className="text-gray-700">{item}</span>
                                     </li>
                                 ))}
@@ -531,14 +547,14 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                         </div>
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3">
-                                <Sparkles className="w-6 h-6 text-blue-600" />
-                                Equipos Disponibles
+                                <Globe className="w-6 h-6 text-orange-600" />
+                                Selecciones Disponibles
                             </h2>
                             <p className="text-gray-700 mb-4">
-                                Encuentra jerseys de clubes legendarios como Real Madrid, Barcelona, Manchester United, PSG, Liverpool, Bayern Munich y Juventus, así como de selecciones nacionales de todo el mundo.
+                                Encuentra las camisetas de las mejores selecciones: Italia, Portugal, Argentina, Brasil, España, Alemania, Francia y muchas más.
                             </p>
                             <p className="text-gray-700">
-                                Disponibles en versiones actuales y retro, de competiciones como La Liga, Premier League, Serie A, Bundesliga, Copa Libertadores, además de mundiales y diversas copas internacionales.
+                                Prepárate para el torneo más grande del mundo con las camisetas oficiales de las selecciones participantes.
                             </p>
                         </div>
                     </div>
@@ -550,4 +566,4 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
     );
 };
 
-export default Futbol;
+export default WorldCup2026;

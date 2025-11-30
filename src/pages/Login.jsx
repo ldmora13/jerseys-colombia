@@ -6,7 +6,7 @@ import Footer from "../components/Footer.jsx";
 
 import SEO from '../components/SEO';
 import {supabase} from "../lib/supabaseClient"
-import { ChevronDown, ChevronUp, Star, Shield, Truck, CreditCard, Award, Users, Globe, Package } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronRight, Star, Shield, Truck, CreditCard, Award, Users, Globe, Package, Trophy } from 'lucide-react';
 
 const Login = () => {
   
@@ -26,6 +26,7 @@ const Login = () => {
   const [camisetasNBA, setCamisetasNBA] = useState([])
   const [camisetasF1, setCamisetasF1] = useState([])
   const [totalProducts, setTotalProducts] = useState(0);
+  const [worldCupFeatured, setWorldCupFeatured] = useState([]);
 
   // Animation states
   const [hoveredIndexFutbol, setHoveredIndexFutbol] = useState(null);
@@ -103,7 +104,7 @@ const Login = () => {
   useEffect(() => {
     const fetchCamisetas = async () => {
       try {
-        const [futbolRes, nbaRes, f1Res] = await Promise.all([
+        const [futbolRes, nbaRes, f1Res, wcRes] = await Promise.all([
           supabase
             .from('futbol')
             .select('name, img, team, year, index, category')
@@ -120,7 +121,16 @@ const Login = () => {
             .from('f1')
             .select('name, img, team, year, index, driver, category')
             .order('year', { ascending: true })
-            .limit(3)
+            .limit(3),
+  
+          supabase
+            .from('futbol')
+            .select('name, img, team, category, year, index, price, type')
+            .ilike('name', '%World_Cup%')
+            .eq('team', 'Colombia') 
+            .gte('year', 2025)
+            .order('year', { ascending: false })
+            .limit(4)
         ]);
 
         // Get total count for stats
@@ -141,6 +151,9 @@ const Login = () => {
   
         if (f1Res.error) console.error('Error en F1:', f1Res.error)
         else setCamisetasF1(f1Res.data)
+  
+        if (wcRes.error) console.error('Error en Mundial 2026:', wcRes.error)
+        else setWorldCupFeatured(wcRes.data)
   
       } catch (err) {
         console.error('Error al cargar camisetas:', err)
@@ -230,11 +243,58 @@ const Login = () => {
 
               <button
                 onClick={handleScroll}
-                className="md:inline-flex hidden items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full font-semibold text-lg shadow-2xl transform hover:scale-105 hover:shadow-3xl transition-all duration-300 group"
+                className="md:inline-flex hidden mb-5 items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full font-semibold text-lg shadow-2xl transform hover:scale-105 hover:shadow-3xl transition-all duration-300 group"
               >
                 Explorar Colección
                 <ChevronDown className="w-5 h-5 group-hover:animate-bounce" />
               </button>
+            </div>
+          </div>
+        </section>
+
+        {/* WORLD CUP HIGHLIGHT */}
+        <section aria-labelledby="worldcup-heading" className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-10">
+              <div className="w-20 h-20 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Trophy className="w-10 h-10 text-white" />
+              </div>
+              <h2 id="worldcup-heading" className="text-4xl font-bold text-gray-900 mb-3">Mundial 2026</h2>
+              <p className="text-lg text-gray-700 max-w-2xl mx-auto">Descubre los nuevos diseños oficiales del Mundial 2026. Versiones Player y Fan, logos 3D y materiales premium.</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              {worldCupFeatured.slice(0,4).map((item, index) => {
+                const imagenes = item.img || [];
+                const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null;
+                const slug = generarSlug(item.name);
+                return (
+                  <figure key={index} className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transform transition-all duration-300 hover:scale-105">
+                    <Link to={`/futbol/${slug}`} className="block">
+                      <div className="relative h-90 bg-gradient-to-br from-gray-50 to-gray-100">
+                        {imagenPrincipal && (
+                          <img src={imagenPrincipal} alt={item.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                        )}
+                        <div className="absolute top-2 left-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow">2026</div>
+                      </div>
+                      <figcaption className="p-4">
+                        <div className="font-bold text-gray-800 line-clamp-2 capitalize">{item.team} Mundial {item.year} {item.category === 'manga_larga' ? 'Manga Larga' : item.category} {item.type}</div>
+                      </figcaption>
+                    </Link>
+                  </figure>
+                );
+              })}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/mundial" className="px-8 py-4 bg-gradient-to-r from-yellow-600 to-orange-600 text-white rounded-full font-semibold text-lg hover:from-yellow-700 hover:to-orange-700 transform hover:scale-105 transition-all duration-300 shadow-xl inline-flex items-center gap-2">
+                Ver colección
+                <ChevronRight className="w-5 h-5" />
+              </Link>
+              <Link to="/mundial" className="px-8 py-4 bg-white text-yellow-700 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-xl inline-flex items-center gap-2">
+                Descubre más
+                <ChevronRight className="w-5 h-5" />
+              </Link>
             </div>
           </div>
         </section>

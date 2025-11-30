@@ -56,7 +56,9 @@ function generateEmailHTML(data: EmailRequest): string {
         <table role="presentation" style="width: 100%; border-collapse: collapse;">
           <tr>
             <td style="width: 80px; vertical-align: top;">
-              ${item.img ? `<img src="${item.img}" alt="${item.name}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid #e0e0e0;">` : `<div style="width: 70px; height: 70px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span style="color: white; font-size: 24px; font-weight: bold;">${item.name.charAt(0)}</span></div>`}
+              <img src="${item.img[item.img.length - 1] }" 
+                  alt="${item.name}" 
+                  style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid #e0e0e0;" />
             </td>
             <td style="padding-left: 15px; vertical-align: top;">
               <p style="margin: 0 0 8px 0; color: #1a1a1a; font-size: 15px; font-weight: 600; line-height: 1.4;">${item.name}</p>

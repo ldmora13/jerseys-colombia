@@ -17,6 +17,9 @@ import Policies from './pages/Policies';
 import Futbol from './pages/Futbol';
 import NBA from './pages/NBA';
 import F1 from './pages/F1';
+import WorldCup2026 from './pages/WorldCup2026';
+
+
 import Product from './pages/Product';
 import SearchResults from './pages/SearchResults';
 import Checkout from './pages/Checkout';
@@ -55,6 +58,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/politicas" element={<Policies />} />
           <Route path='/futbol' element={<Futbol setCartVisible={setCartVisible} />} />
+          <Route path='/mundial' element={<WorldCup2026 setCartVisible={setCartVisible} />} />
           <Route path='/nba' element={<NBA setCartVisible={setCartVisible} />} />
           <Route path='/f1' element={<F1 setCartVisible={setCartVisible}  />} />
           <Route path='/:category/:name' element={<Product setCartVisible={setCartVisible} />} />

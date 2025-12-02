@@ -719,6 +719,7 @@ const Checkout = () => {
                                                                     <Package className="w-3 h-3" />
                                                                     Talla: {item.size}
                                                                 </p>
+                                                                <div className='flex flex-row gap-x-2'>
                                                                 {item.customName && (
                                                                     <p className="text-xs text-gray-600 flex items-center gap-1">
                                                                         <Gift className="w-3 h-3" />
@@ -728,6 +729,13 @@ const Checkout = () => {
                                                                 {item.customNumber && (
                                                                     <p className="text-xs text-gray-600">
                                                                         #{item.customNumber}
+                                                                    </p>
+                                                                )}
+                                                                </div>
+                                                                
+                                                                {item.competitionPatch && (
+                                                                    <p className="text-xs text-blue-600 flex items-center gap-1 font-medium">
+                                                                        🏆 {item.competitionPatch}
                                                                     </p>
                                                                 )}
                                                             </div>

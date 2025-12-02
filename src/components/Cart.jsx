@@ -278,6 +278,11 @@ const Cart = ({ cartVisible, setCartVisible }) => {
                                       {producto.customName} #{producto.customNumber}
                                     </p>
                                   )}
+                                  {producto.competitionPatch && (
+                                      <p className="text-xs text-blue-600 flex items-center gap-1 font-medium">
+                                          🏆 Parche: {producto.competitionPatch}
+                                      </p>
+                                  )}
                                 </div>
 
                                 <div className="flex items-center justify-between">

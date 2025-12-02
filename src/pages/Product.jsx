@@ -4,6 +4,9 @@ import { supabase } from '../lib/supabaseClient';
 import { useSEO } from '../hooks/useSEO';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+
+import { canHavePatches, getPatchesForTeam } from '../utils/competitionPatchesConfig';
+
 import { motion } from 'framer-motion';
 
 import Loader from '../components/Loader';
@@ -26,6 +29,7 @@ import {
     Check,
     Gift,
     MessageCircle,
+    Trophy
 } from 'lucide-react';
 
 const generarSlugDesdeNombre = (name) => {
@@ -56,6 +60,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
     const [selectedSize, setSelectedSize] = useState(null);
     const [customName, setCustomName] = useState('');
     const [customNumber, setCustomNumber] = useState('');
+    const [competitionPatch, setCompetitionPatch] = useState('');
     
     const [imagenPrincipal, setImagenPrincipal] = useState('');
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -85,24 +90,36 @@ const Product = ({ cartVisible, setCartVisible }) => {
         setLoading(true);
         let table = category.toLowerCase();
         
-        const { data, error } = await supabase.from(table).select('*');
+        const { data, error } = await supabase
+          .from(table)
+          .select('*')
+          .range(0, 5000);
         if (error) {
-            console.error('Error al buscar el producto:', error);
-            setProducto(null);
+          console.error('Error al buscar el producto:', error);
+          setProducto(null);
         } else {
-            const encontrado = data.find((p) => {
-                const slugDelNombre = generarSlugDesdeNombre(p.name);
-                return slugDelNombre === name;
-            });
-            
-            if (encontrado) {
-                let sportIdentifier = encontrado.deporte || encontrado.category;
-                setProducto({ ...encontrado, sport: sportIdentifier.toLowerCase() });
-            } else {
-                setProducto(null);
+          const slugTarget = name;
+          let encontrado = data.find((p) => generarSlugDesdeNombre(p.name) === slugTarget);
+          if (!encontrado) {
+            const pattern = '%' + slugTarget.split('').join('%') + '%';
+            const { data: altData, error: altError } = await supabase
+              .from(table)
+              .select('*')
+              .ilike('name', pattern)
+              .range(0, 500);
+            if (!altError && altData && altData.length) {
+              encontrado = altData.find((p) => generarSlugDesdeNombre(p.name) === slugTarget) || null;
             }
           }
-          setTimeout(() => { setLoading(false); }, 500);
+          if (encontrado) {
+            let sportIdentifier = encontrado.deporte || encontrado.category;
+            setProducto({ ...encontrado, sport: (sportIdentifier || '').toLowerCase() });
+          } else {
+            console.warn('Producto no encontrado por slug:', slugTarget, 'en tabla', table);
+            setProducto(null);
+          }
+        }
+        setTimeout(() => { setLoading(false); }, 500);
       };
       fetchProducto();
     }, [category, name]);
@@ -132,14 +149,15 @@ const Product = ({ cartVisible, setCartVisible }) => {
                 item.name === product.name && 
                 item.size === selectedSize && 
                 (item.customName || '') === customName && 
-                (item.customNumber || '') === customNumber
+                (item.customNumber || '') === customNumber &&
+                (item.competitionPatch || '') === competitionPatch
             );
             if (index !== -1) {
                 const updatedCart = [...prevCart];
                 updatedCart[index].quantity += 1;
                 return updatedCart;
             } else {
-                return [...prevCart, { ...product, quantity: 1, size: selectedSize, customName, customNumber }];
+                return [...prevCart, { ...product, quantity: 1, size: selectedSize, customName, customNumber, competitionPatch}];
             }
         });
         let message = `${product.name} talla (${selectedSize}) añadido al carrito.`;
@@ -180,7 +198,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
             setAlert({ show: true, message: "Selecciona una talla antes de ir al pago", severity: "error", title: "Talla no seleccionada" });
             return;
         }
-        const itemForCheckout = { ...product, quantity: 1, size: selectedSize, customName, customNumber };
+        const itemForCheckout = { ...product, quantity: 1, size: selectedSize, customName, customNumber, competitionPatch };
         navigate('/checkout', { state: { items: [itemForCheckout] } });
     };
 
@@ -380,13 +398,30 @@ const Product = ({ cartVisible, setCartVisible }) => {
                             {/* Price */}
                             <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 md:p-6 mb-6 border border-green-200 w-full">
                                 <div className="flex items-baseline gap-3 mb-2 flex-wrap">
-                                    <span className="text-3xl md:text-4xl font-bold text-gray-900">${producto.price}</span>
+                                    <span className="text-3xl md:text-4xl font-bold text-gray-900">
+                                        ${(producto.price + 
+                                        ((customName || customNumber) ? 5 : 0) + 
+                                        (competitionPatch ? 3 : 0)
+                                        ).toFixed(2)}
+                                    </span>
                                     <span className="text-lg md:text-xl text-gray-600">USD</span>
                                 </div>
                                 {tasaCOP && (
                                     <p className="text-sm md:text-base text-gray-600 break-words">
-                                        {(producto.price * tasaCOP).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })} COP
+                                        {((producto.price + 
+                                        ((customName || customNumber) ? 5 : 0) + 
+                                        (competitionPatch ? 3 : 0)
+                                        ) * tasaCOP).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })} COP
                                     </p>
+                                )}
+                                {((customName || customNumber) || competitionPatch) && (
+                                    <div className="mt-3 pt-3 border-t border-green-300">
+                                        <p className="text-xs text-gray-600 space-y-1">
+                                            <span className="block">Precio base: ${producto.price.toFixed(2)}</span>
+                                            {(customName || customNumber) && <span className="block">+ Personalización: $5.00</span>}
+                                            {competitionPatch && <span className="block">+ Parche {competitionPatch}: $3.00</span>}
+                                        </p>
+                                    </div>
                                 )}
                             </div>
 
@@ -451,7 +486,56 @@ const Product = ({ cartVisible, setCartVisible }) => {
                                     </div>
                                 </div>
                             )}
-
+                            {canHavePatches(producto) && (
+                                <div className="mb-6 p-4 md:p-6 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl border border-yellow-200 w-full">
+                                    <h3 className="font-bold text-base md:text-lg mb-4 flex flex-wrap items-center gap-2">
+                                        <Shield className="w-5 h-5 text-yellow-600 flex-shrink-0" />
+                                        <span>Parche de Competición</span>
+                                        <span className="text-xs md:text-sm text-yellow-600">+3 USD</span>
+                                    </h3>
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-3 p-3 bg-white rounded-xl border-2 border-yellow-200 cursor-pointer hover:border-yellow-400 transition-all duration-300"
+                                            onClick={() => setCompetitionPatch('')}>
+                                            <input
+                                                type="radio"
+                                                id="no-patch"
+                                                name="competition-patch"
+                                                checked={competitionPatch === ''}
+                                                onChange={() => setCompetitionPatch('')}
+                                                className="w-5 h-5 text-yellow-600 focus:ring-yellow-500"
+                                            />
+                                            <label htmlFor="no-patch" className="flex-1 cursor-pointer font-medium text-gray-700">
+                                                Sin parche
+                                            </label>
+                                        </div>
+                                        {getPatchesForTeam(producto.team)?.map((patch) => (
+                                            <div 
+                                                key={patch}
+                                                className="flex items-center gap-3 p-3 bg-white rounded-xl border-2 border-yellow-200 cursor-pointer hover:border-yellow-400 transition-all duration-300"
+                                                onClick={() => setCompetitionPatch(patch)}>
+                                                <input
+                                                    type="radio"
+                                                    id={`patch-${patch}`}
+                                                    name="competition-patch"
+                                                    value={patch}
+                                                    checked={competitionPatch === patch}
+                                                    onChange={(e) => setCompetitionPatch(e.target.value)}
+                                                    className="w-5 h-5 text-yellow-600 focus:ring-yellow-500"
+                                                />
+                                                <label htmlFor={`patch-${patch}`} className="flex-1 cursor-pointer font-medium text-gray-700">
+                                                    {patch}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="mt-4 p-3 bg-yellow-100 rounded-lg">
+                                        <p className="text-xs text-yellow-800 flex items-start gap-2">
+                                            <MessageCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                            <span>El parche se bordará en la manga de la camiseta siguiendo los estándares oficiales.</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
                             {/* Action Buttons */}
                             <div className="space-y-3 w-full">
                                 <button

@@ -25,9 +25,9 @@ import {
 
 const WorldCup2026 = ({ cartVisible, setCartVisible }) => {
     const seoData = {
-        title: 'Camisetas Mundial 2026 - Edición Especial',
-        description: 'Compra las camisetas oficiales del Mundial 2026. Italia, Portugal, Argentina, Brasil y más selecciones. Ediciones Player y Fan con envío gratis en Colombia.',
-        keywords: 'camisetas mundial 2026, world cup 2026, camisetas selecciones, italia 2026, portugal 2026, argentina 2026, brasil 2026, jerseys mundial, camisetas futbol mundial',
+        title: 'Camisetas Mundial 2026',
+        description: 'Compra las camisetas oficiales del Mundial 2026. Colombia, Italia, Portugal, Argentina, Brasil y más selecciones. Ediciones Player y Fan con envío gratis en Colombia.',
+        keywords: 'camisetas mundial 2026, world cup 2026, camisetas selecciones, italia 2026, portugal 2026, argentina 2026, brasil 2026, jerseys mundial, camisetas futbol mundial, camiseta mundial 2026 colombia',
         url: `${window.location.origin}/mundial-2026`,
         type: 'website'
     };
@@ -68,7 +68,6 @@ const WorldCup2026 = ({ cartVisible, setCartVisible }) => {
         'Fan': 'fan',
         'Player': 'player',
         'Women': 'women',
-        'Windbreaker': 'windbreaker'
     };
 
     const camisetasFiltradas = camisetas.filter((camiseta) => {

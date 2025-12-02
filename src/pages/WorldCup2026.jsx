@@ -197,7 +197,7 @@ const WorldCup2026 = ({ cartVisible, setCartVisible }) => {
             } catch (err) {
                 console.error('Error al cargar camisetas del Mundial 2026:', err);
             } finally {
-                setTimeout(() => setLoading(false), 500);
+                setTimeout(() => setLoading(false), 1500);
             }
         };
 
@@ -245,7 +245,7 @@ const WorldCup2026 = ({ cartVisible, setCartVisible }) => {
             </div>
 
             {loading && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 bg-opacity-90 z-[2000]">
+                <div className="fixed inset-0 flex items-center justify-center bg-white z-[2000]">
                     <Loader />
                 </div>
             )}

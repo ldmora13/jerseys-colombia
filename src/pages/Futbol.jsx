@@ -198,7 +198,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
             } finally {
                 setTimeout(() => {
                     setLoading(false);
-                }, 500);
+                }, 1500);
             }
         };
         fetchCamisetasFutbol();
@@ -245,7 +245,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
             </div>
 
             {loading && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 bg-opacity-90 z-[2000]">
+                <div className="fixed inset-0 flex items-center justify-center bg-white z-[2000]">
                     <Loader />
                 </div>
             )}

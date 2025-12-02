@@ -160,7 +160,7 @@ const Login = () => {
       } finally {
         setTimeout(() => {
           setLoading(false)
-        }, 1500)
+        }, 1000)
       }
     }
   
@@ -202,7 +202,7 @@ const Login = () => {
       
       {/* LOADER */}
       {loading && (
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 fixed inset-0 flex items-center justify-center bg-opacity-90 z-[2000]">
+        <div className="bg-white fixed inset-0 flex items-center justify-center bg-opacity-90 z-[2000]">
           <Loader />
         </div>
       )}

@@ -127,38 +127,6 @@ const SizeRules = ({
               </div>
             ))}
           </div>
-
-          {/* Tabla NBA Silk */}
-          <div>
-            <h2 className="text-base font-bold mb-2 text-center">
-              NBA (Hombres)
-            </h2>
-            <div className="grid grid-cols-5 text-center font-semibold bg-gray-200 rounded-t-xl text-xs">
-              <div className="p-1">Talla</div>
-              <div className="p-1">Largo</div>
-              <div className="p-1">Pecho</div>
-              <div className="p-1">Hombros</div>
-              <div className="p-1">Altura</div>
-            </div>
-            {[
-              ["S", "70", "98", "35", "160-170cm"],
-              ["M", "72", "106", "37", "168-175cm"],
-              ["L", "75", "112", "39", "172-180cm"],
-              ["XL", "77", "120", "41", "178-185cm"],
-              ["XXL", "80", "130", "44", "183-200cm"],
-            ].map((row, idx) => (
-              <div
-                key={idx}
-                className="grid grid-cols-5 text-center border-b border-gray-300 text-xs"
-              >
-                {row.map((cell, i) => (
-                  <div key={i} className="p-1">
-                    {cell}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

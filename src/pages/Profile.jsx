@@ -496,11 +496,11 @@ const Profile = () => {
                                 <Heart className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                                 <h3 className="text-2xl font-bold text-gray-800 mb-2">Lista de Deseos</h3>
                                 <p className="text-gray-600">Guarda tus productos favoritos para más tarde</p>
-                                <button
+                                    <button
                                     onClick={() => setWishlistVisible(true)}
                                     className="mt-6 px-8 py-3 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-2xl font-semibold hover:from-pink-600 hover:to-rose-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
                                 >
-                                    Descubrir Jerseys
+                                    Descubrir Camisetas
                                 </button>
                             </div>
                         </div>

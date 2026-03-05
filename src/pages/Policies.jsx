@@ -369,7 +369,7 @@ const Policies= () => {
           </div>
           <div>
             <h2 className="text-3xl font-bold text-gray-800">Envíos y Entregas</h2>
-            <p className="text-purple-600 font-medium">Llevamos tus jerseys favoritos hasta tu puerta</p>
+            <p className="text-purple-600 font-medium">Llevamos tus camisetas favoritas de la Selección hasta tu puerta</p>
           </div>
         </div>
 

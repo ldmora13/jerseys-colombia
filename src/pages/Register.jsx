@@ -181,7 +181,7 @@ const Register = () => {
                     </h1>
                     
                     <p className="text-xl text-gray-600 mb-8">
-                        Descubre los mejores jerseys deportivos con calidad premium y personalización exclusiva
+                        Descubre las mejores camisetas de la Selección Colombia con calidad premium y personalización exclusiva
                     </p>
 
                     <div className="space-y-4">

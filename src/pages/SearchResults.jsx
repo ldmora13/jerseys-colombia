@@ -54,33 +54,20 @@ const SearchResults = () => {
       setError(null);
 
       try {
-        const safeQuery = query.replace(/[%_]/g, ""); 
-        const f1Query = supabase
-          .from("f1")
-          .select("*")
-          .or(`name.ilike.%${safeQuery}%,team.ilike.%${safeQuery}%,driver.ilike.%${safeQuery}%`);
-
-        const nbaQuery = supabase
-          .from("nba")
-          .select("*")
-          .or(`name.ilike.%${safeQuery}%,team.ilike.%${safeQuery}%,player.ilike.%${safeQuery}%`);
+        const safeQuery = query.replace(/[%_]/g, "");
 
         const futbolQuery = supabase
           .from("futbol")
           .select("*")
           .or(`name.ilike.%${safeQuery}%,team.ilike.%${safeQuery}%`);
 
-        const [f1Res, nbaRes, futbolRes] = await Promise.all([f1Query, nbaQuery, futbolQuery]);
+        const [futbolRes] = await Promise.all([futbolQuery]);
 
-        if (f1Res.error) throw f1Res.error;
-        if (nbaRes.error) throw nbaRes.error;
         if (futbolRes.error) throw futbolRes.error;
         
-        const f1Data = f1Res.data.map(item => ({ ...item, page: 'F1' }));
-        const nbaData = nbaRes.data.map(item => ({ ...item, page: 'NBA' }));
         const futbolData = futbolRes.data.map(item => ({ ...item, page: 'futbol' }));
 
-        let allResults = [...f1Data, ...nbaData, ...futbolData];
+        let allResults = [...futbolData];
         
         // Apply sorting
         if (sortBy === 'price-low') {
@@ -236,8 +223,6 @@ const SearchResults = () => {
                       </Link>
                       <div className="p-4">
                         <p className='font-bold text-gray-800 mb-2 line-clamp-2'>
-                          {item.page === 'F1' && `${item.type || ''} de ${item.team || ''} ${item.year || ''}`}
-                          {item.page === 'NBA' && `${item.category || ''} ${item.player || ''} ${item.team || ''} ${item.year || ''}`}
                           {item.page === 'futbol' && `${item.team || ''} ${item.year || ''} ${item.category || ''}`}
                         </p>
                         <div className="flex items-center justify-between">
@@ -269,8 +254,6 @@ const SearchResults = () => {
                             {item.page}
                           </div>
                           <h3 className='font-bold text-xl text-gray-800 mb-2'>
-                            {item.page === 'F1' && `${item.type || ''} de ${item.team || ''} ${item.year || ''}`}
-                            {item.page === 'NBA' && `${item.category || ''} ${item.player || ''} ${item.team || ''} ${item.year || ''}`}
                             {item.page === 'futbol' && `${item.team || ''} ${item.year || ''} ${item.category || ''}`}
                           </h3>
                         </div>
@@ -303,18 +286,6 @@ const SearchResults = () => {
                       className="flex-1 h-12 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-2xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg"
                     >
                       Fútbol
-                    </button>
-                    <button
-                      onClick={() => navigate('/nba')}
-                      className="flex-1 h-12 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-2xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg"
-                    >
-                      NBA
-                    </button>
-                    <button
-                      onClick={() => navigate('/f1')}
-                      className="flex-1 h-12 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-2xl font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg"
-                    >
-                      F1
                     </button>
                   </div>
                 </div>

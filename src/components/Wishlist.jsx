@@ -48,22 +48,6 @@ const Wishlist = () => {
                 try {
                     let allProducts = [];
 
-                    const { data: f1Data, error: f1Error } = await supabase
-                        .from('f1')
-                        .select('name, price, team, year, img, category, deporte')
-                        .in('name', wishlistItems);
-                    
-                    if (f1Error) console.error("Error buscando en F1:", f1Error);
-                    if (f1Data) allProducts.push(...f1Data.map(p => ({ ...p, sport_path: 'f1' })));
-
-                    const { data: nbaData, error: nbaError } = await supabase
-                        .from('nba')
-                        .select('name, price, team, year, img, deporte')
-                        .in('name', wishlistItems);
-
-                    if (nbaError) console.error("Error buscando en NBA:", nbaError);
-                    if (nbaData) allProducts.push(...nbaData.map(p => ({ ...p, sport_path: p.deporte })));
-
                     const { data: futbolData, error: futbolError } = await supabase
                         .from('futbol')
                         .select('name, price, team, year, img, deporte')
@@ -175,7 +159,6 @@ const Wishlist = () => {
                             ) : products.length > 0 ? (
                                 <div className="space-y-3">
                                     {products.map((product) => {
-                                        const link = product.deporte === 'f1' ? product.category.toLowerCase() : product.deporte.toLowerCase();
                                         const nombre = product.deporte === 'futbol' ? product.team + ' ' + product.year : product.name;
                                         
                                         return (

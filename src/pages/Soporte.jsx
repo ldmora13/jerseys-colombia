@@ -50,11 +50,11 @@ const Soporte = () => {
             },
             {
                 question: '¿Los productos son originales?',
-                answer: 'Sí, todos nuestros jerseys son de calidad Fan Premium con licencia oficial. Incluyen logos bordados y materiales de alta calidad.'
+                answer: 'Sí, todas nuestras camisetas son de calidad Fan Premium con licencia oficial. Incluyen logos bordados y materiales de alta calidad.'
             },
             {
                 question: '¿Puedo personalizar mi jersey?',
-                answer: 'Sí, para jerseys de fútbol puedes agregar nombre y número por $5 USD adicionales. La personalización se hace con tecnología de termoestampado de alta calidad.'
+                answer: 'Sí, para las camisetas de la Selección Colombia puedes agregar nombre y número por $5 USD adicionales. La personalización se hace con tecnología de termoestampado de alta calidad.'
             }
         ],
         orders: [

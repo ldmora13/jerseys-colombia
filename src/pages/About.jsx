@@ -25,7 +25,7 @@ const About = () => {
 
     const seoData = {
         title: 'Sobre Nosotros - Jerseys Colombia',
-        description: 'Conoce la historia de Jerseys Colombia, tu tienda de confianza para jerseys deportivos de fútbol, NBA y F1. Calidad premium, envío gratis y pasión por el deporte.',
+        description: 'Conoce la historia de Jerseys Colombia, tu tienda de confianza para las camisetas más miticas de la Selección Colombia',
         keywords: 'sobre nosotros, jerseys colombia, historia, equipo, misión, visión',
         url: `${window.location.origin}/about`
     };
@@ -73,7 +73,7 @@ const About = () => {
         {
             year: "2025",
             title: "Expansión de Catálogo",
-            description: "Incorporamos jerseys de NBA y Fórmula 1, convirtiéndonos en la tienda más completa de Colombia en deportes."
+            description: "Incorporamos jerseys todos los tiempos, convirtiéndonos en la tienda más completa de camisetas de la Selección Colombia"
         },
         {
             year: "2026",
@@ -86,7 +86,7 @@ const About = () => {
         {
             name: "Luis David Mora",
             role: "Fundador & CEO",
-            description: "Apasionado de los deportes con más de 5 años de experiencia en el desarrollo web, e-commerce y atención al usuario",
+            description: "Apasionado de los deportes con más de 5 años de experiencia en el desarrollo web / e-commerce ",
             gradient: "from-blue-500 to-indigo-600"
         }
     ];
@@ -115,8 +115,8 @@ const About = () => {
                         </div>
                         <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">Sobre Nosotros</h1>
                         <p className="text-xl md:text-2xl text-blue-100 leading-relaxed">
-                            Somos más que una tienda de jerseys. Somos una comunidad de fanáticos apasionados 
-                            que viven y respiran el deporte cada día.
+                            Somos más que una tienda de camisetas. Somos una comunidad de fanáticos apasionados 
+                            que viven y respiran los colores de la Selección cada día.
                         </p>
                     </motion.div>
                 </div>
@@ -157,8 +157,8 @@ const About = () => {
                                 que no encontraban jerseys de calidad a precios justos en Colombia.
                             </p>
                             <p>
-                                Comenzamos con una pequeña selección de jerseys de fútbol, pero rápidamente nos dimos 
-                                cuenta de que había una demanda enorme de productos deportivos auténticos en el país.
+                                Comenzamos con una pequeña selección de camisetas de la Selección Colombia, pero rápidamente nos dimos 
+                                    cuenta de que había una demanda enorme de piezas históricas y réplicas de alta calidad en el país.
                             </p>
                         </div>
                     </div>
@@ -172,9 +172,8 @@ const About = () => {
                         </div>
                         <div className="space-y-4 text-gray-700 leading-relaxed">
                             <p>
-                                Democratizar el acceso a jerseys deportivos de calidad premium en Colombia y 
-                                Latinoamérica, permitiendo que cada fanático pueda llevar los colores de su 
-                                equipo o ídolo favorito con orgullo.
+                                Democratizar el acceso a las camisetas de la Selección Colombia de calidad premium en Colombia y 
+                                Latinoamérica, permitiendo que cada fanático pueda llevar los colores de la Selección con orgullo.
                             </p>
                             <p>
                                 Nos comprometemos a ofrecer productos auténticos, precios justos, envío confiable 

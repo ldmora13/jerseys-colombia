@@ -27,9 +27,9 @@ import {
 const Futbol = ({ cartVisible, setCartVisible }) => {
 
     const seoData = {
-        title: 'Jerseys de Fútbol - Equipos Internacionales',
-        description: 'Compra jerseys de fútbol de los mejores equipos del mundo. Real Madrid, Barcelona, PSG, Manchester United y más. Calidad Fan con envío gratis en Colombia. Personalización disponible.',
-        keywords: 'jerseys futbol, camisetas retro, jerseys retro, camisetas de futbol colombia, camisetas futbol, real madrid, barcelona, psg, manchester united, jerseys colombia, futbol, camisetas personalizadas de futbol, envio gratis, camisetas retro futbol, camisetas de futbol baratas',
+        title: 'Camisetas de la Selección Colombia - Retro, Actual y Histórica',
+        description: 'Compra camisetas oficiales de la Selección Colombia: ediciones retro, actuales, míticas e históricas. Calidad premium, personalización disponible y envío a toda Colombia.',
+        keywords: 'camisetas seleccion colombia, camiseta colombia retro, camiseta colombia historica, camiseta seleccion colombia, camisetas colombia tienda, camiseta colombia oficial',
         url: `${window.location.origin}/futbol`,
         type: 'website'
     };
@@ -182,11 +182,13 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
     };
 
     useEffect(() => {
+        const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+        const BUCKET = "camisetas";
         const fetchCamisetasFutbol = async () => {
             try {
                 const futbolRes = await supabase
                     .from('futbol')
-                    .select('name, img, team, category, year, index, price, stock, provider, deporte, type')
+                    .select('name, images, team, category, year, index, price, stock_status, provider, deporte, type')
                     .order('year', { ascending: false });
                 if (futbolRes.error) {
                     console.error('Error en Futbol:', futbolRes.error);
@@ -274,10 +276,10 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                             <span className="text-5xl">⚽</span>
                         </div>
                         <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-                            Jerseys de Fútbol Originales
+                            Jerseys de la Selección Colombia
                         </h1>
                         <p className="text-xl md:text-2xl mb-8 text-blue-100">
-                            +{camisetasFiltradas.length} jerseys de los mejores equipos del mundo
+                            +{camisetasFiltradas.length} camisetas oficiales de la Selección Colombia: retro, actuales y especiales
                         </p>
                         <div className="flex flex-wrap justify-center gap-4 text-sm">
                             {[
@@ -332,9 +334,19 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-12">
                     {camisetasPagina.map((camiseta, index) => {
                         const slug = generarSlug(camiseta.name);
-                        const imagenes = camiseta.img || [];
-                        const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null;
-                        const imagenSecundaria = imagenes.length > 1 ? imagenes[imagenes.length - 2] : null;
+                        const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+                        const BUCKET = "camisetas";
+
+                        const buildImageUrl = (path) =>
+                        `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+
+                        const imagenPrincipal = camiseta.images?.[camiseta.images.length - 1]
+                        ? buildImageUrl(camiseta.images[camiseta.images.length - 1])
+                        : null;
+
+                        const imagenSecundaria = camiseta.images?.[camiseta.images.length - 2]
+                        ? buildImageUrl(camiseta.images[camiseta.images.length - 2])
+                        : null;
 
                         return (
                             <div
@@ -513,7 +525,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3">
                                 <TrendingUp className="w-6 h-6 text-green-600" />
-                                ¿Por qué elegir nuestros jerseys?
+                                ¿Por qué elegir nuestras camisetas?
                             </h2>
                             <ul className="space-y-3">
                                 {[
@@ -532,13 +544,13 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                         <div>
                             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3">
                                 <Sparkles className="w-6 h-6 text-blue-600" />
-                                Equipos Disponibles
+                                Colección Selección Colombia
                             </h2>
                             <p className="text-gray-700 mb-4">
-                                Encuentra jerseys de clubes legendarios como Real Madrid, Barcelona, Manchester United, PSG, Liverpool, Bayern Munich y Juventus, así como de selecciones nacionales de todo el mundo.
+                                Descubre camisetas icónicas de la Selección Colombia: ediciones históricas, retro, local, visitante y conmemorativas que marcaron generaciones.
                             </p>
                             <p className="text-gray-700">
-                                Disponibles en versiones actuales y retro, de competiciones como La Liga, Premier League, Serie A, Bundesliga, Copa Libertadores, además de mundiales y diversas copas internacionales.
+                                Disponibles en versiones originales y recreaciones premium, desde las décadas clásicas hasta los lanzamientos más recientes.
                             </p>
                         </div>
                     </div>

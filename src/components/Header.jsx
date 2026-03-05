@@ -207,48 +207,6 @@ const Header = ({setCartVisible}) => {
                     </a>
                 </div>
 
-                {/* Navigation - Desktop */}
-                <nav className="hidden md:flex items-center">
-                    <ul className="flex items-center gap-8">
-                        <li>
-                            <a 
-                                onClick={() => navigate("/futbol")} 
-                                className="cursor-pointer relative group font-semibold text-gray-700 hover:text-blue-600 transition-all duration-300"
-                            >
-                                <span className="relative z-10 flex items-center gap-2 px-4 py-2">
-                                    ⚽ Fútbol
-                                </span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg opacity-0 group-hover:opacity-10 transform scale-0 group-hover:scale-100 transition-all duration-300"></div>
-                                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-400 to-blue-500 group-hover:w-full transition-all duration-300"></div>
-                            </a>
-                        </li>
-                        <li>
-                            <a 
-                                onClick={() => navigate("/nba")}
-                                className="cursor-pointer relative group font-semibold text-gray-700 hover:text-orange-600 transition-all duration-300"
-                            >
-                                <span className="relative z-10 flex items-center gap-2 px-4 py-2">
-                                    🏀 NBA
-                                </span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-red-500 rounded-lg opacity-0 group-hover:opacity-10 transform scale-0 group-hover:scale-100 transition-all duration-300"></div>
-                                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-400 to-red-500 group-hover:w-full transition-all duration-300"></div>
-                            </a>
-                        </li>
-                        <li>
-                            <a 
-                                onClick={() => navigate("/f1")}
-                                className="cursor-pointer relative group font-semibold text-gray-700 hover:text-purple-600 transition-all duration-300"
-                            >
-                                <span className="relative z-10 flex items-center gap-2 px-4 py-2">
-                                    🏎️ Fórmula 1
-                                </span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-lg opacity-0 group-hover:opacity-10 transform scale-0 group-hover:scale-100 transition-all duration-300"></div>
-                                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-400 to-indigo-500 group-hover:w-full transition-all duration-300"></div>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-
                 {/* Search bar - Desktop */}
                 <div className="hidden md:flex items-center">
                     <form onSubmit={handleQuery} className="relative group">
@@ -256,7 +214,7 @@ const Header = ({setCartVisible}) => {
                             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 transition-colors duration-300 w-5 h-5" />
                             <input
                                 type='text'
-                                placeholder="Buscar tu jersey"
+                                placeholder="Buscar tu camiseta"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 className="w-[320px] h-[48px] pl-12 pr-4 rounded-2xl bg-gray-50 border border-gray-200 font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-300 hover:shadow-lg"
@@ -354,44 +312,13 @@ const Header = ({setCartVisible}) => {
                                     <X className="w-6 h-6 text-gray-600" />
                                 </button>
 
-                                {/* Navigation Links */}
-                                <div className="space-y-4">
-                                    <a 
-                                        onClick={() => {navigate("/futbol"); setMenuOpen(false)}}
-                                        className="flex items-center gap-4 p-4 rounded-2xl bg-white/70 hover:bg-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
-                                    >
-                                        <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-xl flex items-center justify-center text-white text-xl">
-                                            ⚽
-                                        </div>
-                                        <span className="font-semibold text-gray-800">Fútbol</span>
-                                    </a>
-                                    <a 
-                                        onClick={() => {navigate("/nba"); setMenuOpen(false)}}
-                                        className="flex items-center gap-4 p-4 rounded-2xl bg-white/70 hover:bg-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
-                                    >
-                                        <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-xl flex items-center justify-center text-white text-xl">
-                                            🏀
-                                        </div>
-                                        <span className="font-semibold text-gray-800">NBA</span>
-                                    </a>
-                                    <a 
-                                        onClick={() => {navigate("/f1"); setMenuOpen(false)}}
-                                        className="flex items-center gap-4 p-4 rounded-2xl bg-white/70 hover:bg-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
-                                    >
-                                        <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center text-white text-xl">
-                                            🏎️
-                                        </div>
-                                        <span className="font-semibold text-gray-800">Fórmula 1</span>
-                                    </a>
-                                </div>
-
                                 {/* Search */}
                                 <form onSubmit={(e) => {handleQuery(e); setMenuOpen(false)}} className="space-y-4">
                                     <div className="relative">
                                         <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                                         <input
                                             type="text"
-                                            placeholder="Buscar jerseys..."
+                                            placeholder="Buscar camisetas..."
                                             value={query}
                                             onChange={(e) => setQuery(e.target.value)}
                                             className="w-full h-14 pl-12 pr-4 rounded-2xl bg-white/70 border border-gray-200 font-medium text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"

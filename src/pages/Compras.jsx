@@ -36,9 +36,6 @@ const Compras = () => {
     const getProductPath = (productDetails) => {
         const sport = productDetails?.sport?.toLowerCase();
         const category = productDetails?.category?.toLowerCase();
-        
-        if (sport === 'f1') return 'f1';
-        if (sport === 'nba') return 'nba';
         return 'futbol';
     };
 

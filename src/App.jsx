@@ -15,9 +15,6 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import Policies from './pages/Policies';
 import Futbol from './pages/Futbol';
-import NBA from './pages/NBA';
-import F1 from './pages/F1';
-import WorldCup2026 from './pages/WorldCup2026';
 
 
 import Product from './pages/Product';
@@ -58,9 +55,6 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/politicas" element={<Policies />} />
           <Route path='/futbol' element={<Futbol setCartVisible={setCartVisible} />} />
-          <Route path='/mundial' element={<WorldCup2026 setCartVisible={setCartVisible} />} />
-          <Route path='/nba' element={<NBA setCartVisible={setCartVisible} />} />
-          <Route path='/f1' element={<F1 setCartVisible={setCartVisible}  />} />
           <Route path='/:category/:name' element={<Product setCartVisible={setCartVisible} />} />
           <Route path="/searchs/:query" element={<SearchResults />} />
           <Route path="/checkout" element={<Checkout />} />

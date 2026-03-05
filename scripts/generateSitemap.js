@@ -33,23 +33,17 @@ async function getAllProducts() {
   try {
     console.log('🔌 Conectando a Supabase...');
     
-    const [futbolRes, nbaRes, f1Res] = await Promise.all([
-      supabase.from('futbol').select('name, team, year, category, index, price, img'),
-      supabase.from('nba').select('name, team, year, category, index, price, img'),
-      supabase.from('f1').select('name, team, year, type, category, index, price, img')
+    const [futbolRes] = await Promise.all([
+      supabase.from('futbol').select('name, team, year, category, index, price, img')
     ]);
 
     console.log('📊 Respuestas de la base de datos:');
     console.log('⚽ Fútbol:', futbolRes.error ? `❌ ${futbolRes.error.message}` : `✅ ${futbolRes.data?.length} productos`);
-    console.log('🏀 NBA:', nbaRes.error ? `❌ ${nbaRes.error.message}` : `✅ ${nbaRes.data?.length} productos`);
-    console.log('🏎️ F1:', f1Res.error ? `❌ ${f1Res.error.message}` : `✅ ${f1Res.data?.length} productos`);
 
     // Verificar errores
-    if (futbolRes.error || nbaRes.error || f1Res.error) {
+    if (futbolRes.error) {
       console.log('\n❌ Errores encontrados:');
       if (futbolRes.error) console.log('- Fútbol:', futbolRes.error.message);
-      if (nbaRes.error) console.log('- NBA:', nbaRes.error.message);
-      if (f1Res.error) console.log('- F1:', f1Res.error.message);
       return [];
     }
 
@@ -75,46 +69,6 @@ async function getAllProducts() {
       });
     }
 
-    // Procesar productos de NBA
-    if (nbaRes.data && nbaRes.data.length > 0) {
-      nbaRes.data.forEach(product => {
-        const slug = generarSlugDesdeNombre(product.name);
-        if (slug) {
-          products.push({
-            url: `${BASE_URL}/nba/${slug}`,
-            lastmod: new Date().toISOString().split('T')[0],
-            priority: '0.8',
-            category: 'nba',
-            name: product.name,
-            team: product.team,
-            year: product.year,
-            price: product.price,
-            image: product.img?.[product.img.length - 1]
-          });
-        }
-      });
-    }
-
-    // Procesar productos de F1
-    if (f1Res.data && f1Res.data.length > 0) {
-      f1Res.data.forEach(product => {
-        const slug = generarSlugDesdeNombre(product.name);
-        if (slug) {
-          products.push({
-            url: `${BASE_URL}/f1/${slug}`,
-            lastmod: new Date().toISOString().split('T')[0],
-            priority: '0.8',
-            category: 'f1',
-            name: product.name,
-            team: product.team,
-            year: product.year,
-            price: product.price,
-            image: product.img?.[product.img.length - 1]
-          });
-        }
-      });
-    }
-
     return products;
   } catch (error) {
     console.error('💥 Error crítico al obtener productos:', error.message);
@@ -129,8 +83,6 @@ function generateSitemapXML(products) {
   const staticRoutes = [
     { url: `${BASE_URL}/`, priority: '1.0', changefreq: 'daily' },
     { url: `${BASE_URL}/futbol`, priority: '0.9', changefreq: 'weekly' },
-    { url: `${BASE_URL}/nba`, priority: '0.9', changefreq: 'weekly' },
-    { url: `${BASE_URL}/f1`, priority: '0.9', changefreq: 'weekly' },
     { url: `${BASE_URL}/soporte`, priority: '0.5', changefreq: 'monthly' },
     { url: `${BASE_URL}/politicas`, priority: '0.3', changefreq: 'yearly' }
   ];
@@ -165,7 +117,7 @@ function generateSitemapXML(products) {
     <image:image>
       <image:loc>${product.image}</image:loc>
       <image:title>${product.name}</image:title>
-      <image:caption>Jersey ${product.team || 'F1'} ${product.year} - $${product.price} USD</image:caption>
+      <image:caption>Jersey ${product.team} ${product.year} - $${product.price} USD</image:caption>
     </image:image>`;
     }
     
@@ -209,8 +161,6 @@ Disallow: /cart/
 
 # Permitir explícitamente URLs importantes
 Allow: /futbol/
-Allow: /nba/
-Allow: /f1/
 Allow: /soporte/
 Allow: /politicas/
 Allow: /searchs/
@@ -219,8 +169,6 @@ Allow: /searchs/
 User-agent: Googlebot
 Crawl-delay: 1
 Allow: /futbol/
-Allow: /nba/
-Allow: /f1/
 
 User-agent: Bingbot
 Crawl-delay: 2

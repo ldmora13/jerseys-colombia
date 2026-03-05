@@ -131,10 +131,6 @@ const Cart = ({ cartVisible, setCartVisible }) => {
 
   const renderProductTitle = (producto) => {
     switch (producto.deporte) {
-      case 'NBA':
-        return <>{producto.team} {producto.player ? producto.player : producto.year}</>;
-      case 'F1':
-        return <>{producto.team} {producto.driver ? producto.driver : producto.year}</>;
       case 'futbol':
         return <> {producto.team} {producto.category} {producto.type} {producto.year}</>;
       default:

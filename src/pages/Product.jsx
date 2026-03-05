@@ -380,8 +380,6 @@ const Product = ({ cartVisible, setCartVisible }) => {
 
                             {/* Product Title */}
                             <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 break-words">
-                                {producto.sport === 'f1' && `${producto.team} ${producto.driver || producto.year}`}
-                                {producto.sport === 'nba' && `${producto.team} ${producto.player || producto.year}`}
                                 {producto.sport === 'futbol' && `${producto.team} ${producto.category} ${producto.type} ${producto.year}`}
                             </h1>
 

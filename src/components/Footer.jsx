@@ -5,11 +5,9 @@ import { Mail, Phone, MapPin,  Heart, Shield, Truck, Award, ChevronRight } from 
 const Footer = () => {
     const navigate = useNavigate()
 
-    const footerLinks = {
+        const footerLinks = {
         productos: [
-            { name: 'Jerseys de Fútbol', path: '/futbol' },
-            { name: 'Jerseys NBA', path: '/nba' },
-            { name: 'Fórmula 1', path: '/f1' },
+            { name: 'Camisetas Selección Colombia', path: '/futbol' }
         ],
         empresa: [
             { name: 'Sobre Nosotros', path: '/about' },
@@ -114,7 +112,7 @@ const Footer = () => {
                     </div>
                     
                     <p className="text-gray-300 leading-relaxed">
-                        La experiencia definitiva en jerseys deportivos oficiales. Calidad premium, diseños exclusivos y envío a toda Colombia.
+                        La experiencia definitiva en camisetas oficiales de la Selección Colombia. Calidad premium, diseños exclusivos y envío a toda Colombia.
                     </p>
                 </div>
 

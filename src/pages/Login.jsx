@@ -11,9 +11,9 @@ import { ChevronDown, ChevronUp, ChevronRight, Star, Shield, Truck, CreditCard, 
 const Login = () => {
   
    const seoData = {
-    title: 'Jerseys Colombia - Jerseys Oficiales de Fútbol, NBA y F1',
-    description: 'La mejor tienda de jerseys oficiales en Colombia. Encuentra jerseys de fútbol, NBA y Fórmula 1 de tus equipos favoritos. Calidad premium, envío gratis y personalización disponible.',
-    keywords: 'jerseys colombia, camisetas futbol, jerseys NBA, F1 merchandise, deportes colombia',
+    title: 'Jerseys Colombia - Jerseys de la Selección Colombiana de Fútbol',
+    description: 'La mejor tienda de jerseys oficiales en Colombia. Encuentra todas las camisetas de la Selección Colombiana de Fútbol. Calidad premium, envío gratis y personalización disponible.',
+    keywords: 'jerseys colombia, camisetas de futbol de colombia, jerseys retro, deportes colombia',
     url: window.location.origin,
     image: `${window.location.origin}/og-home.jpg`
   };
@@ -23,15 +23,17 @@ const Login = () => {
 
   // Supabase data
   const [camisetasFutbol, setCamisetasFutbol] = useState([])
-  const [camisetasNBA, setCamisetasNBA] = useState([])
-  const [camisetasF1, setCamisetasF1] = useState([])
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [worldCupFeatured, setWorldCupFeatured] = useState([]);
+  const [retro, setRetro] = useState([])
+  const [special, setSpecial] = useState([])
+  const [worldcup, setWorldcup] = useState([])
+
+   const [totalProducts, setTotalProducts] = useState(0);
 
   // Animation states
   const [hoveredIndexFutbol, setHoveredIndexFutbol] = useState(null);
-  const [hoveredIndexNBA, setHoveredIndexNBA] = useState(null);
-  const [hoveredIndexF1, setHoveredIndexF1] = useState(null);
+  const [hoveredIndexRetro, setHoveredIndexRetro] = useState(null);
+  const [hoveredIndexSpecial, setHoveredIndexSpecial] = useState(null);
+  const [hoveredIndexWorldcup, setHoveredIndexWorldcup] = useState(null);
   const [hoveredFeature, setHoveredFeature] = useState(null);
 
   // FAQ
@@ -92,8 +94,8 @@ const Login = () => {
 
   const stats = [
     { number: "5000+", label: "Clientes Satisfechos", icon: Users },
-    { number: "500+", label: "Productos Únicos", icon: Package },
-    { number: "15", label: "Países de Envío", icon: Globe },
+    { number: "50+", label: "Productos Únicos", icon: Package },
+    { number: "10000+", label: "Productos importados", icon: Globe },
     { number: "4.9", label: "Rating Promedio", icon: Star }
   ];
 
@@ -104,56 +106,46 @@ const Login = () => {
   useEffect(() => {
     const fetchCamisetas = async () => {
       try {
-        const [futbolRes, nbaRes, f1Res, wcRes] = await Promise.all([
+        const [retro] = await Promise.all([
           supabase
             .from('futbol')
-            .select('name, img, team, year, index, category')
-            .order('year', { ascending: false })
-            .limit(3),
-  
-          supabase
-            .from('nba')
-            .select('name, img, team, year, index, player, deporte')
+            .select('name, images, team, year, index, category')
             .order('year', { ascending: true })
-            .limit(3),
-  
-          supabase
-            .from('f1')
-            .select('name, img, team, year, index, driver, category')
-            .order('year', { ascending: true })
-            .limit(3),
-  
+            .limit(3)
+          ]);
+        const [special] = await Promise.all([
           supabase
             .from('futbol')
-            .select('name, img, team, category, year, index, price, type')
-            .ilike('name', '%World_Cup%')
-            .eq('team', 'Colombia') 
-            .gte('year', 2025)
+            .select('name, images, team, year, index, category')
+            .eq('category', 'special')
             .order('year', { ascending: false })
-            .limit(4)
+            .limit(3),
+        ]);
+
+        const [worldcup] = await Promise.all([
+          supabase
+            .from('futbol')
+            .select('name, images, team, year, index, category')
+            .eq('category', 'home')
+            .order('year', { ascending: false })
+            .limit(3),
         ]);
 
         // Get total count for stats
-        const [futbolCount, nbaCount, f1Count] = await Promise.all([
-          supabase.from('futbol').select('*', { count: 'exact', head: true }),
-          supabase.from('nba').select('*', { count: 'exact', head: true }),
-          supabase.from('f1').select('*', { count: 'exact', head: true })
+        const [futbolCount] = await Promise.all([
+          supabase.from('futbol').select('*', { count: 'exact', head: true })
         ]);
 
-        const total = (futbolCount.count || 0) + (nbaCount.count || 0) + (f1Count.count || 0);
+        const total = (futbolCount.count || 0);
         setTotalProducts(total);
   
-        if (futbolRes.error) console.error('Error en Fútbol:', futbolRes.error)
-        else setCamisetasFutbol(futbolRes.data)
-  
-        if (nbaRes.error) console.error('Error en NBA:', nbaRes.error)
-        else setCamisetasNBA(nbaRes.data)
-  
-        if (f1Res.error) console.error('Error en F1:', f1Res.error)
-        else setCamisetasF1(f1Res.data)
-  
-        if (wcRes.error) console.error('Error en Mundial 2026:', wcRes.error)
-        else setWorldCupFeatured(wcRes.data)
+        if (retro.error || special.error || worldcup.error) {
+          console.error('Error en Fútbol:', retro.error || special.error || worldcup.error);
+        } else {
+          setRetro(retro.data);
+          setSpecial(special.data);
+          setWorldcup(worldcup.data);
+        }
   
       } catch (err) {
         console.error('Error al cargar camisetas:', err)
@@ -223,10 +215,10 @@ const Login = () => {
                 Jerseys Colombia
               </h1>
               <p className="text-2xl md:text-3xl mb-8 text-gray-700 font-light">
-                La experiencia definitiva en jerseys deportivos oficiales
+                La experiencia definitiva en camisetas oficiales de la Selección Colombia
               </p>
               <p className="text-lg md:text-xl mb-12 text-gray-600 max-w-2xl mx-auto">
-                Descubre la mayor colección de jerseys auténticos de fútbol, NBA y Fórmula 1. 
+                Descubre la mayor colección de camisetas autenticas de la Seleccón Colombia. 
                 Calidad premium, diseños exclusivos y envío a toda Colombia.
               </p>
               
@@ -248,53 +240,6 @@ const Login = () => {
                 Explorar Colección
                 <ChevronDown className="w-5 h-5 group-hover:animate-bounce" />
               </button>
-            </div>
-          </div>
-        </section>
-
-        {/* WORLD CUP HIGHLIGHT */}
-        <section aria-labelledby="worldcup-heading" className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <div className="w-20 h-20 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <Trophy className="w-10 h-10 text-white" />
-              </div>
-              <h2 id="worldcup-heading" className="text-4xl font-bold text-gray-900 mb-3">Mundial 2026</h2>
-              <p className="text-lg text-gray-700 max-w-2xl mx-auto">Descubre los nuevos diseños oficiales del Mundial 2026. Versiones Player y Fan, logos 3D y materiales premium.</p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-              {worldCupFeatured.slice(0,4).map((item, index) => {
-                const imagenes = item.img || [];
-                const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null;
-                const slug = generarSlug(item.name);
-                return (
-                  <figure key={index} className="group bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transform transition-all duration-300 hover:scale-105">
-                    <Link to={`/futbol/${slug}`} className="block">
-                      <div className="relative h-90 bg-gradient-to-br from-gray-50 to-gray-100">
-                        {imagenPrincipal && (
-                          <img src={imagenPrincipal} alt={item.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
-                        )}
-                        <div className="absolute top-2 left-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow">2026</div>
-                      </div>
-                      <figcaption className="p-4">
-                        <div className="font-bold text-gray-800 line-clamp-2 capitalize">{item.team} Mundial {item.year} {item.category === 'manga_larga' ? 'Manga Larga' : item.category} {item.type}</div>
-                      </figcaption>
-                    </Link>
-                  </figure>
-                );
-              })}
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/mundial" className="px-8 py-4 bg-gradient-to-r from-yellow-600 to-orange-600 text-white rounded-full font-semibold text-lg hover:from-yellow-700 hover:to-orange-700 transform hover:scale-105 transition-all duration-300 shadow-xl inline-flex items-center gap-2">
-                Ver colección
-                <ChevronRight className="w-5 h-5" />
-              </Link>
-              <Link to="/mundial" className="px-8 py-4 bg-white text-yellow-700 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-xl inline-flex items-center gap-2">
-                Descubre más
-                <ChevronRight className="w-5 h-5" />
-              </Link>
             </div>
           </div>
         </section>
@@ -335,38 +280,46 @@ const Login = () => {
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold mb-4 text-gray-800">Nuestras Categorías</h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Explora nuestra amplia selección de jerseys oficiales de los mejores deportes del mundo
+                Explora nuestra colección exclusiva de camisetas de la Selección Colombia: retros y actuales, históricas y de edición limitada. Calidad premium garantizada.
               </p>
             </div>
 
             <div  className="flex md:flex-row flex-col justify-center items-center gap-10 w-full">
-              {/* Fútbol Container */}
+              {/* retro Container */}
               <div 
-                onClick={() => navigate("/futbol")} 
+                onClick={() => navigate("/retro")} 
                 className="group relative overflow-hidden w-[350px] h-[500px] rounded-3xl bg-gradient-to-br from-green-200 via-blue-200 to-indigo-200 shadow-2xl cursor-pointer transform hover:scale-105 transition-all duration-500 hover:shadow-3xl"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10"></div>
-                <div className="relative z-20 p-8 h-full flex flex-col">
+                  <div className="relative z-20 p-8 h-full flex flex-col">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-2xl font-bold text-gray-800">⚽ Fútbol</h3>
+                    <h3 className="text-2xl font-bold text-gray-800">Retro</h3>
                     <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-medium">
-                      600+ productos
+                      50+ productos
                     </div>
                   </div>
                   
                   <div className="flex-1 space-y-4">
-                    {camisetasFutbol.map((camiseta, index) => {
-                      const imagenes = camiseta.img || []
-                      const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
+                    {retro.map((camiseta, index) => {
+
+                      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+                        const BUCKET = "camisetas";
+
+                        const buildImageUrl = (path) =>
+                        `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+
+                        const imagenPrincipal = camiseta.images?.[camiseta.images.length - 1]
+                        ? buildImageUrl(camiseta.images[camiseta.images.length - 1])
+                        : null;
 
                       return (
                         <div 
                           key={index} 
-                          onMouseEnter={() => setHoveredIndexFutbol(index)} 
-                          onMouseLeave={() => setHoveredIndexFutbol(null)} 
+                          onMouseEnter={() => setHoveredIndexRetro(index)} 
+                          onMouseLeave={() => setHoveredIndexRetro(null)} 
                           onClick={(e) => e.stopPropagation()} 
                           className={`flex items-center bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg cursor-pointer transform transition-all duration-300 hover:shadow-xl
-                            ${hoveredIndexFutbol === null ? '' : hoveredIndexFutbol === index ? 'scale-105 shadow-2xl' : 'scale-95 opacity-70'}
+                            ${hoveredIndexRetro === null ? '' : hoveredIndexRetro === index ? 'scale-105 shadow-2xl' : 'scale-95 opacity-70'}
                           `}
                         >
                           <Link to={`/futbol/${generarSlug(camiseta.name)}`} className="flex items-center w-full">
@@ -388,37 +341,44 @@ const Login = () => {
                   </div>
                 </div>
               </div>
-
-              {/* NBA Container */}
               <div 
-                onClick={() => navigate("/nba")} 
-                className="group relative overflow-hidden w-[350px] h-[500px] rounded-3xl bg-gradient-to-br from-orange-200 via-red-200 to-pink-200 shadow-2xl cursor-pointer transform hover:scale-105 transition-all duration-500 hover:shadow-3xl"
+                onClick={() => navigate("/special")} 
+                className="group relative overflow-hidden w-[350px] h-[500px] rounded-3xl bg-gradient-to-br from-green-200 via-blue-200 to-indigo-200 shadow-2xl cursor-pointer transform hover:scale-105 transition-all duration-500 hover:shadow-3xl"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10"></div>
-                <div className="relative z-20 p-8 h-full flex flex-col">
+                  <div className="relative z-20 p-8 h-full flex flex-col">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-2xl font-bold text-gray-800">🏀 NBA</h3>
+                    <h3 className="text-2xl font-bold text-gray-800">Especial</h3>
                     <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-medium">
-                      700+ productos
+                      50+ productos
                     </div>
                   </div>
                   
                   <div className="flex-1 space-y-4">
-                    {camisetasNBA.map((camiseta, index) => {
-                      const imagenes = camiseta.img || []
-                      const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
+                    {special.map((camiseta, index) => {
+
+                      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+                        const BUCKET = "camisetas";
+
+                        const buildImageUrl = (path) =>
+                        `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+
+                        const imagenPrincipal = camiseta.images?.[camiseta.images.length - 1]
+                        ? buildImageUrl(camiseta.images[camiseta.images.length - 1])
+                        : null;
 
                       return (
                         <div 
                           key={index} 
-                          onMouseEnter={() => setHoveredIndexNBA(index)} 
-                          onMouseLeave={() => setHoveredIndexNBA(null)}
+                          onMouseEnter={() => setHoveredIndexSpecial(index)} 
+                          onMouseLeave={() => setHoveredIndexSpecial(null)} 
+                          onClick={(e) => e.stopPropagation()} 
                           className={`flex items-center bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg cursor-pointer transform transition-all duration-300 hover:shadow-xl
-                            ${hoveredIndexNBA === null ? '' : hoveredIndexNBA === index ? 'scale-105 shadow-2xl' : 'scale-95 opacity-70'}
+                            ${hoveredIndexSpecial === null ? '' : hoveredIndexSpecial === index ? 'scale-105 shadow-2xl' : 'scale-95 opacity-70'}
                           `}
                         >
-                          <Link to={`/nba/${generarSlug(camiseta.name)}`} className="flex items-center w-full" onClick={(e) => e.stopPropagation()}>
-                            {imagenPrincipal && ( 
+                          <Link to={`/futbol/${generarSlug(camiseta.name)}`} className="flex items-center w-full">
+                            {imagenPrincipal && (
                               <img
                                 src={imagenPrincipal}
                                 alt={camiseta.name}
@@ -426,7 +386,7 @@ const Login = () => {
                               />
                             )}
                             <div className="ml-4">
-                              <h4 className="font-semibold text-gray-800">{camiseta.player || camiseta.team}</h4>
+                              <h4 className="font-semibold text-gray-800">{camiseta.team}</h4>
                               <p className="text-sm text-gray-600">{camiseta.year}</p>
                             </div>
                           </Link>
@@ -436,46 +396,53 @@ const Login = () => {
                   </div>
                 </div>
               </div>
-
-              {/* F1 Container */}
               <div 
-                onClick={() => navigate("/f1")} 
-                className="group relative overflow-hidden w-[350px] h-[500px] rounded-3xl bg-gradient-to-br from-purple-200 via-indigo-200 to-blue-200 shadow-2xl cursor-pointer transform hover:scale-105 transition-all duration-500 hover:shadow-3xl"
+                onClick={() => navigate("/worldcup")} 
+                className="group relative overflow-hidden w-[350px] h-[500px] rounded-3xl bg-gradient-to-br from-green-200 via-blue-200 to-indigo-200 shadow-2xl cursor-pointer transform hover:scale-105 transition-all duration-500 hover:shadow-3xl"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10"></div>
-                <div className="relative z-20 p-8 h-full flex flex-col">
+                  <div className="relative z-20 p-8 h-full flex flex-col">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-2xl font-bold text-gray-800">🏎️ F1</h3>
+                    <h3 className="text-2xl font-bold text-gray-800">Mundial</h3>
                     <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-medium">
-                      150+ productos
+                      50+ productos
                     </div>
                   </div>
                   
                   <div className="flex-1 space-y-4">
-                    {camisetasF1.map((camiseta, index) => {
-                      const imagenes = camiseta.img || []
-                      const imagenPrincipal = imagenes.length > 0 ? imagenes[imagenes.length - 1] : null
+                    {worldcup.map((camiseta, index) => {
+
+                      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+                      const BUCKET = "camisetas";
+
+                      const buildImageUrl = (path) =>
+                      `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+
+                      const imagenPrincipal = camiseta.images?.[camiseta.images.length - 1]
+                      ? buildImageUrl(camiseta.images[camiseta.images.length - 1])
+                      : null;
 
                       return (
                         <div 
                           key={index} 
-                          onMouseEnter={() => setHoveredIndexF1(index)} 
-                          onMouseLeave={() => setHoveredIndexF1(null)}
+                          onMouseEnter={() => setHoveredIndexWorldcup(index)} 
+                          onMouseLeave={() => setHoveredIndexWorldcup(null)} 
+                          onClick={(e) => e.stopPropagation()} 
                           className={`flex items-center bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg cursor-pointer transform transition-all duration-300 hover:shadow-xl
-                            ${hoveredIndexF1 === null ? '' : hoveredIndexF1 === index ? 'scale-105 shadow-2xl' : 'scale-95 opacity-70'}
+                            ${hoveredIndexWorldcup === null ? '' : hoveredIndexWorldcup === index ? 'scale-105 shadow-2xl' : 'scale-95 opacity-70'}
                           `}
                         >
-                          <Link to={`/${camiseta.category.toLowerCase()}/${generarSlug(camiseta.name)}`} className="flex items-center w-full" onClick={(e) => e.stopPropagation()}>
-                            {imagenPrincipal && ( 
+                          <Link to={`/futbol/${generarSlug(camiseta.name)}`} className="flex items-center w-full">
+                            {imagenPrincipal && (
                               <img
                                 src={imagenPrincipal}
                                 alt={camiseta.name}
-                                className="w-16 h-16 object-contain rounded-xl shadow-md"
+                                className="w-16 h-16 object-cover rounded-xl shadow-md"
                               />
                             )}
                             <div className="ml-4">
-                              <h4 className="font-semibold text-gray-800">{camiseta.team}</h4>
-                              <p className="text-sm text-gray-600">{camiseta.driver || camiseta.year}</p>
+                              <h4 className="font-semibold text-gray-800">{camiseta.team} <span>{camiseta.category}</span> </h4>
+                              <p className="text-sm text-gray-600">{camiseta.year}</p>
                             </div>
                           </Link>
                         </div>
@@ -496,26 +463,14 @@ const Login = () => {
                 ¿Listo para encontrar tu jersey perfecto?
               </h2>
               <p className="text-xl text-blue-100 mb-8">
-                Únete a miles de fanáticos que ya visten sus colores favoritos con nuestros jerseys premium
+                Únete a miles de fanáticos que ya visten sus colores favoritos con nuestras camisetas premium
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button 
                   onClick={() => navigate('/futbol')}
                   className="px-8 py-4 bg-white text-blue-600 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-xl"
                 >
-                  Ver Fútbol
-                </button>
-                <button 
-                  onClick={() => navigate('/nba')}
-                  className="px-8 py-4 bg-white text-purple-600 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-xl"
-                >
-                  Ver NBA
-                </button>
-                <button 
-                  onClick={() => navigate('/f1')}
-                  className="px-8 py-4 bg-white text-indigo-600 rounded-full font-semibold text-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-xl"
-                >
-                  Ver F1
+                  Ver Selección Colombia
                 </button>
               </div>
             </div>

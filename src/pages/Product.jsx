@@ -72,18 +72,20 @@ const Product = ({ cartVisible, setCartVisible }) => {
         severity: '', 
         title: '' 
     });
-
+    
     const seoData = useSEO(producto, category, name);
 
     useEffect(() => {
         if (producto && producto.img && producto.img.length > 0) {
-            setImagenPrincipal(producto.img[producto.img.length - 1]); 
-            setMiniaturas(producto.img);
+            const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+            const BUCKET = "camisetas";
+            const buildImageUrl = (path) => `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+            
+            setImagenPrincipal(buildImageUrl(producto.img[producto.img.length - 1])); 
+            setMiniaturas(producto.img.map(path => buildImageUrl(path)));
             setCurrentImageIndex(producto.img.length - 1);
         }
     }, [producto]);
-
-    useEffect
 
     useEffect(() => {
       const fetchProducto = async () => {
@@ -216,7 +218,7 @@ const Product = ({ cartVisible, setCartVisible }) => {
 
     if (loading) {
         return (
-            <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 z-[2000]">
+            <div className="fixed inset-0 flex items-center justify-center z-[2000]">
                 <Loader />
             </div>
         );

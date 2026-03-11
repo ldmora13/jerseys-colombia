@@ -109,14 +109,14 @@ const Login = () => {
         const [retro] = await Promise.all([
           supabase
             .from('futbol')
-            .select('name, images, team, year, index, category')
+            .select('name, img, team, year, index, category, type')
             .order('year', { ascending: true })
             .limit(3)
           ]);
         const [special] = await Promise.all([
           supabase
             .from('futbol')
-            .select('name, images, team, year, index, category')
+            .select('name, img, team, year, index, category, type')
             .eq('category', 'special')
             .order('year', { ascending: false })
             .limit(3),
@@ -125,7 +125,7 @@ const Login = () => {
         const [worldcup] = await Promise.all([
           supabase
             .from('futbol')
-            .select('name, images, team, year, index, category')
+            .select('name, img, team, year, index, category, type')
             .eq('category', 'home')
             .order('year', { ascending: false })
             .limit(3),
@@ -294,9 +294,6 @@ const Login = () => {
                   <div className="relative z-20 p-8 h-full flex flex-col">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-2xl font-bold text-gray-800">Retro</h3>
-                    <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-medium">
-                      50+ productos
-                    </div>
                   </div>
                   
                   <div className="flex-1 space-y-4">
@@ -308,8 +305,8 @@ const Login = () => {
                         const buildImageUrl = (path) =>
                         `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
 
-                        const imagenPrincipal = camiseta.images?.[camiseta.images.length - 1]
-                        ? buildImageUrl(camiseta.images[camiseta.images.length - 1])
+                        const imagenPrincipal = camiseta.img?.[camiseta.img.length - 1]
+                        ? buildImageUrl(camiseta.img[camiseta.img.length - 1])
                         : null;
 
                       return (
@@ -332,7 +329,7 @@ const Login = () => {
                             )}
                             <div className="ml-4">
                               <h4 className="font-semibold text-gray-800">{camiseta.team}</h4>
-                              <p className="text-sm text-gray-600">{camiseta.year}</p>
+                              <p className="text-sm text-gray-600">{camiseta.year} - <span>{camiseta.type}</span></p>
                             </div>
                           </Link>
                         </div>
@@ -349,9 +346,6 @@ const Login = () => {
                   <div className="relative z-20 p-8 h-full flex flex-col">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-2xl font-bold text-gray-800">Especial</h3>
-                    <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-medium">
-                      50+ productos
-                    </div>
                   </div>
                   
                   <div className="flex-1 space-y-4">
@@ -363,8 +357,8 @@ const Login = () => {
                         const buildImageUrl = (path) =>
                         `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
 
-                        const imagenPrincipal = camiseta.images?.[camiseta.images.length - 1]
-                        ? buildImageUrl(camiseta.images[camiseta.images.length - 1])
+                        const imagenPrincipal = camiseta.img?.[camiseta.img.length - 1]
+                        ? buildImageUrl(camiseta.img[camiseta.img.length - 1])
                         : null;
 
                       return (
@@ -387,7 +381,7 @@ const Login = () => {
                             )}
                             <div className="ml-4">
                               <h4 className="font-semibold text-gray-800">{camiseta.team}</h4>
-                              <p className="text-sm text-gray-600">{camiseta.year}</p>
+                              <p className="text-sm text-gray-600">{camiseta.year} - <span>{camiseta.type}</span></p>
                             </div>
                           </Link>
                         </div>
@@ -404,9 +398,6 @@ const Login = () => {
                   <div className="relative z-20 p-8 h-full flex flex-col">
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-2xl font-bold text-gray-800">Mundial</h3>
-                    <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-sm font-medium">
-                      50+ productos
-                    </div>
                   </div>
                   
                   <div className="flex-1 space-y-4">
@@ -418,8 +409,8 @@ const Login = () => {
                       const buildImageUrl = (path) =>
                       `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
 
-                      const imagenPrincipal = camiseta.images?.[camiseta.images.length - 1]
-                      ? buildImageUrl(camiseta.images[camiseta.images.length - 1])
+                      const imagenPrincipal = camiseta.img?.[camiseta.img.length - 1]
+                      ? buildImageUrl(camiseta.img[camiseta.img.length - 1])
                       : null;
 
                       return (
@@ -441,8 +432,8 @@ const Login = () => {
                               />
                             )}
                             <div className="ml-4">
-                              <h4 className="font-semibold text-gray-800">{camiseta.team} <span>{camiseta.category}</span> </h4>
-                              <p className="text-sm text-gray-600">{camiseta.year}</p>
+                              <h4 className="font-semibold text-gray-800">{camiseta.team} </h4>
+                              <p className="text-sm text-gray-600">{camiseta.year} - <span>{camiseta.type}</span></p>
                             </div>
                           </Link>
                         </div>

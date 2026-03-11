@@ -188,7 +188,7 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
             try {
                 const futbolRes = await supabase
                     .from('futbol')
-                    .select('name, images, team, category, year, index, price, stock_status, provider, deporte, type')
+                    .select('name, img, team, category, year, index, price, stock_status, provider, deporte, type')
                     .order('year', { ascending: false });
                 if (futbolRes.error) {
                     console.error('Error en Futbol:', futbolRes.error);
@@ -340,12 +340,12 @@ const Futbol = ({ cartVisible, setCartVisible }) => {
                         const buildImageUrl = (path) =>
                         `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
 
-                        const imagenPrincipal = camiseta.images?.[camiseta.images.length - 1]
-                        ? buildImageUrl(camiseta.images[camiseta.images.length - 1])
+                        const imagenPrincipal = camiseta.img?.[camiseta.img.length - 1]
+                        ? buildImageUrl(camiseta.img[camiseta.img.length - 1])
                         : null;
 
-                        const imagenSecundaria = camiseta.images?.[camiseta.images.length - 2]
-                        ? buildImageUrl(camiseta.images[camiseta.images.length - 2])
+                        const imagenSecundaria = camiseta.img?.[camiseta.img.length - 2]
+                        ? buildImageUrl(camiseta.img[camiseta.img.length - 2])
                         : null;
 
                         return (

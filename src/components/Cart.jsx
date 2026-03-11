@@ -216,7 +216,10 @@ const Cart = ({ cartVisible, setCartVisible }) => {
                   {cartItems.length > 0 ? (
                     <div className="space-y-3">
                       {cartItems.map((producto, index) => {
-                        const imagenPrincipal = producto.img?.length > 0 ? producto.img[producto.img.length - 1] : null;
+                        const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+                        const BUCKET = "camisetas";
+                        const buildImageUrl = (path) => `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+                        const imagenPrincipal = producto.img?.length > 0 ? buildImageUrl(producto.img[producto.img.length - 1]) : null;
                         const categoria = producto.deporte.toLowerCase();
                         
                         return (

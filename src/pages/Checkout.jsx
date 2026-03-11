@@ -75,6 +75,11 @@ const Checkout = () => {
     const [isValidatingCode, setIsValidatingCode] = useState(false);
     const [appliedDiscount, setAppliedDiscount] = useState(null);
 
+    // Construcción de URL de imágenes desde paths almacenados en la base de datos
+    const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+    const BUCKET = "camisetas";
+    const buildImageUrl = (path) => `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+
     const shippingCost = useMemo(() => {
         return calculateShippingCost(itemsToCheckout);
     }, [itemsToCheckout]);
@@ -702,7 +707,7 @@ const Checkout = () => {
                                                     <div className="flex gap-4">
                                                         <div className="relative">
                                                             <img 
-                                                                src={item.img && item.img.length > 0 ? item.img[item.img.length - 1] : 'https://via.placeholder.com/50'} 
+                                                                src={item.img && item.img.length > 0 ? buildImageUrl(item.img[item.img.length - 1]) : 'https://via.placeholder.com/50'} 
                                                                 className="w-20 h-20 object-contain rounded-xl bg-white shadow-md" 
                                                                 alt={item.name}
                                                             />

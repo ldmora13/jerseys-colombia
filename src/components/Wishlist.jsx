@@ -50,7 +50,7 @@ const Wishlist = () => {
 
                     const { data: futbolData, error: futbolError } = await supabase
                         .from('futbol')
-                        .select('name, price, team, year, img, deporte')
+                        .select('name, price, team, year, img, deporte, category')
                         .in('name', wishlistItems);
                     
                     if (futbolError) console.error("Error buscando en Futbol:", futbolError);
@@ -159,6 +159,9 @@ const Wishlist = () => {
                             ) : products.length > 0 ? (
                                 <div className="space-y-3">
                                     {products.map((product) => {
+                                        const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+                                        const BUCKET = "camisetas";
+                                        const buildImageUrl = (path) => `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
                                         const nombre = product.deporte === 'futbol' ? product.team + ' ' + product.year : product.name;
                                         
                                         return (
@@ -172,12 +175,12 @@ const Wishlist = () => {
                                                 <div className="flex gap-4">
                                                     {/* Product Image */}
                                                     <Link onClick={() => setWishlistVisible(false)}
-                                                        to={`/${link}/${generarSlug(product.name)}`}
+                                                        to={`/${product.sport_path}/${generarSlug(product.name)}`}
                                                         className="flex-shrink-0 relative"
                                                     >
                                                         <div className="w-24 h-24 rounded-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 shadow-md group-hover:scale-105 transition-transform duration-300">
                                                             <img 
-                                                                src={product.img && product.img.length > 0 ? product.img[product.img.length - 1] : 'https://via.placeholder.com/96'} 
+                                                                src={product.img && product.img.length > 0 ? buildImageUrl(product.img[product.img.length - 1]) : 'https://via.placeholder.com/96'} 
                                                                 alt={product.name}
                                                                 className='w-full h-full object-cover'
                                                             />
@@ -190,7 +193,7 @@ const Wishlist = () => {
                                                     {/* Product Info */}
                                                     <div className="flex-1 min-w-0">
                                                         <Link onClick={() => setWishlistVisible(false)}
-                                                            to={`/${link}/${generarSlug(product.name)}`}
+                                                            to={`/${product.sport_path}/${generarSlug(product.name)}`}
                                                             className="block group-hover:text-pink-600 transition-colors duration-300"
                                                         >
                                                             <h3 className='font-bold text-gray-800 mb-1 line-clamp-2 text-sm'>
@@ -199,7 +202,7 @@ const Wishlist = () => {
                                                         </Link>
                                                         <div className="flex items-center gap-2 mb-2">
                                                             <span className="text-xs px-2 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 rounded-full font-semibold">
-                                                                {product.deporte?.toUpperCase()}
+                                                                {product.category?.toUpperCase() || product.deporte?.toUpperCase()}
                                                             </span>
                                                             <span className="text-xs text-gray-500">{product.year}</span>
                                                         </div>
@@ -214,7 +217,7 @@ const Wishlist = () => {
                                                             <Trash2 className="w-4 h-4 text-red-600 group-hover/btn:scale-110 transition-transform duration-300" />
                                                         </button>
                                                         <Link onClick={() => setWishlistVisible(false)}
-                                                            to={`/${link}/${generarSlug(product.name)}`}
+                                                            to={`/${product.sport_path}/${generarSlug(product.name)}`}
                                                             className='w-10 h-10 rounded-xl bg-blue-50 hover:bg-blue-100 flex items-center justify-center transition-all duration-300 group/btn border border-blue-200'
                                                         >
                                                             <ExternalLink className="w-4 h-4 text-blue-600 group-hover/btn:scale-110 transition-transform duration-300" />
